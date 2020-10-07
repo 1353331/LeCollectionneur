@@ -110,6 +110,8 @@
     <Compile Include="Modeles\Item.cs" />
     <Compile Include="Modeles\ItemADO.cs" />
     <Compile Include="Modeles\PropositionADO.cs" />
+    <Compile Include="Modeles\Utilisateur.cs" />
+    <Compile Include="Modeles\UtilisateurADO.cs" />
     <Compile Include="Outils\BdBase.cs" />
     <Compile Include="VuesModeles\Proposition_VM.cs" />
     <Compile Include="Vues\ModalAjoutAnnonce.xaml.cs">

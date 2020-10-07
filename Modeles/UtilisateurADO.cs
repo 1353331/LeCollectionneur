@@ -1,4 +1,4 @@
-﻿using LeCollectionneur.Outil;
+﻿using LeCollectionneur.Outils;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,7 +11,7 @@ namespace LeCollectionneur.Modeles
 {
     class UtilisateurADO
     {
-        public BDbase BD = new BDbase();
+        public BdBase BD = new BdBase();
         #region Variable
         Utilisateur utilisateur;
 
