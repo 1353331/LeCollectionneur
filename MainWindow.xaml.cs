@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LeCollectionneur.Outils;
+using LeCollectionneur.Vues;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +25,32 @@ namespace LeCollectionneur
 		public MainWindow()
 		{
 			InitializeComponent();
+			BdBase MaBD = new BdBase();
+		}
+
+		private void btnCollections_Click(object sender, RoutedEventArgs e)
+		{
+			presenteurContenu.Content = new UCCollection();
+		}
+
+		private void btnAnnonces_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void btnPropositions_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void btnConversations_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void btnDeconnexion_Click(object sender, RoutedEventArgs e)
+		{
+
 		}
 	}
 }
