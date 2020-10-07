@@ -1,0 +1,79 @@
+﻿<Window x:Class="LeCollectionneur.Vues.ModalAjoutAnnonce"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LeCollectionneur.Vues"
+        mc:Ignorable="d"
+        Title="ViewAjoutAnnonce" Height="660" Width="500">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="70"></RowDefinition>
+            <RowDefinition Height="140"></RowDefinition>
+            <RowDefinition Height="300"></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="110"></ColumnDefinition>
+            <ColumnDefinition Width="140"></ColumnDefinition>
+            <ColumnDefinition Width="250"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <!--Titre-->
+        <Label Content="Titre" HorizontalAlignment="left" VerticalAlignment="bottom" Margin="10,0,0,0"></Label>
+        <TextBox Grid.Column="1" Margin="0,20,20,0" Grid.ColumnSpan="2"></TextBox>
+
+        <!--Type annonce-->
+        <Label Content="Type d'annonce" Grid.Row="1"  HorizontalAlignment="left" VerticalAlignment="Center" Margin="10,0,0,0"></Label>
+        <ComboBox Grid.Row="1" Grid.Column="1" Margin="0,20,20,20" Grid.ColumnSpan="2"></ComboBox>
+
+        <!--Description-->
+        <Label Content="Description" Grid.Row="2"  HorizontalAlignment="left" VerticalAlignment="Top" Margin="10,0,0,0"></Label>
+        <TextBox Grid.Column="1" Grid.Row="2" Margin="0,0,20,20" Grid.ColumnSpan="2" TextWrapping="Wrap"></TextBox>
+
+        <!--Offre-->
+        <GroupBox Grid.Row="3" Grid.ColumnSpan="3" Header="Offre" Margin="10,0,20,0" >
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <!--Items-->
+                <ListView Grid.Row="0" Grid.ColumnSpan="2">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Item" Width="130"/>
+                            <GridViewColumn Header="Condition" Width="125"/>
+                            <GridViewColumn Header="Quantité" Width="80"/>
+                            <GridViewColumn Header="Détails" Width="120"/>
+                        </GridView>
+                    </ListView.View>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListView_SelectItem"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+
+                <!--Bouton Retirer et Ajouter item-->
+                <Button Content="Retirer Item" Grid.Row="1" Width="200" Height="30" HorizontalAlignment="Right" Margin="0,0,10,0"></Button>
+                <Button Content="Ajouter Item" Grid.Row="1" Grid.Column="1" Width="200" Height="30" HorizontalAlignment="Left" Margin="10,0,0,0"></Button>
+
+                <!--Montant d'argent-->
+                <Label Content="Montant en argent" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center"></Label>
+                <TextBox Grid.Row="2" Grid.Column="1" Margin="0,15"></TextBox>
+            </Grid>
+        </GroupBox>
+
+        <!--Bouton Annuler/Publier l'annonce-->
+        <Button x:Name="btnAnnuler" HorizontalAlignment="Right" Content="Annuler" Grid.Row="4" Margin="0,0,10,0" Grid.Column="1"  Click="btnAnnuler_Click" Height="30" Width="100"></Button>
+        <Button Name="btnPublier" Content="Publier" Grid.Row="4" Grid.Column="2" HorizontalAlignment="left" Margin="10,0,0,0" Height="30" Width="100" Click="btnPublier_Click"></Button>
+    </Grid>
+</Window>

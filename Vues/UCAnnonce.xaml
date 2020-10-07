@@ -1,0 +1,162 @@
+﻿<UserControl x:Class="LeCollectionneur.Vues.UCAnnonce"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LeCollectionneur.Vues"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1000">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"></RowDefinition>
+            <RowDefinition Height="500"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="333.33"></ColumnDefinition>
+            <ColumnDefinition Width="333.33"></ColumnDefinition>
+            <ColumnDefinition Width="166.6"></ColumnDefinition>
+            <ColumnDefinition Width="166.6"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        
+        <!--GroupBox pour la recherche textuel-->
+        <GroupBox Header="Recherche" Grid.Row="0" Grid.Column="0" Margin="7,0,0,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"></ColumnDefinition>
+                    <ColumnDefinition Width="3*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="2*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <!-- Recherche textuel-->
+                <TextBox Grid.ColumnSpan="2" VerticalAlignment="Center" Margin="0,0,8,0"></TextBox>
+                <Button Content="Rechercher" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Center"></Button>
+
+                <!-- Checkbox pour filtre de recherche textuel-->
+                <CheckBox Grid.Row="1" VerticalAlignment="Center">Titre</CheckBox>
+                <CheckBox Grid.Row="1" VerticalAlignment="Center" Grid.Column="1">Annonceur</CheckBox>
+                <CheckBox Grid.Row="1" VerticalAlignment="Center" Grid.Column="2" Grid.ColumnSpan="2">Items</CheckBox>
+            </Grid>
+        </GroupBox>
+        
+        <!--GroupBox pour la recherche par filtres-->
+        <GroupBox Header="Filtres de recherche" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.5*"></ColumnDefinition>
+                    <ColumnDefinition Width="2*"></ColumnDefinition>
+                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                    <ColumnDefinition Width="2*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <!-- Recherche par type objets-->
+                <Label Content="Type Objets" VerticalAlignment="Center"></Label>
+                <ComboBox Grid.Column="1" VerticalAlignment="Center"></ComboBox>
+
+                <!-- Recherche par type annonces-->
+                <Label Content="Type Annonces" VerticalAlignment="Center" Grid.Row="1"></Label>
+                <ComboBox Grid.Column="1" VerticalAlignment="Center" Grid.Row="1"></ComboBox>
+
+                <!-- Recherche par dates-->
+                <Label Content="Date entre" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center"></Label>
+                <DatePicker Grid.Row="0" Grid.Column="3"  VerticalAlignment="Center"></DatePicker>
+
+                <Label Content="et" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right"  VerticalAlignment="Center"></Label>
+                <DatePicker Grid.Row="1" Grid.Column="3"  VerticalAlignment="Center"></DatePicker>
+            </Grid>
+        </GroupBox>
+
+        <!-- Boutons d'action pour annonce-->
+        <StackPanel Grid.Column="3" VerticalAlignment="Center" Margin="0,0,15,0">
+            <Button x:Name="btnAjoutAnnonce" Content="Ajouter une annonce" Margin="5,5,5,5" Click="btnAjoutAnnonce_Click"></Button>
+            <CheckBox Content="Mes annonces" Margin="5,0,5,5" HorizontalAlignment="Center" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"></CheckBox>
+        </StackPanel>
+    
+        <!-- Listes des annonces-->
+        <ListView Grid.Row="1" Grid.ColumnSpan="2"  Margin="7,10,0,0">
+            <ListView.View>
+                <GridView >
+                    <GridViewColumn Header="Titre" Width="250"/>
+                    <GridViewColumn Header="Annonceur" Width="150"/>
+                    <GridViewColumn Header="Date" Width="100"/>
+                    <GridViewColumn Header="Type d'annonce" Width="170" />
+                </GridView>
+            </ListView.View>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListView_SelectAnnonce"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+        
+        <!--GroupBox pour l'affichage d'une annonce-->
+        <GroupBox Header="Détails de l'annonce" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"  Margin="7,10,17,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="0.8*"></RowDefinition>
+                    <RowDefinition Height="3*"></RowDefinition>
+                    <RowDefinition Height="0.8*"></RowDefinition>
+                    <RowDefinition Height="3*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.5*"></ColumnDefinition>
+                    <ColumnDefinition Width="2*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                
+                <!--titre de l'annonce-->
+                <Label Content="Annonce" FontSize="20" Grid.ColumnSpan="2" VerticalAlignment="Center"></Label>
+                
+                <!--Type de l'annonce-->
+                <Label Content="Type d'annonce" Grid.Row="1" VerticalAlignment="Center"></Label>
+                <TextBox Grid.Row="1" Grid.Column="1" Margin="0,3" IsReadOnly="True"></TextBox>
+
+                <!--Date de l'annonce-->
+                <Label Content="Date" Grid.Row="2" VerticalAlignment="Center"></Label>
+                <TextBox Grid.Row="2" Grid.Column="1" Margin="0,3" IsReadOnly="True"></TextBox>
+
+                <!--Nom de l'annonceur-->
+                <Label Content="Annonceur" Grid.Row="3" VerticalAlignment="Center"></Label>
+                <TextBox Grid.Row="3" Grid.Column="1" Margin="0,3" IsReadOnly="True"></TextBox>
+
+                <!--Affichage des items de l'annonce-->
+                <Label Content="Items annoncés" Grid.Row="4" ></Label>
+                <ListView Grid.Row="5" Grid.ColumnSpan="2">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Item" Width="100"/>
+                            <GridViewColumn Header="Condition" Width="80"/>
+                            <GridViewColumn Header="Quantité" Width="55"/>
+                            <GridViewColumn Header="Détails" Width="60"/>
+                        </GridView>
+                    </ListView.View>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListView_SelectItem"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+
+                <!--Description de l'annonce-->
+                <Label Content="Description de l'annonce" Grid.Row="6" Grid.ColumnSpan="2"></Label>
+                <TextBox Grid.Row="7" Grid.ColumnSpan="2" IsReadOnly="True"></TextBox>
+
+                <!--Bouton du bas de l'annonce, change en fonction de la checkbox "Mes annonces"-->
+                <Button Name="btnPropAnnonce" Content="Proposer un échange" Grid.Row="8" Grid.ColumnSpan="2" Margin="40,5"></Button>
+                <Button Name="btnModAnnonce" Content="Modifier mon annonce" Grid.Row="8" Grid.ColumnSpan="2" Margin="40,5" Visibility="Hidden"></Button>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</UserControl>

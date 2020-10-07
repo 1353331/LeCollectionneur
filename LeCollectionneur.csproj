@@ -103,12 +103,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Modeles\Annonce.cs" />
+    <Compile Include="Modeles\AnnonceADO.cs" />
     <Compile Include="Modeles\Collection.cs" />
     <Compile Include="Modeles\CollectionADO.cs" />
     <Compile Include="Modeles\Item.cs" />
     <Compile Include="Modeles\ItemADO.cs" />
     <Compile Include="Outils\BdBase.cs" />
     <Compile Include="VuesModeles\Proposition_VM.cs" />
+    <Compile Include="Vues\ModalAjoutAnnonce.xaml.cs">
+      <DependentUpon>ModalAjoutAnnonce.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vues\UCAnnonce.xaml.cs">
+      <DependentUpon>UCAnnonce.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Vues\UCCollection.xaml.cs">
       <DependentUpon>UCCollection.xaml</DependentUpon>
     </Compile>
@@ -127,6 +135,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Vues\ModalAjoutAnnonce.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Vues\UCAnnonce.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Vues\UCCollection.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
