@@ -26,11 +26,7 @@ namespace LeCollectionneur.Vues
         public UCCollection()
         {
             InitializeComponent();
-            ObservableCollection<Collection> listeCollections = new ObservableCollection<Collection>();
-            GestionCollections = new CollectionADO();
-            listeCollections= GestionCollections.Recuperer(1);
-            ItemADO itemADO = new ItemADO();
-            GestionCollections.TransfererItem(listeCollections[1], listeCollections[0], itemADO.RecupererUn(1));
+            
         }
 
         private void verifierChiffre(object sender, TextChangedEventArgs e)

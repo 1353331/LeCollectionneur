@@ -35,17 +35,17 @@ namespace LeCollectionneur
 
 		private void btnAnnonces_Click(object sender, RoutedEventArgs e)
 		{
-
+			presenteurContenu.Content = new UCAnnonce();
 		}
 
 		private void btnPropositions_Click(object sender, RoutedEventArgs e)
 		{
-
+			presenteurContenu.Content = new UCProposition();
 		}
 
 		private void btnConversations_Click(object sender, RoutedEventArgs e)
 		{
-
+			//presenteurContenu.Content=new UCConversation
 		}
 
 		private void btnDeconnexion_Click(object sender, RoutedEventArgs e)
