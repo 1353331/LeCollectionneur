@@ -109,6 +109,7 @@
     <Compile Include="Modeles\CollectionADO.cs" />
     <Compile Include="Modeles\Item.cs" />
     <Compile Include="Modeles\ItemADO.cs" />
+    <Compile Include="Modeles\PropositionADO.cs" />
     <Compile Include="Outils\BdBase.cs" />
     <Compile Include="VuesModeles\Proposition_VM.cs" />
     <Compile Include="Vues\ModalAjoutAnnonce.xaml.cs">
@@ -122,6 +123,9 @@
     </Compile>
     <Compile Include="Vues\UCProposition.xaml.cs">
       <DependentUpon>UCProposition.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vues\UCPropositionsRecuesEnvoyees.xaml.cs">
+      <DependentUpon>UCPropositionsRecuesEnvoyees.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -150,6 +154,10 @@
     <Page Include="Vues\UCProposition.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Vues\UCPropositionsRecuesEnvoyees.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -182,6 +190,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="images\noimage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\Icones\message.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
