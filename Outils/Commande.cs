@@ -29,6 +29,10 @@ namespace LeCollectionneur.Outils
         {
             actionAExecuter(parameter);
         }
+        public Commande(Action<object> execute)
+        {
+            actionAExecuter = execute;
+        }
         public Commande(Action<object> execute, Predicate<object> canExecute)
         {
             actionAExecuter = execute;
