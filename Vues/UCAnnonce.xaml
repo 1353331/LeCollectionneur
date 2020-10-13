@@ -1,4 +1,5 @@
 ﻿<UserControl x:Class="LeCollectionneur.Vues.UCAnnonce"
+             x:Name="UCVueAnnonce"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -147,7 +148,7 @@
                 <TextBox Name="txt_description" Text="{Binding Description}" TextWrapping="Wrap" Grid.Row="7" Grid.ColumnSpan="2" IsReadOnly="True"></TextBox>
 
                 <!--Bouton du bas de l'annonce, change en fonction de la checkbox "Mes annonces"-->
-                <Button Name="btnPropAnnonce" Content="Proposer un échange" Grid.Row="8" Grid.ColumnSpan="2" Margin="40,5"></Button>
+                <Button Name="btnPropAnnonce" Content="Proposer un échange" Grid.Row="8" Grid.ColumnSpan="2" Margin="40,5" Command="{Binding cmdProposer_Annonce}" CommandParameter="{Binding ElementName=UCVueAnnonce}"></Button>
                 <Button Name="btnModAnnonce" Content="Modifier mon annonce" Grid.Row="8" Grid.ColumnSpan="2" Margin="40,5" Visibility="Hidden"></Button>
             </Grid>
         </GroupBox>

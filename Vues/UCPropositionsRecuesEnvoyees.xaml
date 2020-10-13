@@ -34,7 +34,7 @@
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="5*"></RowDefinition>
+            <RowDefinition Height="7*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -80,9 +80,15 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
 
-                        <DataGrid Grid.ColumnSpan="2" Name="dgProposition" Margin="8">
-                        
-                        </DataGrid>
+                        <ListView Grid.ColumnSpan="2" Name="lvProposition" Margin="8">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Item" Width="Auto"></GridViewColumn>
+                                    <GridViewColumn Header="Condition" Width="Auto"></GridViewColumn>
+                                    <GridViewColumn Header="" Width="Auto"></GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
 
                         <Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">Montant en argent</Label>
                         <TextBox Name="tbxMontantProposition" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsEnabled="False" Text="0" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center"></TextBox>
@@ -104,9 +110,15 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
 
-                        <DataGrid Grid.ColumnSpan="2" Name="dgOffre" Margin="8">
-
-                        </DataGrid>
+                        <ListView Grid.ColumnSpan="2" Name="lvOffre" Margin="8">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Item" Width="Auto"></GridViewColumn>
+                                    <GridViewColumn Header="Condition" Width="Auto"></GridViewColumn>
+                                    <GridViewColumn Header="" Width="Auto"></GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
 
                         <Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">Montant en argent</Label>
                         <TextBox Name="tbxMontantOffre" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsEnabled="False" Text="0" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center"></TextBox>
@@ -116,7 +128,7 @@
                 </GroupBox>
 
                 <!-- Propositions reçues -->
-                <Button Name="btnRefuserProposition" Grid.RowSpan="2" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Margin="0,10,30,10" Visibility="Visible" Content="Refuser">
+                <Button Name="btnRefuserProposition" Grid.RowSpan="2" Grid.Row="1" Grid.Column="0"  HorizontalAlignment="Stretch" Margin="100,10,100,10" Visibility="Visible" Content="Refuser">
                     <!-- Sert à arrondir les coins du bouton -->
                     <Button.Resources>
                         <Style TargetType="Border">
@@ -124,7 +136,7 @@
                         </Style>
                     </Button.Resources>
                 </Button>
-                <Button Name="btnAccepterProposition" Grid.RowSpan="2" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="30,10,0,10" Visibility="Visible" Content="Accepter">
+                <Button Name="btnAccepterProposition" Grid.RowSpan="2" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="100,10,100,10" Visibility="Visible" Content="Accepter">
                     <!-- Sert à arrondir les coins du bouton -->
                     <Button.Resources>
                         <Style TargetType="Border">

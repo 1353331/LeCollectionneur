@@ -1,4 +1,6 @@
-﻿using LeCollectionneur.VuesModeles;
+﻿using LeCollectionneur.Modeles;
+using LeCollectionneur.Outils;
+using LeCollectionneur.VuesModeles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,8 +21,8 @@ namespace LeCollectionneur.Vues
     /// <summary>
     /// Logique d'interaction pour UCAnnonce.xaml
     /// </summary>
-    public partial class UCAnnonce : UserControl
-    {
+    public partial class UCAnnonce : UserControl, IOuvreFenetreNouvellePropositionModalVM
+   {
         public UCAnnonce()
         {
             InitializeComponent();
@@ -55,5 +57,12 @@ namespace LeCollectionneur.Vues
             ModalAjoutAnnonce viewAjoutAnnonce = new ModalAjoutAnnonce();
             viewAjoutAnnonce.Show();
         }
-    }
+
+		  public void OuvrirModal(Annonce annonce)
+		  {
+            ModalNouvelleProposition viewProp = new ModalNouvelleProposition(annonce);
+            viewProp.Owner = Window.GetWindow(this);
+            viewProp.Show();
+		  }
+	}
 }

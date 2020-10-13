@@ -30,7 +30,7 @@ namespace LeCollectionneur
 			BdBase MaBD = new BdBase();
 			Window login = new Login();
 			login.ShowDialog();
-			if (UtilisateurADO.utilisateur.NomUtilisateur.Length > 0)
+			if (UtilisateurADO.utilisateur != null)
 				presenteurContenu.Content = new UCCollection();
 			else
 				this.Close();
@@ -49,7 +49,7 @@ namespace LeCollectionneur
 
 		private void btnPropositions_Click(object sender, RoutedEventArgs e)
 		{
-			presenteurContenu.Content = new UCProposition();
+			presenteurContenu.Content = new UCPropositionsRecuesEnvoyees();
 		}
 
 		private void btnConversations_Click(object sender, RoutedEventArgs e)

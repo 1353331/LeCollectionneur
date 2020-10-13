@@ -86,7 +86,40 @@ namespace LeCollectionneur.Outils
             return nbResultat;
         }
 
-        private bool Ouvrir()
+      public int CommandeCreationAvecRetourId(string requete)
+      {
+         // Pour que le retour d'ID fonctionne, il faut ajouter la commande SELECT LAST_INSERT_ID(); à la fin de la requête
+         // Ex: 
+         // INSERT INTO Condition (Nom)
+         //	VALUES
+         //	('Endommagée');
+         // SELECT LAST_INSERT_ID();
+
+         int idElementInsere = 0;
+
+         try
+         {
+            if (Ouvrir())
+            {
+               MySqlCommand cmd = new MySqlCommand(requete, MaConnexion);
+               cmd.CommandType = CommandType.Text;
+               idElementInsere = Convert.ToInt32(cmd.ExecuteScalar());
+            }
+         }
+         catch (MySqlException e)
+         {
+            MessageBox.Show("Erreur dans la commande :" + e.Message);
+            throw;
+         }
+         finally
+         {
+            //Fermer();
+         }
+
+         return idElementInsere;
+      }
+
+      private bool Ouvrir()
         {
             try
             {

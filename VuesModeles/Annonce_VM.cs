@@ -21,11 +21,13 @@ namespace LeCollectionneur.VuesModeles
 
         public ICommand cmdAjouter_Annonce { get; set; }
         public ICommand cmdFiltrer_Annonce { get; set; }
+        public ICommand cmdProposer_Annonce { get; set; }
 
         public Annonce_VM()
         {
             cmdAjouter_Annonce = new Commande(cmdAjouter);
             cmdFiltrer_Annonce = new Commande(cmdFiltrer);
+            cmdProposer_Annonce = new Commande(cmdProposer);
             initAnnonces();
             initFiltre();
         }
@@ -191,6 +193,16 @@ namespace LeCollectionneur.VuesModeles
             ObservableCollection<Annonce> LesAnnoncesFiltrees = new ObservableCollection<Annonce>(LesAnnonces.Where(a => a.Type == TypeAnnonceFiltre).ToList());
             LesAnnonces = LesAnnoncesFiltrees;
         }
+
+        private void cmdProposer(object param)
+        {
+            //Pour obtenir l'interface de la fenêtre, il faut la passer en paramètre lors de l'envoi de la commande (Voir le XAML du bouton, CommandParameter={...})
+            IOuvreFenetreNouvellePropositionModalVM modal = param as IOuvreFenetreNouvellePropositionModalVM;
+            if (modal != null)
+            {
+               modal.OuvrirModal(AnnonceSelectionnee);
+            }
+      }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string nomPropriete)

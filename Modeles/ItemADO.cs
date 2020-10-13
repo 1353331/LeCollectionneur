@@ -52,9 +52,10 @@ namespace LeCollectionneur.Modeles
        
         public Item RecupererUn(int id)
         {
-            string sel = $"select i.id, , i.nom as nomItem, i.description,i.dateSortie , i.cheminImage , t.nom as 'typeItem' , m.nom as 'manufacturier' from Items i " +
+            string sel = $"select i.id, i.nom as nomItem, i.description,i.dateSortie , i.cheminImage , t.nom as 'typeItem' , m.nom as 'manufacturier', c.Nom AS 'condition' from Items i " +
                 $" INNER JOIN Manufacturiers as m on i.idManufacturier = m.id" +
                 $" INNER JOIN TypesItem as t on i.idTypeItem=t.id" +
+                $" INNER JOIN Conditions as c on i.idCondition = c.id" +
                 $" WHERE i.id = {id};";
             DataSet SetItem = MaBD.Selection(sel);
             DataTable TableItem = SetItem.Tables[0];

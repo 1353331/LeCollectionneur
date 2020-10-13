@@ -13,28 +13,32 @@ namespace LeCollectionneur.Modeles
 
 		public int Id { get; set; }
 		public Annonce AnnonceLiee { get; set; }
-		//public Utilisateur Proposeur { get; set; }
-		public decimal Montant { get; set; }
+		public Utilisateur Proposeur { get; set; }
+		public double Montant { get; set; }
 		public DateTime DateProposition{ get; set; }
 		public string EtatProposition{ get; set; }
 
-		//public ObservableCollection<Item> ItemsProposes { get; set; }
+		public ObservableCollection<Item> ItemsProposes { get; set; }
 
 		public Proposition()
 		{
-			//ItemsProposes = new ObservableCollection<Item>();		
+			ItemsProposes = new ObservableCollection<Item>();
+			EtatProposition = "En attente";
 		}
 
 		public Proposition(DataRow dr)
 		{
+			AnnonceADO annonceADO = new AnnonceADO();
+			UtilisateurADO utilisateurADO = new UtilisateurADO();
+
 			Id = (int)dr["id"];
-			//AnnonceLiee
-			//Proposeur
-			Montant = (decimal)dr["montant"];
+			AnnonceLiee = annonceADO.RecupererUn((int)dr["idAnnonce"]);
+			Proposeur = utilisateurADO.RechercherUtilisateurById((int)dr["idUtilisateur"]);
+			Montant = (double)dr["montant"];
 			DateProposition = (DateTime)dr["dateProposition"];
 			EtatProposition = (string)dr["etatProposition"];
 
-			//ItemsProposes = new ObservableCollection<Item>();
+			ItemsProposes = new ObservableCollection<Item>();
 		}
 	}
 }
