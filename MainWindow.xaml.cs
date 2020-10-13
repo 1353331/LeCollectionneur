@@ -1,4 +1,5 @@
-﻿using LeCollectionneur.Outils;
+﻿using LeCollectionneur.Modeles;
+using LeCollectionneur.Outils;
 using LeCollectionneur.Vues;
 using System;
 using System.Collections.Generic;
@@ -22,11 +23,17 @@ namespace LeCollectionneur
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		
 		public MainWindow()
 		{
 			InitializeComponent();
 			BdBase MaBD = new BdBase();
-			presenteurContenu.Content = new UCCollection();
+			Window login = new Login();
+			login.ShowDialog();
+			if (UtilisateurADO.utilisateur.NomUtilisateur.Length > 0)
+				presenteurContenu.Content = new UCCollection();
+			else
+				this.Close();
 		}
 
 		private void btnCollections_Click(object sender, RoutedEventArgs e)

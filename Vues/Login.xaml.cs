@@ -35,6 +35,7 @@ namespace LeCollectionneur.Vues
         {
             UtilisateurADO temp = new UtilisateurADO();
             temp.Connection("collectionneur1","collectionneur");
+            this.Close();
         }
     }
 }
