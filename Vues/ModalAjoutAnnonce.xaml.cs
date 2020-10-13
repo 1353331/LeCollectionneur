@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using LeCollectionneur.Modeles;
 
 namespace LeCollectionneur.Vues
 {
@@ -22,6 +23,7 @@ namespace LeCollectionneur.Vues
         public ModalAjoutAnnonce()
         {
             InitializeComponent();
+ 
         }
 
         private void ListView_SelectItem(object sender, MouseButtonEventArgs e)
@@ -36,6 +38,17 @@ namespace LeCollectionneur.Vues
 
         private void btnPublier_Click(object sender, RoutedEventArgs e)
         {
+            Annonce NeoAnnonce = new Annonce();
+            NeoAnnonce.Titre = txtTitre.Text;
+            //TODO changer l'id de l'annonceur en fonction de celui qui est connecté
+            NeoAnnonce.Annonceur.Id = 1;
+            NeoAnnonce.Montant = Convert.ToDouble(txtMontant.Text);
+            NeoAnnonce.DatePublication = new DateTime().Date;
+            NeoAnnonce.Type = cmbType.Text;
+
+            AnnonceADO annonceADO = new AnnonceADO();
+            annonceADO.Ajouter(NeoAnnonce);
+
             this.Close();
         }
     }

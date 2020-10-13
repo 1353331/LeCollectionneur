@@ -10,23 +10,27 @@ namespace LeCollectionneur.Modeles
 {
     public class Annonce
     {
+        #region Propriétés
         public int Id { get; set; }
-        //public Utilisateur Annonceur { get; set; }
+        public Utilisateur Annonceur { get; set; }
         public string Titre { get; set; }
         public DateTime DatePublication { get; set; }
         public string Type { get; set; }
         public string Description { get; set; }
-        //public ObservableCollection<Item> ListeItems { get; set; }
+        public ObservableCollection<Item> ListeItems { get; set; }
+        public double Montant { get; set; }
+        #endregion
 
+        #region Constructeur
         public Annonce()
         {
-            //ListeItems = new ObservableCollection<Item>();
-            //Annonceur = new Utilisateur();
+            ListeItems = new ObservableCollection<Item>();
+            Annonceur = new Utilisateur();
         }
 
         public Annonce(DataRow dr)
         {
-            //UtilisateurADO ud = new UtilisateurADO();
+            UtilisateurADO ud = new UtilisateurADO();
             
             Id = (int)dr["Id"];
             //Annonceur = ud.RecupererUn((int)dr["IdUtilisateur"]);
@@ -34,8 +38,10 @@ namespace LeCollectionneur.Modeles
             DatePublication = (DateTime)dr["Date"];
             Type = (string)dr["typeAnnonce"];
             Description = (string)dr["Description"];
-
+            // TODO: Aller chercher la liste d'item
+            Montant = (double)dr["montant"];
         }
+        #endregion
 
 
     }

@@ -113,6 +113,8 @@
     <Compile Include="Modeles\Utilisateur.cs" />
     <Compile Include="Modeles\UtilisateurADO.cs" />
     <Compile Include="Outils\BdBase.cs" />
+    <Compile Include="Outils\Commande.cs" />
+    <Compile Include="VuesModeles\Annonce_VM.cs" />
     <Compile Include="VuesModeles\Proposition_VM.cs" />
     <Compile Include="Vues\ModalAjoutAnnonce.xaml.cs">
       <DependentUpon>ModalAjoutAnnonce.xaml</DependentUpon>

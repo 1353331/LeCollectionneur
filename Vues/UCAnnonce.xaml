@@ -34,7 +34,7 @@
 
                 <!-- Recherche textuel-->
                 <TextBox Grid.ColumnSpan="2" VerticalAlignment="Center" Margin="0,0,8,0"></TextBox>
-                <Button Content="Rechercher" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Center"></Button>
+                <Button Content="Rechercher" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Center" Command="{Binding cmdFiltrer_Annonce}"></Button>
 
                 <!-- Checkbox pour filtre de recherche textuel-->
                 <CheckBox Grid.Row="1" VerticalAlignment="Center">Titre</CheckBox>
@@ -59,11 +59,11 @@
 
                 <!-- Recherche par type objets-->
                 <Label Content="Type Objets" VerticalAlignment="Center"></Label>
-                <ComboBox Grid.Column="1" VerticalAlignment="Center"></ComboBox>
+                <ComboBox Grid.Column="1" VerticalAlignment="Center" ItemsSource="{Binding Path=LesAnnonces}" DisplayMemberPath=""></ComboBox>
 
                 <!-- Recherche par type annonces-->
                 <Label Content="Type Annonces" VerticalAlignment="Center" Grid.Row="1"></Label>
-                <ComboBox Grid.Column="1" VerticalAlignment="Center" Grid.Row="1"></ComboBox>
+                <ComboBox Name="cmbTypesAnnonce" Grid.Column="1" VerticalAlignment="Center" Grid.Row="1"  ItemsSource="{Binding Path=LesTypesAnnonce}" SelectedItem="{Binding Path=TypeAnnonceFiltre}"></ComboBox>
 
                 <!-- Recherche par dates-->
                 <Label Content="Date entre" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center"></Label>
@@ -76,27 +76,20 @@
 
         <!-- Boutons d'action pour annonce-->
         <StackPanel Grid.Column="3" VerticalAlignment="Center" Margin="0,0,15,0">
-            <Button x:Name="btnAjoutAnnonce" Content="Ajouter une annonce" Margin="5,5,5,5" Click="btnAjoutAnnonce_Click"></Button>
+            <Button x:Name="btnAjoutAnnonce" Content="Ajouter une annonce" Margin="5,5,5,5" Command="{Binding cmdAjouter_Annonce}"></Button>
             <CheckBox Content="Mes annonces" Margin="5,0,5,5" HorizontalAlignment="Center" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"></CheckBox>
         </StackPanel>
     
         <!-- Listes des annonces-->
-        <ListView Grid.Row="1" Grid.ColumnSpan="2"  Margin="7,10,0,0">
-            <ListView.View>
-                <GridView >
-                    <GridViewColumn Header="Titre" Width="250"/>
-                    <GridViewColumn Header="Annonceur" Width="150"/>
-                    <GridViewColumn Header="Date" Width="100"/>
-                    <GridViewColumn Header="Type d'annonce" Width="170" />
-                </GridView>
-            </ListView.View>
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListView_SelectAnnonce"/>
-                </Style>
-            </ListView.ItemContainerStyle>
-        </ListView>
-        
+        <DataGrid ItemsSource="{Binding LesAnnonces}" SelectedItem="{Binding AnnonceSelectionnee}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" IsReadOnly="True" Grid.Row="1" Grid.ColumnSpan="2"  Margin="7,10,0,0">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Path=Titre}" Header="Titre" Width="250"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=Annonceur.NomUtilisateur}" Header="Annonceur" Width="150"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=DatePublication, StringFormat=yyyy-MM-dd}" Header="Date" Width="100"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=Type}" Header="Type d'annonce" Width="152"></DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
         <!--GroupBox pour l'affichage d'une annonce-->
         <GroupBox Header="Détails de l'annonce" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"  Margin="7,10,17,0">
             <Grid>
@@ -117,19 +110,19 @@
                 </Grid.ColumnDefinitions>
                 
                 <!--titre de l'annonce-->
-                <Label Content="Annonce" FontSize="20" Grid.ColumnSpan="2" VerticalAlignment="Center"></Label>
+                <Label Name="lbl_nom" Content="{Binding Titre}" FontSize="20" Grid.ColumnSpan="2" VerticalAlignment="Center"></Label>
                 
                 <!--Type de l'annonce-->
                 <Label Content="Type d'annonce" Grid.Row="1" VerticalAlignment="Center"></Label>
-                <TextBox Grid.Row="1" Grid.Column="1" Margin="0,3" IsReadOnly="True"></TextBox>
+                <TextBox Name="txt_type" Text="{Binding Type}" Grid.Row="1" Grid.Column="1" Margin="0,3" IsReadOnly="True"></TextBox>
 
                 <!--Date de l'annonce-->
                 <Label Content="Date" Grid.Row="2" VerticalAlignment="Center"></Label>
-                <TextBox Grid.Row="2" Grid.Column="1" Margin="0,3" IsReadOnly="True"></TextBox>
+                <TextBox Name="txt_datePublication" Text="{Binding DatePublication, StringFormat=yyyy-MM-dd}" Grid.Row="2" Grid.Column="1" Margin="0,3" IsReadOnly="True"></TextBox>
 
                 <!--Nom de l'annonceur-->
                 <Label Content="Annonceur" Grid.Row="3" VerticalAlignment="Center"></Label>
-                <TextBox Grid.Row="3" Grid.Column="1" Margin="0,3" IsReadOnly="True"></TextBox>
+                <TextBox Name="txt_Annonceur" Text="{Binding Annonceur.NomUtilisateur}" Grid.Row="3" Grid.Column="1" Margin="0,3" IsReadOnly="True"></TextBox>
 
                 <!--Affichage des items de l'annonce-->
                 <Label Content="Items annoncés" Grid.Row="4" ></Label>
@@ -151,7 +144,7 @@
 
                 <!--Description de l'annonce-->
                 <Label Content="Description de l'annonce" Grid.Row="6" Grid.ColumnSpan="2"></Label>
-                <TextBox Grid.Row="7" Grid.ColumnSpan="2" IsReadOnly="True"></TextBox>
+                <TextBox Name="txt_description" Text="{Binding Description}" TextWrapping="Wrap" Grid.Row="7" Grid.ColumnSpan="2" IsReadOnly="True"></TextBox>
 
                 <!--Bouton du bas de l'annonce, change en fonction de la checkbox "Mes annonces"-->
                 <Button Name="btnPropAnnonce" Content="Proposer un échange" Grid.Row="8" Grid.ColumnSpan="2" Margin="40,5"></Button>

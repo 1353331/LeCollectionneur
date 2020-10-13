@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace LeCollectionneur.Modeles
 {
-    class Item
+    public class Item
     {
         #region Propriétés
         public int Id { get; set; }
