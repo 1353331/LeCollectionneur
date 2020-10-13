@@ -26,11 +26,13 @@ namespace LeCollectionneur
 		{
 			InitializeComponent();
 			BdBase MaBD = new BdBase();
+			presenteurContenu.Content = new UCCollection();
 		}
 
 		private void btnCollections_Click(object sender, RoutedEventArgs e)
 		{
 			presenteurContenu.Content = new UCCollection();
+
 		}
 
 		private void btnAnnonces_Click(object sender, RoutedEventArgs e)
@@ -49,6 +51,11 @@ namespace LeCollectionneur
 		}
 
 		private void btnDeconnexion_Click(object sender, RoutedEventArgs e)
+		{
+
+		}
+
+		private void btnParametres_Click(object sender, RoutedEventArgs e)
 		{
 
 		}

@@ -47,34 +47,29 @@ namespace LeCollectionneur.Modeles
 
         public void Supprimer(int id)
         {
-            string req = "delete from Collections where ID = " + id;
+            string req = $"delete from Items Where idCollection ={id}; delete from Collections where ID = " + id;
             MaBD.Commande(req);
         }
 
        
 
-        public void Ajouter(Collection c)
+        public void Ajouter(Collection c,int IdUtilisateur)
         {
-            string req = $"insert into Collections values(NULL,{c.Nom} )";
+            string req = $"insert into Collections (id,idUtilisateur,nom) values(NULL,{IdUtilisateur},'{c.Nom}' )";
             MaBD.Commande(req);
         }
-        public void AjouterItem(Collection c,Item i)
-        {
-            string req = $"insert into ItemCollection values(NULL,{i.Id},{c.Id},(SELECT id from Conditions WHERE nom='{i.Condition}'),{i.Quantite})";
-            MaBD.Commande(req);
-        }
+        //public void AjouterItem(Collection c,Item i)
+        //{
+        //    string req = $"insert into Items values(NULL,{i.Id},{c.Id},(SELECT id from Conditions WHERE nom='{i.Condition}'),{i.Quantite})";
+        //    MaBD.Commande(req);
+        //}
 
-        public void EnleverItem(Collection c, Item i)
-        {
-            string req = $"DELETE FROM ItemCollection WHERE idCollection={c.Id} AND idItem={i.Id}";
-            MaBD.Commande(req);
-        }
+        //public void EnleverItem(Collection c, Item i)
+        //{
+        //    string req = $"DELETE FROM ItemCollection WHERE idCollection={c.Id} AND idItem={i.Id}";
+        //    MaBD.Commande(req);
+        //}
 
-        public void TransfererItem(Collection cDepart,Collection cDestination,Item i)
-        {
-            // Transfert d'un item d'une collection à une autre en BD.
-            string req = $"UPDATE ItemCollection SET idCollection={cDestination.Id} WHERE idCollection={cDepart.Id} AND idItem={i.Id}";
-            MaBD.Commande(req);
-        }
+        
     }
 }

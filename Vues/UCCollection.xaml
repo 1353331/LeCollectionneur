@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LeCollectionneur.Vues"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="1000">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="5*"></RowDefinition>
@@ -16,23 +16,50 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition Width="2*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <ListBox Name="lstCollections" Margin="10,10,10,10">
-            <DataGridColumnHeader x:Name="headCollections"  Height="35" >
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch"  >
-                    <Label HorizontalAlignment="Left">Collections</Label>
-                    <Button HorizontalAlignment="Right" Content="+" Height="20" Width="20" RenderTransformOrigin="3.615,0.487"  />
-                </StackPanel>
-            </DataGridColumnHeader>
-        </ListBox>
-        <ListBox x:Name="lstItemsCollection" Grid.Row="0" Grid.Column="1" Margin="10,10,10,10">
-            <DataGridColumnHeader  Height="35" >
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch"  >
-                    <Label HorizontalAlignment="Left" Content="Items"/>
-                    <Button HorizontalAlignment="Right" Content="+" Height="20" Width="20" RenderTransformOrigin="3.615,0.487"  />
-                </StackPanel>
-            </DataGridColumnHeader>
-        </ListBox>
-        <Grid Grid.Row="0" Grid.Column="2" Margin="10,10,10,10">
+        <StackPanel Margin="10,10,10,10">
+            <StackPanel Orientation="Horizontal">
+                <Label HorizontalAlignment="Left">Collections</Label>
+                <Button Command="{Binding cmdAjouterCollection}" HorizontalAlignment="Right" Content="+" Height="20" Width="20" RenderTransformOrigin="3.615,0.487"  />
+            </StackPanel>
+            
+           <ListView Name="lstCollections" SelectedItem="{Binding CollectionSelectionnee}"  ItemsSource="{Binding MesCollections}" Height="322">
+            <ListView.View>
+                <GridView >
+                        <GridView.Columns>
+                        <GridViewColumn Header="Collection" DisplayMemberBinding="{Binding Nom}" Width="73" />
+                            <GridViewColumn Header="Création" DisplayMemberBinding="{Binding DateCreation, StringFormat=d}"  Width="60"  />
+                            <GridViewColumn Header="Nombre d'items" DisplayMemberBinding="{Binding ItemsCollection.Count}"  Width="90"  />
+                        </GridView.Columns>
+                    
+                    </GridView>
+                
+            </ListView.View>
+                
+            </ListView>
+        </StackPanel>
+        <StackPanel Margin="10,10,10,10" Grid.Column="1">
+            <StackPanel Orientation="Horizontal">
+                <Label HorizontalAlignment="Left">Items</Label>
+                <Button Command="{Binding cmdAjouterItem}" HorizontalAlignment="Right" Content="+" Height="20" Width="20" RenderTransformOrigin="3.615,0.487"  />
+            </StackPanel>
+            <ListView SelectedItem="{Binding ItemSelectionne}"  ItemsSource="{Binding CollectionSelectionnee.ItemsCollection}" Height="322">
+                <ListView.View>
+                    <GridView >
+                        <GridView.Columns>
+                            <GridViewColumn Header="Nom" DisplayMemberBinding="{Binding Nom}" Width="88" />
+                            <GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}"  Width="60"  />
+                            <GridViewColumn Header="Condition" DisplayMemberBinding="{Binding Condition}"  Width="80"  />
+                        </GridView.Columns>
+
+                    </GridView>
+
+                </ListView.View>
+
+            </ListView>
+        </StackPanel>
+
+        <GroupBox Header="Détails de l'item" Grid.Row="0" Grid.Column="2" Margin="10,10,10,10">
+        <Grid >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition Width="2*"></ColumnDefinition>
@@ -47,48 +74,43 @@
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
-            <Border Grid.RowSpan="8" Grid.ColumnSpan="2" BorderThickness="1" BorderBrush="Black" ></Border>
 
             <Image Name="imgItem" Source="/images/noimage.png" Grid.Column="0" Grid.RowSpan="3" Stretch="Fill" Margin="10,10,5,10" />
             <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="5,5,5,0">
                 <Label>Nom:</Label>
-                <TextBox Name="txtNomItem" IsEnabled="False" Height="23" Width="193" Margin="0,4"></TextBox>
+                <TextBox Text="{Binding ItemSelectionne.Nom}" Name="txtNomItem"  Height="23" Width="193" Margin="0,4"></TextBox>
             </StackPanel>
             <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="2,5,5,0">
                 <Label>Condition:</Label>
-                <ComboBox Name="cboConditionItem" Height="23" Width="171" Margin="0,4" >
-                    <ComboBoxItem>Condition Item</ComboBoxItem>
+                <ComboBox ItemsSource="{Binding ConditionsPossibles}" SelectedValue="{Binding ItemSelectionne.Condition}"  Name="cboConditionItem" Height="23" Width="171" Margin="0,4" >
                 </ComboBox>
             </StackPanel>
             <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="5,5,5,0">
                 <Label>Type:</Label>
-                <ComboBox Name="cboTypeItem" IsEditable="False" IsEnabled="False" Height="23" Width="193" Margin="0,4">
-                    <ComboBoxItem>Type d'item</ComboBoxItem>
-                </ComboBox>
+                <ComboBox ItemsSource="{Binding TypesPossibles}" SelectedValue="{Binding ItemSelectionne.Type}"  Name="cboTypeItem" Height="23" Width="171" Margin="0,4" >
+                    </ComboBox>
             </StackPanel>
             <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="5,5,5,0">
                 <Label>Date de sortie:</Label>
-                <DatePicker Name="dateSortieItem" IsEnabled="False" Height="23" Width="193" Margin="0,4">
+                <DatePicker SelectedDate="{Binding ItemSelectionne.DateSortie,Mode=TwoWay,TargetNullValue='Inconnue'}" Name="dateSortieItem"  Height="23" Width="193" Margin="0,4">
                 </DatePicker>
             </StackPanel>
             <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="5,5,5,0">
                 <Label>Manufacturier:</Label>
-                <TextBox Name="txtManufacturierItem" IsEnabled="False" Height="23" Width="193" Margin="0,4">
+                <TextBox Text="{Binding ItemSelectionne.Manufacturier}" Name="txtManufacturierItem"  Height="23" Width="193" Margin="0,4">
                 </TextBox>
             </StackPanel>
-            <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="5,5,5,0">
-                <Label>Quantité:</Label>
-                <TextBox Name="txtQuantiteItem" TextChanged="verifierChiffre" Height="23" Width="193" Margin="0,4">
-                </TextBox>
-            </StackPanel>
-            <StackPanel Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Orientation="Horizontal" Margin="5,5,5,0">
+
+            <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Orientation="Horizontal" Margin="5,5,5,0">
                 <Label>Description:</Label>
-                <TextBox Name="txtDescriptionItem" IsEnabled="False" Margin="10,10,10,23" TextWrapping="Wrap" AcceptsReturn="True" Width="278"/>
+                <TextBox Text="{Binding ItemSelectionne.Description}" Name="txtDescriptionItem"  Margin="10" TextWrapping="Wrap" AcceptsReturn="True" Width="278"/>
             </StackPanel>
+            <Button Name="btnModifierItem"  Command="{Binding cmdModifierItem}" Grid.Row="7" Grid.ColumnSpan="2" Content="Modifier" Margin="87,5,51,7" />
         </Grid>
-        <Button Name="btnSupprimerCollection" Grid.Column="0" Grid.Row="1" Content="Supprimer" Margin="13,15,10,10"></Button>
-        <Button Name="btnSupprimerItem" Grid.Column="1" Grid.Row="1" Content="Supprimer" Margin="13,15,10,10"></Button>
-        <Button Name="btnDeplacerItem" Grid.Column="2" Grid.Row="1" Content="Déplacer" Margin="13,15,233,10"></Button>
-        <Button Name="btnModifierItem" Grid.Column="2" Grid.Row="1" Content="Modifier" Margin="236,15,13,10"></Button>
+        </GroupBox>
+        <Button Name="btnSupprimerCollection"  Command="{Binding cmdSupprimerCollection}" Grid.Column="0" Grid.Row="1" Content="Supprimer" Margin="13,15,10,10"></Button>
+        <Button Name="btnSupprimerItem"  Command="{Binding cmdSupprimerItem}" Grid.Column="1" Grid.Row="1" Content="Supprimer" Margin="13,15,10,10"></Button>
+        <Button Name="btnDeplacerItem"  Command="{Binding cmdDeplacerItem}" Grid.Column="2" Grid.Row="1" Content="Déplacer" Margin="13,15,233,10"></Button>
+
     </Grid>
 </UserControl>

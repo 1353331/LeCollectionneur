@@ -22,12 +22,11 @@ namespace LeCollectionneur.Modeles
         {
             // On recherche les Items selon la Collection entrée.
             ObservableCollection<Item> lesItems = new ObservableCollection<Item>();
-            string sel = $"select i.id , i.nom as nomItem, i.description,i.dateSortie , i.cheminImage , ic.quantite , c.nom as 'condition' , t.nom as 'typeItem' , m.nom as 'manufacturier' from ItemCollection ic " +
-                $" INNER JOIN Items as i on ic.idItem = i.id " +
+            string sel = $"select i.id , i.nom as nomItem, i.description,i.dateSortie , i.cheminImage  , c.nom as 'condition' , t.nom as 'typeItem' , m.nom as 'manufacturier' from Items i " +
                 $" INNER JOIN Manufacturiers as m on i.idManufacturier = m.id" +
-                $" INNER JOIN Conditions as c on ic.idCondition = c.id" +
+                $" INNER JOIN Conditions as c on i.idCondition = c.id" +
                 $" INNER JOIN TypesItem as t on i.idTypeItem=t.id" +
-                $" WHERE ic.idCollection = {idCollection};";
+                $" WHERE i.idCollection = {idCollection};";
             DataSet SetItem = MaBD.Selection(sel);
             DataTable TableItem = SetItem.Tables[0];
 
@@ -44,19 +43,16 @@ namespace LeCollectionneur.Modeles
                 $"Description='{i.Description}', " +
                 $"idTypeItem= (SELECT id from TypesItem WHERE nom='{i.Type}')," +
                 $"idManufacturier = (SELECT id from Manufacturiers WHERE nom='{i.Manufacturier}')," +
-                $"dateSortie = '{i.DateSortie.Year}-{i.DateSortie.Month}-{i.DateSortie.Day}' " +
+                $"dateSortie = '{i.DateSortie.Year}-{i.DateSortie.Month}-{i.DateSortie.Day}', " +
+                $"idCondition = (SELECT id FROM conditions WHERE nom='{i.Condition}'),"+
+                $"idCollection"+
                 $"where id = {i.Id}";
             MaBD.Commande(req);
         }
-        public void ModifierDansCollection(Item i, Collection c)
-        {
-            // On veut pouvoir modifier la Quantite et la Condition de l'item.
-            string req = $"UPDATE ItemCollection SET Quantite={i.Quantite}, idCondition=(SELECT idCondition FROM Conditions WHERE nom='{i.Condition}') WHERE idCollection={c.Id} AND idItem={i.Id};";
-            MaBD.Commande(req);
-        }
+       
         public Item RecupererUn(int id)
         {
-            string sel = $"select i.id , i.nom as nomItem, i.description,i.dateSortie , i.cheminImage , t.nom as 'typeItem' , m.nom as 'manufacturier' from Items i " +
+            string sel = $"select i.id, , i.nom as nomItem, i.description,i.dateSortie , i.cheminImage , t.nom as 'typeItem' , m.nom as 'manufacturier' from Items i " +
                 $" INNER JOIN Manufacturiers as m on i.idManufacturier = m.id" +
                 $" INNER JOIN TypesItem as t on i.idTypeItem=t.id" +
                 $" WHERE i.id = {id};";
@@ -69,22 +65,55 @@ namespace LeCollectionneur.Modeles
         public void Supprimer(int id)
         {
             // Suppression de l'item en BD (utile pour l'admin)
-            string req = $"delete from ItemCollection Where idItem = {id}; delete from Items where ID = {id}";
+            string req = $" delete from Items where ID = {id}";
             MaBD.Commande(req);
         }
 
 
 
-        public void Ajouter(Item i)
+        public void Ajouter(Item i,Collection c)
         {
             string req = $"insert into Items" +
-                $" values(NULL," +
+                $" values(NULL,{c.Id},(SELECT id from Conditions WHERE nom='{i.Condition}')" +
                 $"'{i.Nom}'," +
                 (i.CheminImage is null ?"NULL," : $"'{i.CheminImage}',") +
                 $"(SELECT id from TypesItem WHERE nom='{i.Type}')," +
                 $"(SELECT id from Manufacturiers WHERE nom='{i.Manufacturier}')," +
                 $"'{i.Description}'," +
                 $"'{i.DateSortie.Year}-{i.DateSortie.Month}-{i.DateSortie.Day}');";
+            MaBD.Commande(req);
+        }
+
+        public ObservableCollection<string> RecupererListeConditions()
+        {
+            ObservableCollection<string> lstConditions = new ObservableCollection<string>();
+            string req = $"Select nom from Conditions";
+            DataSet res=MaBD.Selection(req);
+            DataTable tableRes = res.Tables[0];
+            foreach (DataRow Row in tableRes.Rows)
+            {
+                lstConditions.Add((string)Row["nom"]);
+            }
+            return lstConditions;
+        }
+
+        public ObservableCollection<string> RecupererListeTypes()
+        {
+            ObservableCollection<string> lstTypes = new ObservableCollection<string>();
+            string req = $"Select nom from TypesItem";
+            DataSet res = MaBD.Selection(req);
+            DataTable tableRes = res.Tables[0];
+            foreach (DataRow Row in tableRes.Rows)
+            {
+                lstTypes.Add((string)Row["nom"]);
+            }
+            return lstTypes;
+        }
+
+        public void TransfererItem(Collection cDestination, Item i)
+        {
+            // Transfert d'un item d'une collection à une autre en BD.
+            string req = $"UPDATE Items SET idCollection={cDestination.Id} WHERE id={i.Id}";
             MaBD.Commande(req);
         }
     }

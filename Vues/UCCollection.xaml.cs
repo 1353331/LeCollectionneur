@@ -1,4 +1,5 @@
 ﻿using LeCollectionneur.Modeles;
+using LeCollectionneur.VuesModeles;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,25 +23,13 @@ namespace LeCollectionneur.Vues
     /// </summary>
     public partial class UCCollection : UserControl
     {
-        private CollectionADO GestionCollections;
+        
         public UCCollection()
         {
             InitializeComponent();
-            
+            DataContext = new Collection_VM();
         }
 
-        private void verifierChiffre(object sender, TextChangedEventArgs e)
-        {
-            // Effacer les caractères qui ne seront pas des chiffres si la string n'est pas à 0 de longueur.
-            if(txtQuantiteItem.Text.Length>0)
-            {
-                if (txtQuantiteItem.Text[txtQuantiteItem.Text.Length - 1] < '0' || txtQuantiteItem.Text[txtQuantiteItem.Text.Length - 1] > '9')
-                {
-                    txtQuantiteItem.Text = txtQuantiteItem.Text.Remove(txtQuantiteItem.Text.Length - 1, 1);
-                    // Remettre l'insertion à la dernière position de la string.
-                    txtQuantiteItem.CaretIndex = txtQuantiteItem.Text.Length;
-                }
-            }
-        }
+        
     }
 }

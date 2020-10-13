@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LeCollectionneur"
         mc:Ignorable="d"
-        Title="Le Collectionneur" Height="450" Width="800">
+        Title="Le Collectionneur" Height="450" Width="1000">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="45"></RowDefinition>
@@ -18,13 +18,15 @@
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
             
             <Button Name="btnCollections" Grid.Column="0" Click="btnCollections_Click" Content="Collections"></Button>
             <Button Name="btnAnnonces" Grid.Column="1" Click="btnAnnonces_Click" Content="Annonces"></Button>
             <Button Name="btnPropositions" Grid.Column="2" Click="btnPropositions_Click" Content="Propositions"></Button>
             <Button Name="btnConversations" Grid.Column="3" Click="btnConversations_Click" Content="Conversations"></Button>
-            <Button Name="btnDeconnexion" Grid.Column="4" Click="btnDeconnexion_Click" Content="Déconnexion"></Button>
+            <Button Name="btnParametres" Grid.Column="4" Click="btnParametres_Click" Content="Paramètres"></Button>
+            <Button Name="btnDeconnexion" Grid.Column="5" Click="btnDeconnexion_Click" Content="Déconnexion"></Button>
         </Grid>
         
         <Border Grid.Row="0" VerticalAlignment="Bottom" BorderThickness="1" BorderBrush="Black"></Border>

@@ -37,14 +37,11 @@ namespace LeCollectionneur.Modeles
             if (!drItem.IsNull("cheminImage"))
             CheminImage = (String)drItem["cheminImage"];
             Description = (String)drItem["description"];
+            if (!drItem.IsNull("dateSortie"))
             DateSortie = (DateTime)drItem["dateSortie"];
             // Reste à get le Type, Condition et Manufacturier.
             Type = (String)drItem["typeItem"];
-            if (estDansCollection)
-            {
                 Condition = (String)drItem["condition"]; 
-                Quantite = (int)drItem["quantite"];
-            }
             
             
         }
