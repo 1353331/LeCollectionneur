@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LeCollectionneur.Modeles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,18 @@ namespace LeCollectionneur.Vues
         public Login()
         {
             InitializeComponent();
+        }
+
+        private void ButtonInscription(object sender, RoutedEventArgs e)
+        {
+            Inscription inscription = new Inscription();
+            inscription.ShowDialog();
+        }
+
+        private void btnConnectionProf_Click(object sender, RoutedEventArgs e)
+        {
+            UtilisateurADO temp = new UtilisateurADO();
+            temp.Connection("collectionneur1","collectionneur");
         }
     }
 }

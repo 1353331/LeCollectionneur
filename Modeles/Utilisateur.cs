@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LeCollectionneur.Modeles
 {
-    public class Utilisateur
+    class Utilisateur
     {
         #region Variable
         //Variable nécésaire pour le fonctionnement de l'application

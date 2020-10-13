@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LeCollectionneur.Modeles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,21 @@ namespace LeCollectionneur.Vues
         public Inscription()
         {
             InitializeComponent();
+        }
+
+        private void btnIncription_Click(object sender, RoutedEventArgs e)
+        {
+            UtilisateurADO user = new UtilisateurADO();
+            if (user.CreerCompte(tbNomUtilisateur.Text, tbMP.Text, tbMPC.Text, tbCourriel.Text))
+                this.Close();
+            else
+                MessageBox.Show("Erreur un champ est Invalide");
+
+        }
+
+        private void btnAnnuler_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }
