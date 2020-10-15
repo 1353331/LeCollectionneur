@@ -3,7 +3,6 @@ using LeCollectionneur.Outils;
 using LeCollectionneur.VuesModeles;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,22 +18,17 @@ using System.Windows.Shapes;
 namespace LeCollectionneur.Vues
 {
     /// <summary>
-    /// Logique d'interaction pour ModalAjoutCollection.xaml
+    /// Logique d'interaction pour ModalAjoutItemCollection.xaml
     /// </summary>
-    public partial class ModalAjoutCollection : Window, IFenetreFermeable
+    public partial class ModalAjoutItemCollection : Window, IFenetreFermeable
     {
-        CollectionADO gestionnaireCollections = new CollectionADO();
-        public Utilisateur UtilisateurConnecte { get; set; }
-        public ModalAjoutCollection()
+        
+        public ModalAjoutItemCollection(Collection CollectionItem)
         {
             InitializeComponent();
-            // L'utilisateur est passé en paramètre, on peut lui ajouter une collection.
-            
             this.ResizeMode = ResizeMode.NoResize;
-            DataContext = new AjoutCollection_VM();
-            
+            DataContext = new AjoutItemCollection_VM(CollectionItem);
         }
-
         //Implémentation de l'interface IFenetreFermeable, qui permet de fermer une fenêtre à partir du ViewModel et de respecter le modèle MVVM
         public void Fermer()
         {

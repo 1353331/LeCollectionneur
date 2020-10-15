@@ -78,34 +78,34 @@
             <Image Name="imgItem" Source="/images/noimage.png" Grid.Column="0" Grid.RowSpan="3" Stretch="Fill" Margin="10,10,5,10" />
             <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="5,5,5,0">
                 <Label>Nom:</Label>
-                <TextBox Text="{Binding ItemSelectionne.Nom}" Name="txtNomItem"  Height="23" Width="193" Margin="0,4"></TextBox>
+                <TextBox Text="{Binding Nom}" Name="txtNomItem"  Height="23" Width="193" Margin="0,4"></TextBox>
             </StackPanel>
             <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="2,5,5,0">
                 <Label>Condition:</Label>
-                <ComboBox ItemsSource="{Binding ConditionsPossibles}" SelectedValue="{Binding ItemSelectionne.Condition}"  Name="cboConditionItem" Height="23" Width="171" Margin="0,4" >
+                <ComboBox ItemsSource="{Binding ConditionsPossibles}" SelectedValue="{Binding Condition}"  Name="cboConditionItem" Height="23" Width="171" Margin="0,4" >
                 </ComboBox>
             </StackPanel>
             <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="5,5,5,0">
                 <Label>Type:</Label>
-                <ComboBox ItemsSource="{Binding TypesPossibles}" SelectedValue="{Binding ItemSelectionne.Type}"  Name="cboTypeItem" Height="23" Width="171" Margin="0,4" >
+                <ComboBox ItemsSource="{Binding TypesPossibles}" SelectedValue="{Binding Type}"  Name="cboTypeItem" Height="23" Width="171" Margin="0,4" >
                     </ComboBox>
             </StackPanel>
             <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="5,5,5,0">
                 <Label>Date de sortie:</Label>
-                <DatePicker SelectedDate="{Binding ItemSelectionne.DateSortie,Mode=TwoWay,TargetNullValue='Inconnue'}" Name="dateSortieItem"  Height="23" Width="193" Margin="0,4">
+                <DatePicker  SelectedDate="{Binding DateSortie,Mode=TwoWay}" Name="dateSortieItem"  Height="23" Width="193" Margin="0,4">
                 </DatePicker>
             </StackPanel>
             <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="5,5,5,0">
-                <Label>Manufacturier:</Label>
-                <TextBox Text="{Binding ItemSelectionne.Manufacturier}" Name="txtManufacturierItem"  Height="23" Width="193" Margin="0,4">
+                <Label>Producteur:</Label>
+                <TextBox Text="{Binding Manufacturier}" Name="txtManufacturierItem"  Height="23" Width="193" Margin="0,4">
                 </TextBox>
             </StackPanel>
 
             <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Orientation="Horizontal" Margin="5,5,5,0">
                 <Label>Description:</Label>
-                <TextBox Text="{Binding ItemSelectionne.Description}" Name="txtDescriptionItem"  Margin="10" TextWrapping="Wrap" AcceptsReturn="True" Width="278"/>
+                <TextBox Text="{Binding Description}" Name="txtDescriptionItem"  Margin="10" TextWrapping="Wrap" AcceptsReturn="True" Width="278"/>
             </StackPanel>
-            <Button Name="btnModifierItem"  Command="{Binding cmdModifierItem}" Grid.Row="7" Grid.ColumnSpan="2" Content="Modifier" Margin="87,5,51,7" />
+            <Button Name="btnModifierItem"  Command="{Binding cmdModifierItem}" Grid.Row="7" Grid.ColumnSpan="2" Content="Appliquer les modifications" Margin="87,5,51,7"  />
         </Grid>
         </GroupBox>
         <Button Name="btnSupprimerCollection"  Command="{Binding cmdSupprimerCollection}" Grid.Column="0" Grid.Row="1" Content="Supprimer" Margin="13,15,10,10"></Button>

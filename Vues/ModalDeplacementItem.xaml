@@ -1,0 +1,36 @@
+﻿<Window x:Class="LeCollectionneur.Vues.ModalDeplacementItem"
+        x:Name="ModalDeplacerItem"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LeCollectionneur.Vues"
+        mc:Ignorable="d"
+        Title="Déplacer un item" Height="450" Width="350">
+    <Grid>
+        <StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Item déplacé: "></Label>
+                <Label Content="{Binding ItemDeplace.Nom}" FontWeight="Bold"></Label>
+            </StackPanel>
+            <Label>Choisissez la collection où l'item sera déplacé</Label>
+        </StackPanel>
+        <ListView Name="lstCollections" SelectedItem="{Binding CollectionSelectionnee}"  ItemsSource="{Binding LstCollections}" Height="322" Width="275">
+            <ListView.View>
+                <GridView >
+                    <GridView.Columns>
+                        <GridViewColumn Header="Collection" DisplayMemberBinding="{Binding Nom}" Width="100" />
+                        <GridViewColumn Header="Création" DisplayMemberBinding="{Binding DateCreation, StringFormat=d}"  Width="60"  />
+                        <GridViewColumn Header="Nombre d'items" DisplayMemberBinding="{Binding ItemsCollection.Count}"  Width="90"  />
+                    </GridView.Columns>
+
+                </GridView>
+
+            </ListView.View>
+
+        </ListView>
+        <Button Name="btnAppliquer"  Command="{Binding cmdDeplacerItem}" CommandParameter="{Binding ElementName=ModalDeplacerItem}" Content="Ajouter" Margin="45,376,187,13" />
+        <Button Name="btnAnnuler"  Command="{Binding cmdAnnuler}" CommandParameter="{Binding ElementName=ModalDeplacerItem}" Content="Annuler" Margin="182,376,50,13" />
+
+    </Grid>
+</Window>

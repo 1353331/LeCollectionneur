@@ -25,7 +25,7 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 // Hardcode de l'utilisateur 1 pour l'instant.
-                _mesCollections = gestionnaireCollections.Recuperer(1);
+                _mesCollections = gestionnaireCollections.Recuperer(UtilisateurADO.utilisateur.Id);
                 OnPropertyChanged("MesCollections");
             }
         }
@@ -59,14 +59,76 @@ namespace LeCollectionneur.VuesModeles
             {
                 // Changer les champs de l'item sélectionné
                 _itemSelectionne = value;
-
+                if (_itemSelectionne is null)
+                    ViderChamps();
+                else
+                    RemplirChamps();
                 cmdSupprimerItem = new Commande(cmdSupprimer_Item,UnItemSelectionne);
-                 cmdDeplacerItem= new Commande(cmdSupprimer_Item, UnItemSelectionne);
+                 cmdDeplacerItem= new Commande(cmdDeplacer_Item, UnItemSelectionne);
                 cmdModifierItem = new Commande(cmdModifier_Item, UnItemSelectionne);
                 OnPropertyChanged("ItemSelectionne");
             }
         }
-
+        private string _nom;
+        public string Nom 
+        {
+            get { return _nom; }
+            set 
+            {
+                _nom = value;
+                OnPropertyChanged("Nom");
+            } 
+        }
+        private string _condition;
+        public string Condition
+        {
+            get { return _condition; }
+            set
+            {
+                _condition = value;
+                OnPropertyChanged("Condition");
+            }
+        }
+        private string _description;
+        public string Description
+        {
+            get { return _description; }
+            set
+            {
+                _description = value;
+                OnPropertyChanged("Description");
+            }
+        }
+        private string _type;
+        public string Type
+        {
+            get { return _type; }
+            set
+            {
+                _type = value;
+                OnPropertyChanged("Type");
+            }
+        }
+        private DateTime? _dateSortie;
+        public DateTime? DateSortie
+        {
+            get { return _dateSortie; }
+            set
+            {
+                _dateSortie = value;
+                OnPropertyChanged("DateSortie");
+            }
+        }
+        private string _manufacturier;
+        public string Manufacturier
+        {
+            get { return _manufacturier; }
+            set
+            {
+                _manufacturier = value;
+                OnPropertyChanged("Manufacturier");
+            }
+        }
         public ObservableCollection<string> ConditionsPossibles { get; set; }
         public ObservableCollection<string> TypesPossibles { get; set; }
 
@@ -98,7 +160,7 @@ namespace LeCollectionneur.VuesModeles
         {
             int avantModale = MesCollections.Count();
             // Ajouter_Collection permet de créer une nouvelle collection (ouvre un pop-up avec un champ nom et créer/annuler comme choix)
-            Window modale = new ModalAjoutCollection(new Utilisateur(1,"",""));
+            Window modale = new ModalAjoutCollection();
             
             modale.ShowDialog();
             initialisationEcran(false);
@@ -139,10 +201,13 @@ namespace LeCollectionneur.VuesModeles
         private void cmdSupprimer_Collection(object param)
         {
             //Supprimer_Collection permet de supprimer cette collection de l'utilisateur en question, cela entraine également la suppression des objets de la collection
-            // TODO: Pop-up de confirmation
-
-            gestionnaireCollections.Supprimer(CollectionSelectionnee.Id);
-            initialisationEcran(false);
+            MessageBoxResult resultat;
+            resultat=MessageBox.Show($"Voulez vous vraiment supprimer la collection: {CollectionSelectionnee.Nom}?\n Cela entrainera la suppression de ses {CollectionSelectionnee.ItemsCollection.Count} items. ", $"Attention", MessageBoxButton.YesNo);
+            if (resultat==MessageBoxResult.Yes)
+            {
+                gestionnaireCollections.Supprimer(CollectionSelectionnee.Id);
+                initialisationEcran(false);
+            }
         }
         // Item
         private ICommand _cmdAjouterItem;
@@ -160,8 +225,18 @@ namespace LeCollectionneur.VuesModeles
         }
         private void cmdAjouter_Item(object param)
         {
+            
             //Ajouter_Item permet d'ajouter un item à cette collection.
-            // Un pop-up est ouvert, on peut rechercher l'item, s'il n'existe pas, on l'ajoute en BD.
+            int avantModale = CollectionSelectionnee.ItemsCollection.Count;
+            int idCollection = CollectionSelectionnee.Id;
+            Window modale = new ModalAjoutItemCollection(CollectionSelectionnee);
+            modale.ShowDialog();
+            initialisationEcran(false);
+            
+            CollectionSelectionnee = ReselectionnerCollection(true,idCollection);
+            if (avantModale<CollectionSelectionnee.ItemsCollection.Count)
+                ItemSelectionne = CollectionSelectionnee.ItemsCollection[CollectionSelectionnee.ItemsCollection.Count - 1]; 
+           
         }
         private ICommand _cmdModifierItem;
         public ICommand cmdModifierItem
@@ -178,7 +253,25 @@ namespace LeCollectionneur.VuesModeles
         }
         private void cmdModifier_Item(object param)
         {
-            // cmdModifier_Item permet de modifier la quantite et la condition de l'item
+            // cmdModifier_Item permet de modifier les informations de l'ItemSelectionne
+            MessageBoxResult resultat = MessageBox.Show($"Appliquer les modifications à l'item: {ItemSelectionne.Nom}?", "Attention", MessageBoxButton.YesNo);
+            // TODO: Validation des entrées
+            if (resultat==MessageBoxResult.Yes)
+            {   
+                int index=CollectionSelectionnee.ItemsCollection.IndexOf(ItemSelectionne);
+                int idCollection = CollectionSelectionnee.Id;
+                ItemSelectionne.Nom = Nom;
+                ItemSelectionne.DateSortie = DateSortie.GetValueOrDefault();
+                ItemSelectionne.Type = Type;
+                ItemSelectionne.Condition = Condition;
+                ItemSelectionne.Description = Description;
+                ItemSelectionne.Manufacturier = Manufacturier;
+                gestionnaireItems.Modifier(ItemSelectionne);
+                initialisationEcran(false);
+                CollectionSelectionnee=ReselectionnerCollection(true,idCollection);
+                ItemSelectionne = CollectionSelectionnee.ItemsCollection[index];
+            }
+            RemplirChamps();
         }
         private ICommand _cmdDeplacerItem;
         public ICommand cmdDeplacerItem
@@ -196,6 +289,16 @@ namespace LeCollectionneur.VuesModeles
         private void cmdDeplacer_Item(object param)
         {
             // Deplacer_Item permet de changer l'item de Collection
+            if (MesCollections.Count>1)
+            {
+                Window modale = new ModalDeplacementItem(gestionnaireCollections.RecupererToutesSaufUne(UtilisateurADO.utilisateur.Id, CollectionSelectionnee.Id),ItemSelectionne);
+                modale.ShowDialog();
+                initialisationEcran(false);
+            }
+            else
+            {
+                MessageBox.Show("Vous devez avoir plus d'une collection pour déplacer un item.");
+            }
         }
         private ICommand _cmdSupprimerItem;
         public ICommand cmdSupprimerItem
@@ -212,12 +315,15 @@ namespace LeCollectionneur.VuesModeles
         }
         private void cmdSupprimer_Item(object param)
         {
-            // Supprimer_Item enlève l'Item de la collection courante.
-            gestionnaireItems.Supprimer(ItemSelectionne.Id);
-            CollectionSelectionnee.ItemsCollection.Remove(ItemSelectionne);
-            ItemSelectionne = null;
-            //initialisationEcran(false); Rend la collection Selectionnee null.
-            CollectionSelectionnee = ReselectionnerCollection();
+            MessageBoxResult resultat = MessageBox.Show($"Voulez vous vraiment supprimer l'item: {ItemSelectionne.Nom}?", "Attention", MessageBoxButton.YesNo);
+            if (resultat==MessageBoxResult.Yes)
+            {
+                // Supprimer_Item enlève l'Item de la collection courante.
+                gestionnaireItems.Supprimer(ItemSelectionne.Id);
+                CollectionSelectionnee.ItemsCollection.Remove(ItemSelectionne);
+                ItemSelectionne = null;
+                CollectionSelectionnee = ReselectionnerCollection();
+             }
             
 
         }
@@ -243,8 +349,8 @@ namespace LeCollectionneur.VuesModeles
             // Récupérer tous les états possibles d'items.
             if (estPremierChargement)
             {
-                ConditionsPossibles = gestionnaireItems.RecupererListeConditions();
-                TypesPossibles = gestionnaireItems.RecupererListeTypes();
+                ConditionsPossibles = gestionnaireItems.ConditionsPossibles;
+                TypesPossibles = gestionnaireItems.TypesPossibles;
             }
             
         }
@@ -260,14 +366,43 @@ namespace LeCollectionneur.VuesModeles
             return !(CollectionSelectionnee is null);
         }
 
-        public Collection ReselectionnerCollection()
+        public Collection ReselectionnerCollection(bool reinitialisationEcran=false, int? id=null)
         {
             foreach (Collection c in MesCollections)
             {
-                if (c.Id == CollectionSelectionnee.Id)
-                    return c;
+                if (!reinitialisationEcran)
+                {
+                    if (c.Id == CollectionSelectionnee.Id)
+                        return c;
+                }
+                else
+                {
+                     if (c.Id == id)
+                         return c;
+                }
+                       
             }
             return null;
+        }
+
+        private void ViderChamps()
+        {
+            Nom = null;
+            DateSortie = null;
+            Manufacturier = null;
+            Condition = null;
+            Type = null;
+            Description = null;
+        }
+
+        private void RemplirChamps()
+        {
+            Nom = ItemSelectionne.Nom;
+            DateSortie = ItemSelectionne.DateSortie;
+            Manufacturier = ItemSelectionne.Manufacturier;
+            Condition = ItemSelectionne.Condition;
+            Type = ItemSelectionne.Type;
+            Description = ItemSelectionne.Description;
         }
         #endregion
     }

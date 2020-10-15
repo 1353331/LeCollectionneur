@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace LeCollectionneur.Modeles
 {
@@ -29,7 +30,19 @@ namespace LeCollectionneur.Modeles
             }
             return lesCollections;
         }
+        public ObservableCollection<Collection> RecupererToutesSaufUne(int idUtilisateur,int idPasRecupere)
+        {
+            ObservableCollection<Collection> lesCollections = new ObservableCollection<Collection>();
+            string sel = $"select * from Collections where idUtilisateur = {idUtilisateur} AND NOT id={idPasRecupere}";
+            DataSet SetCollection = MaBD.Selection(sel);
+            DataTable TableCollection = SetCollection.Tables[0];
 
+            foreach (DataRow RowCollection in TableCollection.Rows)
+            {
+                lesCollections.Add(new Collection(RowCollection));
+            }
+            return lesCollections;
+        }
         public void Modifier(Collection c)
         {
             string req = $"update Collections set Nom = {c.Nom} where id = {c.Id}";
@@ -48,7 +61,16 @@ namespace LeCollectionneur.Modeles
         public void Supprimer(int id)
         {
             string req = $"delete from Items Where idCollection ={id}; delete from Collections where ID = " + id;
-            MaBD.Commande(req);
+            try
+            {
+                MaBD.Commande(req);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Vous ne pouvez pas supprimer cette collection car au moins 1 item de celle-ci est inclu dans une annonce ou une proposition.", "Attention");
+            }
+            
+            
         }
 
        

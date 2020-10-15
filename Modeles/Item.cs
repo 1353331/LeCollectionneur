@@ -13,12 +13,12 @@ namespace LeCollectionneur.Modeles
         #region Propriétés
         public int Id { get; set; }
         public string Nom { get; set; }
-        public DateTime DateSortie { get; set; }
+        public DateTime? DateSortie { get; set; }
         public String CheminImage { get; set; } 
         public string Type { get; set; }
         public string Condition { get; set; }
         public string Manufacturier { get; set; }
-        public int Quantite { get; set; }
+        //public int Quantite { get; set; }
         public string Description { get; set; }
         #endregion
 
@@ -33,6 +33,7 @@ namespace LeCollectionneur.Modeles
             // Le DataRow contient * de Item et * de ItemCollection,Manufacturier,TypeItem,Condition.
             Id = (int)drItem["id"];
             Nom = (String)drItem["nomItem"];
+            if (!drItem.IsNull("Manufacturier"))
            Manufacturier = (String)drItem["manufacturier"];
             if (!drItem.IsNull("cheminImage"))
             CheminImage = (String)drItem["cheminImage"];

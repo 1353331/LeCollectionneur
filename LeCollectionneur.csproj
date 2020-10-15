@@ -117,11 +117,16 @@
     <Compile Include="Modeles\UtilisateurADO.cs" />
     <Compile Include="Outils\BdBase.cs" />
     <Compile Include="Outils\Commande.cs" />
+    <Compile Include="Outils\Fichier.cs" />
     <Compile Include="Outils\Interfaces\IFenetreFermeable.cs" />
     <Compile Include="Outils\Interfaces\IOuvreFenetreNouvellePropositionModalVM.cs" />
+    <Compile Include="Outils\Validateur.cs" />
+    <Compile Include="VuesModeles\AjoutCollection_VM.cs" />
+    <Compile Include="VuesModeles\AjoutItemCollection_VM.cs" />
     <Compile Include="VuesModeles\Annonce_VM.cs" />
     <Compile Include="VuesModeles\Collection_VM.cs" />
     <Compile Include="VuesModeles\Conversation_VM.cs" />
+    <Compile Include="VuesModeles\DeplacementItem_VM.cs" />
     <Compile Include="VuesModeles\ModalNouvelleProposition_VM.cs" />
     <Compile Include="VuesModeles\Proposition_VM.cs" />
     <Compile Include="Vues\ajouterConversation.xaml.cs">
@@ -141,6 +146,12 @@
     </Compile>
     <Compile Include="Vues\ModalAjoutCollection.xaml.cs">
       <DependentUpon>ModalAjoutCollection.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vues\ModalAjoutItemCollection.xaml.cs">
+      <DependentUpon>ModalAjoutItemCollection.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vues\ModalDeplacementItem.xaml.cs">
+      <DependentUpon>ModalDeplacementItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Vues\ModalNouvelleProposition.xaml.cs">
       <DependentUpon>ModalNouvelleProposition.xaml</DependentUpon>
@@ -193,6 +204,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Vues\ModalAjoutCollection.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Vues\ModalAjoutItemCollection.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Vues\ModalDeplacementItem.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

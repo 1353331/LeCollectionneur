@@ -86,7 +86,8 @@ namespace LeCollectionneur.Outils
             return nbResultat;
         }
 
-      public int CommandeCreationAvecRetourId(string requete)
+
+	  public int CommandeCreationAvecRetourId(string requete)
       {
          // Pour que le retour d'ID fonctionne, il faut ajouter la commande SELECT LAST_INSERT_ID(); à la fin de la requête
          // Ex: 
@@ -118,8 +119,7 @@ namespace LeCollectionneur.Outils
 
          return idElementInsere;
       }
-
-      private bool Ouvrir()
+        private bool Ouvrir()
         {
             try
             {

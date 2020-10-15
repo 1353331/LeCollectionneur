@@ -19,23 +19,17 @@ using System.Windows.Shapes;
 namespace LeCollectionneur.Vues
 {
     /// <summary>
-    /// Logique d'interaction pour ModalAjoutCollection.xaml
+    /// Logique d'interaction pour ModalDeplacementItem.xaml
     /// </summary>
-    public partial class ModalAjoutCollection : Window, IFenetreFermeable
+    public partial class ModalDeplacementItem : Window, IFenetreFermeable
     {
-        CollectionADO gestionnaireCollections = new CollectionADO();
-        public Utilisateur UtilisateurConnecte { get; set; }
-        public ModalAjoutCollection()
+        public ModalDeplacementItem(ObservableCollection<Collection> CollectionsDisponibles, Item itemADeplacer)
         {
             InitializeComponent();
-            // L'utilisateur est passé en paramètre, on peut lui ajouter une collection.
-            
             this.ResizeMode = ResizeMode.NoResize;
-            DataContext = new AjoutCollection_VM();
-            
+            DataContext = new DeplacementItem_VM(CollectionsDisponibles,itemADeplacer);
         }
 
-        //Implémentation de l'interface IFenetreFermeable, qui permet de fermer une fenêtre à partir du ViewModel et de respecter le modèle MVVM
         public void Fermer()
         {
             this.Close();
