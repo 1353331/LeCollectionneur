@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using LeCollectionneur.Modeles;
 
-namespace LeCollectionneur.Outils
+namespace LeCollectionneur.Outils.Messages
 {
-	public interface IOuvreFenetreNouvellePropositionModalVM
+	public class EnvoyerItemMessage
 	{
-		void OuvrirModal(Annonce annonce);	
+		public Item Item { get; set; }
 	}
 }

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace LeCollectionneur.Outils.Interfaces
 {
-	public interface IFenetreFermeable
+	public interface IOuvreModal
 	{
-		void Fermer();
+		void OuvrirModal();
 	}
 }

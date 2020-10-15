@@ -38,6 +38,9 @@
     <Reference Include="BouncyCastle.Crypto, Version=1.8.3.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
       <HintPath>packages\BouncyCastle.1.8.3.1\lib\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
+    <Reference Include="CommonServiceLocator, Version=2.0.4.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
+      <HintPath>packages\CommonServiceLocator.2.0.4\lib\net47\CommonServiceLocator.dll</HintPath>
+    </Reference>
     <Reference Include="Google.Protobuf, Version=3.6.1.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <HintPath>packages\Google.Protobuf.3.6.1\lib\net45\Google.Protobuf.dll</HintPath>
     </Reference>
@@ -52,6 +55,12 @@
     </Reference>
     <Reference Include="MySql.Data, Version=8.0.21.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <HintPath>packages\MySql.Data.8.0.21\lib\net452\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Prism, Version=7.2.0.1422, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
+      <HintPath>packages\Prism.Core.7.2.0.1422\lib\net45\Prism.dll</HintPath>
+    </Reference>
+    <Reference Include="Prism.Wpf, Version=7.2.0.1422, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
+      <HintPath>packages\Prism.Wpf.7.2.0.1422\lib\net45\Prism.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="Renci.SshNet, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
       <HintPath>packages\SSH.NET.2016.1.0\lib\net40\Renci.SshNet.dll</HintPath>
@@ -79,6 +88,12 @@
       <HintPath>packages\System.Runtime.CompilerServices.Unsafe.4.6.0\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Transactions" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Prism.Wpf.7.2.0.1422\lib\net45\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -119,7 +134,10 @@
     <Compile Include="Outils\Commande.cs" />
     <Compile Include="Outils\Fichier.cs" />
     <Compile Include="Outils\Interfaces\IFenetreFermeable.cs" />
-    <Compile Include="Outils\Interfaces\IOuvreFenetreNouvellePropositionModalVM.cs" />
+    <Compile Include="Outils\Interfaces\IOuvreModal.cs" />
+    <Compile Include="Outils\Interfaces\IOuvreModalAvecParametre.cs" />
+    <Compile Include="Outils\Messages\EnvoyerItemMessage.cs" />
+    <Compile Include="Outils\Messages\EvenementSysteme.cs" />
     <Compile Include="Outils\Validateur.cs" />
     <Compile Include="VuesModeles\AjoutCollection_VM.cs" />
     <Compile Include="VuesModeles\AjoutItemCollection_VM.cs" />
@@ -127,6 +145,7 @@
     <Compile Include="VuesModeles\Collection_VM.cs" />
     <Compile Include="VuesModeles\Conversation_VM.cs" />
     <Compile Include="VuesModeles\DeplacementItem_VM.cs" />
+    <Compile Include="VuesModeles\ModalAjoutItem_VM.cs" />
     <Compile Include="VuesModeles\ModalNouvelleProposition_VM.cs" />
     <Compile Include="VuesModeles\Proposition_VM.cs" />
     <Compile Include="Vues\ajouterConversation.xaml.cs">
@@ -149,6 +168,9 @@
     </Compile>
     <Compile Include="Vues\ModalAjoutItemCollection.xaml.cs">
       <DependentUpon>ModalAjoutItemCollection.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vues\ModalAjoutItemProposition.xaml.cs">
+      <DependentUpon>ModalAjoutItemProposition.xaml</DependentUpon>
     </Compile>
     <Compile Include="Vues\ModalDeplacementItem.xaml.cs">
       <DependentUpon>ModalDeplacementItem.xaml</DependentUpon>
@@ -208,6 +230,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Vues\ModalAjoutItemCollection.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Vues\ModalAjoutItemProposition.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

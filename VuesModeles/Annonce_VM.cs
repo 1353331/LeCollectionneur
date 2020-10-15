@@ -1,5 +1,6 @@
 ﻿using LeCollectionneur.Modeles;
 using LeCollectionneur.Outils;
+using LeCollectionneur.Outils.Interfaces;
 using LeCollectionneur.Vues;
 using System;
 using System.Collections.Generic;
@@ -322,7 +323,7 @@ namespace LeCollectionneur.VuesModeles
         private void cmdProposer(object param)
         {
             //Pour obtenir l'interface de la fenêtre, il faut la passer en paramètre lors de l'envoi de la commande (Voir le XAML du bouton, CommandParameter={...})
-            IOuvreFenetreNouvellePropositionModalVM modal = param as IOuvreFenetreNouvellePropositionModalVM;
+            IOuvreModalAvecParametre<Annonce> modal = param as IOuvreModalAvecParametre<Annonce>;
             if (modal != null)
             {
                modal.OuvrirModal(AnnonceSelectionnee);

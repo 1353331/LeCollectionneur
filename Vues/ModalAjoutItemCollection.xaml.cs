@@ -1,5 +1,6 @@
 ﻿using LeCollectionneur.Modeles;
 using LeCollectionneur.Outils;
+using LeCollectionneur.Outils.Interfaces;
 using LeCollectionneur.VuesModeles;
 using System;
 using System.Collections.Generic;

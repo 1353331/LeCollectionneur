@@ -1,5 +1,6 @@
 ﻿using LeCollectionneur.Modeles;
 using LeCollectionneur.Outils;
+using LeCollectionneur.Outils.Interfaces;
 using LeCollectionneur.VuesModeles;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace LeCollectionneur.Vues
     /// <summary>
     /// Logique d'interaction pour UCAnnonce.xaml
     /// </summary>
-    public partial class UCAnnonce : UserControl, IOuvreFenetreNouvellePropositionModalVM
+    public partial class UCAnnonce : UserControl, IOuvreModalAvecParametre<Annonce>
    {
         public UCAnnonce()
         {

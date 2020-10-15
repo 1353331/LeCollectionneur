@@ -13,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using LeCollectionneur.Modeles;
-using LeCollectionneur.Outils;
+using LeCollectionneur.Outils.Interfaces;
 using LeCollectionneur.VuesModeles;
 
 namespace LeCollectionneur.Vues
@@ -21,7 +21,7 @@ namespace LeCollectionneur.Vues
 	/// <summary>
 	/// Logique d'interaction pour ModalNouvelleProposition.xaml
 	/// </summary>
-	public partial class ModalNouvelleProposition : Window, IFenetreFermeable
+	public partial class ModalNouvelleProposition : Window, IFenetreFermeable, IOuvreModal
 	{
 		private static readonly Regex _regexMontant = new Regex("[^0-9.]+");
 		private static bool texteMontantCorrect(string texte)
@@ -45,6 +45,13 @@ namespace LeCollectionneur.Vues
 		private void tbxMontantProposition_PreviewTextInput(object sender, TextCompositionEventArgs e)
 		{
 			e.Handled = !texteMontantCorrect(e.Text);
+		}
+
+		public void OuvrirModal()
+		{
+			ModalAjoutItemProposition viewProp = new ModalAjoutItemProposition();
+			viewProp.Owner = Window.GetWindow(this);
+			viewProp.ShowDialog();
 		}
 	}
 }

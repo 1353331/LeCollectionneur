@@ -9,6 +9,8 @@ using System.Windows;
 using System.Windows.Input;
 using LeCollectionneur.Modeles;
 using LeCollectionneur.Outils;
+using LeCollectionneur.Outils.Interfaces;
+using LeCollectionneur.Outils.Messages;
 
 namespace LeCollectionneur.VuesModeles
 {
@@ -82,13 +84,14 @@ namespace LeCollectionneur.VuesModeles
 			nouvelleProposition = new Proposition();
 			nouvelleProposition.AnnonceLiee = annonce;
 			nouvelleProposition.Proposeur = UtilisateurADO.utilisateur;
-			// Voir comment on va passer les informations de l'utilisateur au travers du projet
-			//nouvelleProposition.Proposeur = Utilisateur;
 
 			ItemsProposition = new ObservableCollection<Item>();
 		
 			MontantDemande = annonce.Montant;
 			ItemsAnnonce = annonce.ListeItems;
+
+			//Abonnement à l'évènement Ajout d'un item à une proposition
+			EvenementSysteme.Abonnement<EnvoyerItemMessage>(ajouterItemMessage);
 		}
 
 		#region Implémentation Commandes
@@ -137,18 +140,8 @@ namespace LeCollectionneur.VuesModeles
 
 		private void cmdAjouterItem(object param)
 		{
-			//TODO: Modifier pour ajouter un Item à partir d'une fenêtre modale
-			ItemADO itemADO = new ItemADO();
-			Item item = itemADO.RecupererUn(8);
-
-			if (!itemEstDansProposition(item))
-			{
-				ItemsProposition.Add(item);
-			}
-			else
-			{
-				MessageBox.Show($"Cet objet existe déjà dans la proposition.", "Attention", MessageBoxButton.OK, MessageBoxImage.Warning);
-			}
+			IOuvreModal fenetre = param as IOuvreModal;
+			fenetre.OuvrirModal();
 		}
 
 		private void cmdSupprimerItem(object param)
@@ -178,6 +171,19 @@ namespace LeCollectionneur.VuesModeles
 
 			return false;
 		}
+
+		private void ajouterItemMessage(EnvoyerItemMessage msg)
+		{
+			if (!itemEstDansProposition(msg.Item))
+			{
+				ItemsProposition.Add(msg.Item);
+			}
+			else
+			{
+				MessageBox.Show($"Cet objet existe déjà dans la proposition.", "Attention", MessageBoxButton.OK, MessageBoxImage.Warning);
+			}
+		}
+
 		public event PropertyChangedEventHandler PropertyChanged;
 		private void OnPropertyChanged(string nomPropriete)
 		{
