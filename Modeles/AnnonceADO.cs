@@ -48,7 +48,7 @@ namespace LeCollectionneur.Modeles
         public ObservableCollection<string> RecupererTypes()
         {
             ObservableCollection<string> ListeTypes = new ObservableCollection<string>();
-            string sel = "SELECT DISTINCT ta.Nom as TypeAnnonce from annonces a LEFT JOIN typesannonce ta ON a.idTypeAnnonce = ta.id";
+            string sel = "SELECT Nom as TypeAnnonce from typesannonce";
             DataSet SetType = MaBD.Selection(sel);
             DataTable TableType = SetType.Tables[0];
 

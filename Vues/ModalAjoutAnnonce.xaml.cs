@@ -40,12 +40,10 @@ namespace LeCollectionneur.Vues
         {
             Annonce NeoAnnonce = new Annonce();
             NeoAnnonce.Titre = txtTitre.Text;
-            //TODO changer l'id de l'annonceur en fonction de celui qui est connecté
-            NeoAnnonce.Annonceur.Id = 1;
             NeoAnnonce.Montant = Convert.ToDouble(txtMontant.Text);
-            NeoAnnonce.DatePublication = new DateTime().Date;
+            NeoAnnonce.DatePublication = DateTime.Now.Date;
             NeoAnnonce.Type = cmbType.Text;
-
+            NeoAnnonce.Description = txtDescription.Text;
             AnnonceADO annonceADO = new AnnonceADO();
             annonceADO.Ajouter(NeoAnnonce);
 

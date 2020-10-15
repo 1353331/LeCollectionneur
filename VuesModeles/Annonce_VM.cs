@@ -17,7 +17,7 @@ namespace LeCollectionneur.VuesModeles
 {
     class Annonce_VM : INotifyPropertyChanged
     {
-        private const string FILTRE_NULL = "Aucun";
+        private const string FILTRE_NULL = "Aucune sélection";
 
         public ICommand cmdAjouter_Annonce { get; set; }
         public ICommand cmdFiltrer_Annonce { get; set; }
@@ -157,6 +157,72 @@ namespace LeCollectionneur.VuesModeles
                 OnPropertyChanged("TypeAnnonceFiltre");
             }
         }
+
+        private DateTime _dateDebutFiltre;
+        public DateTime DateDebutFiltre
+        {
+            get { return _dateDebutFiltre; }
+            set
+            {
+                _dateDebutFiltre = value;
+                OnPropertyChanged("DateDebutFiltre");
+            }
+        }
+
+        private DateTime _dateFinFiltre;
+        public DateTime DateFinFiltre
+        {
+            get { return _dateFinFiltre; }
+            set
+            {
+                _dateFinFiltre = value;
+                OnPropertyChanged("DateFinFiltre");
+            }
+        }
+
+        private string _rechercheTextuelle;
+        public string RechercheTextuelle
+        {
+            get { return _rechercheTextuelle; }
+            set
+            {
+                _rechercheTextuelle = value;
+                OnPropertyChanged("RechercheTextuel");
+            }
+        }
+
+        private bool _filtrerParNomAnnonceur;
+        public bool FiltrerParNomAnnonceur
+        {
+            get { return _filtrerParNomAnnonceur; }
+            set
+            {
+                _filtrerParNomAnnonceur = value;
+                OnPropertyChanged("FiltrerParNomAnnonceur");
+            }
+        }
+
+        private bool _filtrerParNomItem;
+        public bool FiltrerParNomItem
+        {
+            get { return _filtrerParNomItem; }
+            set
+            {
+                _filtrerParNomItem = value;
+                OnPropertyChanged("FiltrerParNomItem");
+            }
+        }
+
+        private bool _filtrerParTitreAnnonce;
+        public bool FiltrerParTitreAnnonce
+        {
+            get { return _filtrerParTitreAnnonce; }
+            set
+            {
+                _filtrerParTitreAnnonce = value;
+                OnPropertyChanged("FiltrerParTitreAnnonce");
+            }
+        }
         #endregion
 
         #region Méthodes
@@ -171,7 +237,8 @@ namespace LeCollectionneur.VuesModeles
             LesTypesAnnonce = new ObservableCollection<string>();
             LesTypesAnnonce = annonceADO.RecupererTypes();
             LesTypesAnnonce.Add(FILTRE_NULL);
-
+            DateDebutFiltre = new DateTime(0001, 01, 01);
+            DateFinFiltre = DateTime.Now;
         }
 
         private void cmdAjouter(object param)
@@ -187,11 +254,69 @@ namespace LeCollectionneur.VuesModeles
         {
             LesAnnonces = annonceADO.Recuperer();
 
-            if(TypeAnnonceFiltre == FILTRE_NULL)
-                return;
 
+            if (TypeAnnonceFiltre != null && TypeAnnonceFiltre != FILTRE_NULL)
+                LesAnnonces = FiltrerParTypeAnnonce();
+
+            if (DateDebutFiltre != null && DateFinFiltre != null)
+                LesAnnonces = FiltrerParDate();
+
+            if (RechercheTextuelle != null && RechercheTextuelle != "" && FiltrerParNomAnnonceur)
+                LesAnnonces = FiltrerParRechercheTextuelleAnnonceur();
+
+            if (RechercheTextuelle != null && RechercheTextuelle != "" && FiltrerParTitreAnnonce)
+                LesAnnonces = FiltrerParRechercheTextuelleTitreAnnonce();
+        }
+
+        private ObservableCollection<Annonce> FiltrerParTypeAnnonce()
+        {
             ObservableCollection<Annonce> LesAnnoncesFiltrees = new ObservableCollection<Annonce>(LesAnnonces.Where(a => a.Type == TypeAnnonceFiltre).ToList());
-            LesAnnonces = LesAnnoncesFiltrees;
+            return LesAnnoncesFiltrees;
+        }
+
+        private ObservableCollection<Annonce> FiltrerParDate()
+        {
+            ObservableCollection<Annonce> LesAnnoncesFiltrees = new ObservableCollection<Annonce>(LesAnnonces.Where(a => a.DatePublication >= DateDebutFiltre && a.DatePublication <= DateFinFiltre).ToList());
+            return LesAnnoncesFiltrees;
+        }
+
+        private ObservableCollection<Annonce> FiltrerParRechercheTextuelleAnnonceur()
+        {
+            ObservableCollection<Annonce> LesAnnoncesFiltrees = new ObservableCollection<Annonce>(LesAnnonces.Where(a => FiltrerSelonChoix(a)).ToList());
+            return LesAnnoncesFiltrees;
+        }
+
+        private bool FiltrerSelonChoix(Annonce a)
+        {
+            if (FiltrerParNomAnnonceur)
+            {
+                if(a.Annonceur.NomUtilisateur.Contains(RechercheTextuelle) ||
+                   a.Annonceur.NomUtilisateur.StartsWith(RechercheTextuelle, System.StringComparison.CurrentCultureIgnoreCase) ||
+                   a.Annonceur.NomUtilisateur.EndsWith(RechercheTextuelle, System.StringComparison.CurrentCultureIgnoreCase))
+                {
+                    return true;
+                }
+            }
+            if (FiltrerParTitreAnnonce)
+            {
+                if (a.Titre.Contains(RechercheTextuelle) ||
+                    a.Annonceur.NomUtilisateur.StartsWith(RechercheTextuelle, System.StringComparison.CurrentCultureIgnoreCase) ||
+                    a.Annonceur.NomUtilisateur.EndsWith(RechercheTextuelle, System.StringComparison.CurrentCultureIgnoreCase))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private ObservableCollection<Annonce> FiltrerParRechercheTextuelleTitreAnnonce()
+        {
+            ObservableCollection<Annonce> LesAnnoncesFiltrees = new ObservableCollection<Annonce>(LesAnnonces.Where(a =>
+                a.Titre.Contains(RechercheTextuelle) ||
+                a.Annonceur.NomUtilisateur.StartsWith(RechercheTextuelle, System.StringComparison.CurrentCultureIgnoreCase) ||
+                a.Annonceur.NomUtilisateur.EndsWith(RechercheTextuelle, System.StringComparison.CurrentCultureIgnoreCase)
+            ).ToList());
+            return LesAnnoncesFiltrees;
         }
 
         private void cmdProposer(object param)

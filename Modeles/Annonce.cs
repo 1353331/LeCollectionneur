@@ -24,8 +24,9 @@ namespace LeCollectionneur.Modeles
         #region Constructeur
         public Annonce()
         {
+            UtilisateurADO UtilisateurConnecte = new UtilisateurADO();
             ListeItems = new ObservableCollection<Item>();
-            Annonceur = new Utilisateur();
+            Annonceur = UtilisateurConnecte.RetourUtilisateurActif();
         }
 
         public Annonce(DataRow dr)
@@ -33,7 +34,7 @@ namespace LeCollectionneur.Modeles
             UtilisateurADO ud = new UtilisateurADO();
             
             Id = (int)dr["Id"];
-            //Annonceur = ud.RecupererUn((int)dr["IdUtilisateur"]);
+            Annonceur = ud.RechercherUtilisateurById((int)dr["IdUtilisateur"]);
             Titre = (string)dr["Nom"];
             DatePublication = (DateTime)dr["Date"];
             Type = (string)dr["typeAnnonce"];

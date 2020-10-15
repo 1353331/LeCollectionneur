@@ -34,12 +34,12 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Recherche textuel-->
-                <TextBox Grid.ColumnSpan="2" VerticalAlignment="Center" Margin="0,0,8,0"></TextBox>
+                <TextBox Grid.ColumnSpan="2" VerticalAlignment="Center" Margin="0,0,8,0" Text="{Binding RechercheTextuelle}"></TextBox>
                 <Button Content="Rechercher" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Center" Command="{Binding cmdFiltrer_Annonce}"></Button>
 
                 <!-- Checkbox pour filtre de recherche textuel-->
-                <CheckBox Grid.Row="1" VerticalAlignment="Center">Titre</CheckBox>
-                <CheckBox Grid.Row="1" VerticalAlignment="Center" Grid.Column="1">Annonceur</CheckBox>
+                <CheckBox Grid.Row="1" VerticalAlignment="Center" IsChecked="{Binding Path=FiltrerParTitreAnnonce, Mode=TwoWay}">Titre</CheckBox>
+                <CheckBox Grid.Row="1" VerticalAlignment="Center" Grid.Column="1" IsChecked="{Binding Path=FiltrerParNomAnnonceur, Mode=TwoWay}">Annonceur</CheckBox>
                 <CheckBox Grid.Row="1" VerticalAlignment="Center" Grid.Column="2" Grid.ColumnSpan="2">Items</CheckBox>
             </Grid>
         </GroupBox>
@@ -68,10 +68,10 @@
 
                 <!-- Recherche par dates-->
                 <Label Content="Date entre" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center"></Label>
-                <DatePicker Grid.Row="0" Grid.Column="3"  VerticalAlignment="Center"></DatePicker>
+                <DatePicker Grid.Row="0" Grid.Column="3"  VerticalAlignment="Center" SelectedDate="{Binding Path=DateDebutFiltre}"></DatePicker>
 
                 <Label Content="et" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right"  VerticalAlignment="Center"></Label>
-                <DatePicker Grid.Row="1" Grid.Column="3"  VerticalAlignment="Center"></DatePicker>
+                <DatePicker Grid.Row="1" Grid.Column="3"  VerticalAlignment="Center" SelectedDate="{Binding Path=DateFinFiltre}"></DatePicker>
             </Grid>
         </GroupBox>
 
