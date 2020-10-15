@@ -15,7 +15,7 @@ namespace LeCollectionneur.Modeles
         public int Id { get; set; }
         public Utilisateur UserActif;
         public Utilisateur UserAutre;
-
+        public string t = "rter";
         public List<Message> ListMessage{ get; set; }
         #endregion
 

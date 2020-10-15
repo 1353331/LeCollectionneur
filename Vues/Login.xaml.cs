@@ -37,5 +37,15 @@ namespace LeCollectionneur.Vues
             temp.Connection("collectionneur1","collectionneur");
             this.Close();
         }
+
+        private void btnConnection_Click(object sender, RoutedEventArgs e)
+        {
+            UtilisateurADO temp = new UtilisateurADO();
+            if (temp.Connection(User.Text, MDP.Text))
+                this.Close();
+            else
+                MessageBox.Show("Champs invalide");
+
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using LeCollectionneur.Outils;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -84,17 +85,30 @@ namespace LeCollectionneur.Modeles
             GetMessages();
         }
 
-        public List<Conversation> RecupererConversationUtilisateur()
+        public List<Conversation> RecupererConversationUtilisateurList()
         {
             List<Conversation> ListConversation = new List<Conversation>();
             
-            string req = "SELECT * FROM  conversations WHERE idUtilisateur1 = "+ UtilisateurADO.utilisateur.Id+ "OR idUtilisateur2=" + UtilisateurADO.utilisateur.Id;
+            string req = "SELECT * FROM  conversations WHERE idUtilisateur1 = "+ UtilisateurADO.utilisateur.Id+ " OR idUtilisateur2=" + UtilisateurADO.utilisateur.Id;
             
             DataSet conversation = BD.Selection(req);
             for (int i = 0; i < conversation.Tables[0].Rows.Count; i++)
             {
                 ListConversation.Add(new Conversation(conversation));
             }           
+            return ListConversation;
+        }
+        public ObservableCollection<Conversation> RecupererConversationUtilisateur()
+        {
+            ObservableCollection<Conversation> ListConversation = new ObservableCollection<Conversation>();
+
+            string req = "SELECT * FROM  conversations WHERE idUtilisateur1 = " + UtilisateurADO.utilisateur.Id + " OR idUtilisateur2 = " + UtilisateurADO.utilisateur.Id;
+            
+            DataSet conversation = BD.Selection(req);
+            for (int i = 0; i < conversation.Tables[0].Rows.Count; i++)
+            {
+                ListConversation.Add(new Conversation(conversation));
+            }
             return ListConversation;
         }
     }

@@ -22,18 +22,18 @@ namespace LeCollectionneur.Modeles
         {
             // On recherche les Items selon la Collection entrée.
             ObservableCollection<Item> lesItems = new ObservableCollection<Item>();
-            string sel = $"select i.id , i.nom as nomItem, i.description,i.dateSortie , i.cheminImage  , c.nom as 'condition' , t.nom as 'typeItem' , m.nom as 'manufacturier' from Items i " +
-                $" INNER JOIN Manufacturiers as m on i.idManufacturier = m.id" +
-                $" INNER JOIN Conditions as c on i.idCondition = c.id" +
-                $" INNER JOIN TypesItem as t on i.idTypeItem=t.id" +
-                $" WHERE i.idCollection = {idCollection};";
-            DataSet SetItem = MaBD.Selection(sel);
-            DataTable TableItem = SetItem.Tables[0];
-
-            foreach (DataRow RowItem in TableItem.Rows)
-            {
-                lesItems.Add(new Item(RowItem));
-            }
+           // string sel = $"select i.id , i.nom as nomItem, i.description,i.dateSortie , i.cheminImage  , c.nom as 'condition' , t.nom as 'typeItem' , m.nom as 'manufacturier' from Items i " +
+           //     $" INNER JOIN Manufacturiers as m on i.idManufacturier = m.id" +
+           //     $" INNER JOIN Conditions as c on i.idCondition = c.id" +
+           //     $" INNER JOIN TypesItem as t on i.idTypeItem=t.id" +
+           //     $" WHERE i.idCollection = {idCollection};";
+           // DataSet SetItem = MaBD.Selection(sel);
+           // DataTable TableItem = SetItem.Tables[0];
+           //
+           // foreach (DataRow RowItem in TableItem.Rows)
+           // {
+           //     lesItems.Add(new Item(RowItem));
+           // }
             return lesItems;
         }
         
@@ -42,7 +42,7 @@ namespace LeCollectionneur.Modeles
             string req = $"update Items set Nom = '{i.Nom}' , " +
                 $"Description='{i.Description}', " +
                 $"idTypeItem= (SELECT id from TypesItem WHERE nom='{i.Type}')," +
-                $"idManufacturier = (SELECT id from Manufacturiers WHERE nom='{i.Manufacturier}')," +
+                $"Manufacturier = (SELECT id from Manufacturiers WHERE nom='{i.Manufacturier}')," +
                 $"dateSortie = '{i.DateSortie.Year}-{i.DateSortie.Month}-{i.DateSortie.Day}', " +
                 $"idCondition = (SELECT id FROM conditions WHERE nom='{i.Condition}'),"+
                 $"idCollection"+

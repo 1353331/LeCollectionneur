@@ -5,30 +5,30 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LeCollectionneur.Vues"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="405" d:DesignWidth="1000">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
-            <RowDefinition Height="370"/>
+            <RowDefinition Height="290"/>
             <RowDefinition/>
            
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
-            <ColumnDefinition Width="70"/>
-            <ColumnDefinition Width="425"/>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="50"/>
+            <ColumnDefinition Width="600"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <Label Content="Conversation" FontWeight="Bold"/>
-        <Button Content="+" Grid.Column="1" Grid.Row="0" Height="25" Width="50" Name="btnAjouterConversation"/>
+        
+        <Button Content="+" Grid.Column="1" Grid.Row="0" Height="25" Width="50" Name="btnAjouterConversation" Click="btnAjouterConversation_Click"/>
 
-        <ListBox Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2" ItemsSource="{Binding ListeUtilisateurConversation}" SelectedItem="{Binding UtilisateurSelectionner}"  >
+        <ListBox Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2" ItemsSource="{Binding MesConversation }" SelectedItem="{Binding UtilisateurSelectionner }"  >
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Vertical">
-                        <TextBlock FontSize="14" Text="{Binding Nom}"></TextBlock>
+                        <TextBlock Text="{Binding NomUtilisateur}"/>
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>

@@ -11,22 +11,22 @@ namespace LeCollectionneur.VuesModeles
 {
     class Conversation_VM : INotifyPropertyChanged
     {
-        #region Proprieter
+        #region Propriétés
         private ConversationADO conversationADO = new ConversationADO();
         
-        private ObservableCollection<Conversation> _sommaireConversation;
-        public ObservableCollection<Conversation> SommaireConversation
+        private ObservableCollection<Utilisateur> _mesConversation;
+        public ObservableCollection<Utilisateur> MesConversation
         {
-            get { return _sommaireConversation; }
+            get { return _mesConversation; }
 
             set
             {
-                _sommaireConversation = value;
-                OnPropertyChanged("SommaireConversation");
+                _mesConversation = value;
+                OnPropertyChanged("MesCollection");
             }
         }
         private Conversation _conversationSelectionne;
-        public Conversation ConversationSelctionne
+        public Conversation ConversationSelectionne
         {
             get { return _conversationSelectionne; }
 
@@ -35,21 +35,45 @@ namespace LeCollectionneur.VuesModeles
                 _conversationSelectionne = value;
                 if (_conversationSelectionne == null)
                     return;
-
-               
+                OnPropertyChanged("ConversationSelectionne");
             }
         }
 
-        
-
-
-        #endregion
-        
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string nomPropriete)
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(nomPropriete));
         }
+
+
+        #endregion
+
+        #region Commandes
+        #endregion
+
+        #region Constructeur
+        public Conversation_VM()
+        {
+            GetConversations();
+        }
+
+
+        #endregion
+        #region Méthodes
+        private void GetConversations()
+        {
+            MesConversation = new ObservableCollection<Utilisateur>();
+
+            ConversationADO conversationADO = new ConversationADO();
+
+            var temp = conversationADO.RecupererConversationUtilisateur();
+            foreach(var d in temp)
+            {
+                MesConversation.Add(d.UserAutre);
+            }
+            var e =temp;
+        }
+        #endregion
     }
 }

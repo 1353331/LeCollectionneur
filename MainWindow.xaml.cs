@@ -31,7 +31,7 @@ namespace LeCollectionneur
 			Window login = new Login();
 			login.ShowDialog();
 			if (UtilisateurADO.utilisateur != null)
-				presenteurContenu.Content = new UCCollection();
+				presenteurContenu.Content = new UCConversation();
 			else
 				this.Close();
 		}
@@ -54,7 +54,7 @@ namespace LeCollectionneur
 
 		private void btnConversations_Click(object sender, RoutedEventArgs e)
 		{
-			//presenteurContenu.Content=new UCConversation
+			presenteurContenu.Content = new UCConversation();
 		}
 
 		private void btnDeconnexion_Click(object sender, RoutedEventArgs e)

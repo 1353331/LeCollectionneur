@@ -1,6 +1,7 @@
 ﻿using LeCollectionneur.Outils;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Net.Mail;
@@ -15,7 +16,7 @@ namespace LeCollectionneur.Modeles
         public static BdBase BD = new BdBase();
         #region Variable
         public static Utilisateur utilisateur;
-
+        public static ObservableCollection<Collection> collection;
         #endregion
 
         #region Constructeur
@@ -80,12 +81,15 @@ namespace LeCollectionneur.Modeles
 
 
         //Connecte L'utilisateur rentre ces informations dans un objet Utilisateur
-        public void Connection(string User, string MP)
+        public bool Connection(string User, string MP)
         {
             if (InfoValideConnection(User, MP))
             {
                 utilisateur = new Utilisateur(GetUserDataSet(User));
+                chargerColletion();
+                return true;
             }
+            return false;
         }
 
         //Créé un compte en BD, retourne false si le compte na pas pu être créé
@@ -147,6 +151,11 @@ namespace LeCollectionneur.Modeles
         public Utilisateur RetourUtilisateurActif()
         {
             return utilisateur;
+        }
+        private void chargerColletion()
+        {
+            CollectionADO temp = new CollectionADO();
+            collection = temp.Recuperer(utilisateur.Id);
         }
 
 
