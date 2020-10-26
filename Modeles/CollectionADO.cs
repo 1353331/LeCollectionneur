@@ -16,7 +16,9 @@ namespace LeCollectionneur.Modeles
         private BdBase MaBD;
         
         public CollectionADO() { MaBD = new BdBase(); }
-#endregion
+        #endregion
+
+        #region Retrieve
         public ObservableCollection<Collection> Recuperer(int idUtilisateur)
         {
             ObservableCollection<Collection> lesCollections = new ObservableCollection<Collection>();
@@ -43,12 +45,6 @@ namespace LeCollectionneur.Modeles
             }
             return lesCollections;
         }
-        public void Modifier(Collection c)
-        {
-            string req = $"update Collections set Nom = {c.Nom} where id = {c.Id}";
-            MaBD.Commande(req);
-        }
-        
         public Collection RecupererUn(int id)
         {
             string sel = "select * from Collections where ID = " + id;
@@ -57,7 +53,17 @@ namespace LeCollectionneur.Modeles
 
             return new Collection(TableCollection.Rows[0]);
         }
+        #endregion
 
+        #region Update
+        public void Modifier(Collection c)
+        {
+            string req = $"update Collections set Nom = {c.Nom} where id = {c.Id}";
+            MaBD.Commande(req);
+        }
+        #endregion
+
+        #region Delete
         public void Supprimer(int id)
         {
             string req = $"delete from Items Where idCollection ={id}; delete from Collections where ID = " + id;
@@ -72,26 +78,16 @@ namespace LeCollectionneur.Modeles
             
             
         }
+        #endregion
 
-       
-
+        #region Insert
         public void Ajouter(Collection c,int IdUtilisateur)
         {
             string req = $"insert into Collections (id,idUtilisateur,nom) values(NULL,{IdUtilisateur},'{c.Nom}' )";
             MaBD.Commande(req);
         }
-        //public void AjouterItem(Collection c,Item i)
-        //{
-        //    string req = $"insert into Items values(NULL,{i.Id},{c.Id},(SELECT id from Conditions WHERE nom='{i.Condition}'),{i.Quantite})";
-        //    MaBD.Commande(req);
-        //}
 
-        //public void EnleverItem(Collection c, Item i)
-        //{
-        //    string req = $"DELETE FROM ItemCollection WHERE idCollection={c.Id} AND idItem={i.Id}";
-        //    MaBD.Commande(req);
-        //}
+        #endregion
 
-        
     }
 }

@@ -132,6 +132,7 @@
     <Compile Include="Modeles\UtilisateurADO.cs" />
     <Compile Include="Outils\BdBase.cs" />
     <Compile Include="Outils\Commande.cs" />
+    <Compile Include="Outils\Evenements.cs" />
     <Compile Include="Outils\Fichier.cs" />
     <Compile Include="Outils\Interfaces\IFenetreFermeable.cs" />
     <Compile Include="Outils\Interfaces\IOuvreModal.cs" />
@@ -150,6 +151,9 @@
     <Compile Include="VuesModeles\Proposition_VM.cs" />
     <Compile Include="Vues\ajouterConversation.xaml.cs">
       <DependentUpon>ajouterConversation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vues\ContexteUtilisateur.xaml.cs">
+      <DependentUpon>ContexteUtilisateur.xaml</DependentUpon>
     </Compile>
     <Compile Include="Vues\Conversation.xaml.cs">
       <DependentUpon>Conversation.xaml</DependentUpon>
@@ -206,6 +210,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Vues\ajouterConversation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Vues\ContexteUtilisateur.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

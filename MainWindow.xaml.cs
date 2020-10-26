@@ -31,40 +31,11 @@ namespace LeCollectionneur
 			Window login = new Login();
 			login.ShowDialog();
 			if (UtilisateurADO.utilisateur != null)
-				presenteurContenu.Content = new UCConversation();
+				presenteurContenu.Content = new ContexteUtilisateur();
 			else
 				this.Close();
 		}
 
-		private void btnCollections_Click(object sender, RoutedEventArgs e)
-		{
-			presenteurContenu.Content = new UCCollection();
-
-		}
-
-		private void btnAnnonces_Click(object sender, RoutedEventArgs e)
-		{
-			presenteurContenu.Content = new UCAnnonce();
-		}
-
-		private void btnPropositions_Click(object sender, RoutedEventArgs e)
-		{
-			presenteurContenu.Content = new UCPropositionsRecuesEnvoyees();
-		}
-
-		private void btnConversations_Click(object sender, RoutedEventArgs e)
-		{
-			presenteurContenu.Content = new UCConversation();
-		}
-
-		private void btnDeconnexion_Click(object sender, RoutedEventArgs e)
-		{
-
-		}
-
-		private void btnParametres_Click(object sender, RoutedEventArgs e)
-		{
-
-		}
+		
 	}
 }

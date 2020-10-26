@@ -75,7 +75,7 @@
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
 
-            <Image Name="imgItem" Source="/images/noimage.png" Grid.Column="0" Grid.RowSpan="3" Stretch="Fill" Margin="10,10,5,10" />
+            <Image Name="imgItem" Source="{Binding ImageItemSelectionne}"  Grid.Column="0" Grid.RowSpan="3" Stretch="Uniform" Margin="10,10,5,10" />
             <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="5,5,5,0">
                 <Label>Nom:</Label>
                 <TextBox Text="{Binding Nom}" Name="txtNomItem"  Height="23" Width="193" Margin="0,4"></TextBox>
@@ -90,12 +90,16 @@
                 <ComboBox ItemsSource="{Binding TypesPossibles}" SelectedValue="{Binding Type}"  Name="cboTypeItem" Height="23" Width="171" Margin="0,4" >
                     </ComboBox>
             </StackPanel>
-            <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="5,5,5,0">
+                <StackPanel Grid.Row="3" Grid.RowSpan="2">
+                    <Button Content="Changer l'image" Margin="10,0" Command="{Binding cmdAjouterImage}"></Button>
+                    <Label Content="{Binding NomCourtFichier}" Margin="10,10"/>
+                </StackPanel>
+            <StackPanel Grid.Row="3" Grid.Column="1"  Orientation="Horizontal" Margin="5,5,5,0">
                 <Label>Date de sortie:</Label>
                 <DatePicker  SelectedDate="{Binding DateSortie,Mode=TwoWay}" Name="dateSortieItem"  Height="23" Width="193" Margin="0,4">
                 </DatePicker>
             </StackPanel>
-            <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="5,5,5,0">
+            <StackPanel Grid.Row="4" Grid.Column="1"  Orientation="Horizontal" Margin="5,5,5,0">
                 <Label>Producteur:</Label>
                 <TextBox Text="{Binding Manufacturier}" Name="txtManufacturierItem"  Height="23" Width="193" Margin="0,4">
                 </TextBox>

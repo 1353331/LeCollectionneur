@@ -77,6 +77,7 @@ namespace LeCollectionneur.VuesModeles
             fenetre.Fermer();
         }
         #endregion
+
         #region Constructeur
         public DeplacementItem_VM(ObservableCollection<Collection> collectionsDispo,Item itemDeplacement)
         {
@@ -86,6 +87,7 @@ namespace LeCollectionneur.VuesModeles
             cmdAnnuler = new Commande(cmd_Annuler);
         }
         #endregion
+
         #region PropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string nomPropriete)
@@ -94,6 +96,7 @@ namespace LeCollectionneur.VuesModeles
                 PropertyChanged(this, new PropertyChangedEventArgs(nomPropriete));
         }
         #endregion
+
         #region Méthodes
         public bool UneCollectionSelectionnee()
         {

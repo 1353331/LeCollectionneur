@@ -39,6 +39,8 @@ namespace LeCollectionneur.Modeles
         }
         public ItemADO() { MaBD = new BdBase(); }
         #endregion
+
+        #region Retrieve
         public ObservableCollection<Item> Recuperer(int idCollection)
         {
             // On recherche les Items selon la Collection entrée.
@@ -56,21 +58,6 @@ namespace LeCollectionneur.Modeles
             }
             return lesItems;
         }
-        
-        public void Modifier(Item i)
-        {
-            
-            string req = $"update Items set Nom = '{i.Nom}' , " +
-                $"Description='{i.Description}', " +
-                $"idTypeItem= (SELECT id from TypesItem WHERE nom='{i.Type}')," +
-                $"Manufacturier = '{i.Manufacturier}'," +
-                $"dateSortie = "+ (i.DateSortie.HasValue&&DateTime.Compare(i.DateSortie.GetValueOrDefault(),new DateTime(1,1,1,0,0,0))!=0 ? $"'{i.DateSortie.GetValueOrDefault().Year}-{i.DateSortie.GetValueOrDefault().Month}-{i.DateSortie.GetValueOrDefault().Day}'":"NULL") +", " +
-                $"idCondition = (SELECT id FROM conditions WHERE nom='{i.Condition}')"+
-                $"where id = {i.Id}";
-            MaBD.Commande(req);
-            
-        }
-
         public Item RecupererUn(int id)
         {
             string sel = $"select i.id, i.nom as nomItem, i.description,i.dateSortie , i.cheminImage , t.nom as 'typeItem' , manufacturier, c.Nom AS 'condition' from Items i " +
@@ -82,16 +69,51 @@ namespace LeCollectionneur.Modeles
 
             return new Item(TableItem.Rows[0], false);
         }
+        #endregion
 
+        #region Update
+        public void Modifier(Item i)
+        {
+            // Ne modifie pas le chemin de l'image.
+            string req = $"update Items set Nom = '{i.Nom}' , " +
+                $"Description='{i.Description}', " +
+                $"idTypeItem= (SELECT id from TypesItem WHERE nom='{i.Type}')," +
+                $"Manufacturier = " + (!(i.Manufacturier is null) ? $"'{i.Manufacturier}'" : "NULL") + ", " +
+                $"dateSortie = "+ (i.DateSortie.HasValue&&DateTime.Compare(i.DateSortie.GetValueOrDefault(),new DateTime(1,1,1,0,0,0))!=0 ? $"'{i.DateSortie.GetValueOrDefault().Year}-{i.DateSortie.GetValueOrDefault().Month}-{i.DateSortie.GetValueOrDefault().Day}'":"NULL") +", " +
+                $"idCondition = (SELECT id FROM conditions WHERE nom='{i.Condition}')"+
+                $"where id = {i.Id}";
+            MaBD.Commande(req);
+            
+        }
+        public void TransfererItem(Collection cDestination, Item i)
+        {
+            // Transfert d'un item d'une collection à une autre en BD.
+            string req = $"UPDATE Items SET idCollection={cDestination.Id} WHERE id={i.Id}";
+            MaBD.Commande(req);
+        }
+
+        public void AjouterCheminImage(int id)
+        {
+            string req = $"UPDATE Items Set CheminImage='item{id}.jpg' WHERE id={id}";
+            MaBD.Commande(req);
+        }
+        public void EnleverCheminImage(int id)
+        {
+            string req = $"UPDATE Items Set CheminImage= NULL WHERE id={id}";
+            MaBD.Commande(req);
+        }
+        #endregion
+
+        #region Delete
         public void Supprimer(int id)
         {
             // Suppression de l'item en BD (utile pour l'admin)
             string req = $" delete from Items where ID = {id}";
             MaBD.Commande(req);
         }
+        #endregion
 
-
-
+        #region Insert
         public void Ajouter(Item i,Collection c)
         {
             string req = $"insert into Items" +
@@ -101,11 +123,27 @@ namespace LeCollectionneur.Modeles
                 $"(SELECT id from TypesItem WHERE nom='{i.Type}')," +
                 $"'{i.Description}'," +
                 $"dateSortie = " + (i.DateSortie.HasValue ? $"'{i.DateSortie.GetValueOrDefault().Year}-{i.DateSortie.GetValueOrDefault().Month}-{i.DateSortie.GetValueOrDefault().Day}'" : "NULL") + ", " +
-                 $"'{i.Manufacturier}');";
+                $"Manufacturier = " + (!(i.Manufacturier is null) ? $"'{i.Manufacturier}'" : "NULL") + "); ";
 
             MaBD.Commande(req);
         }
+        public int AjouterAvecRetourId(Item i, Collection c)
+        {
+            string req = $"insert into Items" +
+                $" values(NULL,{c.Id},(SELECT id from Conditions WHERE nom='{i.Condition}')," +
+                $"'{i.Nom}'," +
+                (i.CheminImage is null ? "NULL," : $"'{i.CheminImage}',") +
+                $"(SELECT id from TypesItem WHERE nom='{i.Type}')," +
+                $"'{i.Description}'," +
+                $"dateSortie = " + (i.DateSortie.HasValue ? $"'{i.DateSortie.GetValueOrDefault().Year}-{i.DateSortie.GetValueOrDefault().Month}-{i.DateSortie.GetValueOrDefault().Day}'" : "NULL") + ", " +
+                $"Manufacturier = " + (!(i.Manufacturier is null ) ? $"'{i.Manufacturier}'" : "NULL") + "); "+
+                $"SELECT LAST_INSERT_ID();";
+            int id=MaBD.CommandeCreationAvecRetourId(req);
+            return id;
+        }
+        #endregion
 
+        #region RetrieveTablesConnexes
         private ObservableCollection<string> RecupererListeConditions()
         {
             ObservableCollection<string> lstConditions = new ObservableCollection<string>();
@@ -131,14 +169,7 @@ namespace LeCollectionneur.Modeles
             }
             return lstTypes;
         }
-
-        public void TransfererItem(Collection cDestination, Item i)
-        {
-            // Transfert d'un item d'une collection à une autre en BD.
-            string req = $"UPDATE Items SET idCollection={cDestination.Id} WHERE id={i.Id}";
-            MaBD.Commande(req);
-        }
-
+        #endregion
         
     }
 }

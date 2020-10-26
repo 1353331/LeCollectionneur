@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -8,19 +10,24 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace LeCollectionneur.Outils
 {
      static class Fichier
     {
+        #region Proprietes
         private static string nomUtilisateur = "LeCollectionneur";
         private static string motDePasse = "SE7tr9sKAu";
-        private static string urlImages = "ftp://420.cstj.qc.ca/%2fLeCollectionneur/%2fimages/";
+        private static string urlImages = "ftp://420.cstj.qc.ca/%2fLeCollectionneur/%2fVersion05/%2fimages/";
         private static FtpWebRequest _requete;
         private static string nomFichier;
         private static ManualResetEvent operationComplete;
         private static Exception exceptionAttrappee;
-       public  static string ImporterFichier()
+        #endregion
+
+        #region Fichierlocal
+        public  static string ImporterFichier()
         {
             string nomFichier = "";
             Stream checkStream = null;
@@ -39,7 +46,7 @@ namespace LeCollectionneur.Outils
                     if ((checkStream=explorateurFichier.OpenFile())!=null)
                     {
                         nomFichier = explorateurFichier.FileName;
-                        MessageBox.Show($"Importation de {nomFichier} réussie");
+                        
                     }
                 }
                 catch(Exception e)
@@ -49,10 +56,11 @@ namespace LeCollectionneur.Outils
             }
             return nomFichier;
         }
+        #endregion
 
         #region Ftp
         // Source : https://docs.microsoft.com/en-us/dotnet/api/system.net.ftpwebrequest?view=netcore-3.1
-         public static void TeleverserFichierFTP(int idItem, string cheminPhysique)
+        public static void TeleverserFichierFTP(int idItem, string cheminPhysique)
         {
             // Thread telechargement = new Thread(() => {
             string cheminFtp = urlImages + $"item{idItem}.jpg";
@@ -135,6 +143,61 @@ namespace LeCollectionneur.Outils
                 exceptionAttrappee = e;
                 MessageBox.Show(e.Message);
             }
+        }
+
+        public static Bitmap RecupererImageServeur(string fichierImage)
+        {
+            Bitmap imageRetour= null;
+            string cheminComplet = urlImages + fichierImage;
+            Uri serveurUri =new Uri(cheminComplet);
+
+            if (serveurUri.Scheme != Uri.UriSchemeFtp)
+                return imageRetour;
+            try
+            {
+                byte[] octetsImage = GetOctetsImage(cheminComplet);
+                // Ici,on a les bytes de l'image
+                MemoryStream mStream = new MemoryStream();
+                mStream.Write(octetsImage, 0, Convert.ToInt32(octetsImage.Length));
+                imageRetour = new Bitmap(mStream,false);
+            }
+            catch (Exception e)
+            {
+                // Remettre l'image à null, 
+            }
+
+            return imageRetour;
+        }
+
+        public static BitmapImage TransformerBitmapEnBitmapImage(Bitmap bitmap)
+        {
+            if (!(bitmap is null))
+            {
+
+            
+                using (var memory = new MemoryStream())
+                {
+                    bitmap.Save(memory, ImageFormat.Jpeg);
+                    memory.Position = 0;
+
+                    var bitmapImage = new BitmapImage();
+                    bitmapImage.BeginInit();
+                    bitmapImage.StreamSource = memory;
+                    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmapImage.EndInit();
+                    bitmapImage.Freeze();
+
+                    return bitmapImage;
+                }
+            }
+            return null;
+        }
+        private static byte[] GetOctetsImage(string cheminComplet)
+        {
+            WebClient ClientFtp = new WebClient();
+            ClientFtp.Credentials = new NetworkCredential(nomUtilisateur, motDePasse);
+            byte[] octetsImage = ClientFtp.DownloadData(cheminComplet);
+            return octetsImage;
         }
         #endregion
     }

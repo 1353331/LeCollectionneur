@@ -17,7 +17,7 @@
                 <Button Name="btnAjouterCollection" Command="{Binding cmdAjouterCollection}" CommandParameter="{Binding ElementName=WindowAjoutCollection}" Content="Créer" Width="80" Margin="10,10,100,10"/>
                 <Button Name="btnAnnuler"  Command="{Binding cmdAnnuler}" CommandParameter="{Binding ElementName=WindowAjoutCollection}"  Content="Annuler" Width="80" Margin="10,10,10,10"></Button>
             </StackPanel>
-                        <Label Content="{Binding LblErreur}" Name="lblErreur" Margin="10,0,10,10" Foreground="Red"></Label>
+                        
 
         </StackPanel>
     </Grid>
