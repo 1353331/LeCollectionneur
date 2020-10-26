@@ -30,6 +30,7 @@
                 <Label Content="Ajouter une image"></Label>
                 <Button Command="{Binding cmdAjouterImage}" Content="Parcourir" Margin="5,5,0,34" Width="72"></Button>
             </StackPanel>
+            <Label Grid.Column="1" Content="{Binding NomCourtFichier}" Margin="10,39,10,0"/>
             <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Margin="2,5,5,0">
                 <Label>Condition:</Label>
                 <ComboBox ItemsSource="{Binding ConditionsPossibles}" SelectedValue="{Binding ItemAjout.Condition}"  Name="cboConditionItem" Height="23" Width="171" Margin="0,4" >

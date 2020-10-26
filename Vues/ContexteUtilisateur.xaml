@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="LeCollectionneur.Vues.ContexteUtilisateur"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LeCollectionneur.Vues"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="1000">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45"></RowDefinition>
+            <RowDefinition Height="10*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Button Name="btnCollections" Grid.Column="0" Click="btnCollections_Click" Content="Collections"></Button>
+            <Button Name="btnAnnonces" Grid.Column="1" Click="btnAnnonces_Click" Content="Annonces"></Button>
+            <Button Name="btnPropositions" Grid.Column="2" Click="btnPropositions_Click" Content="Propositions"></Button>
+            <Button Name="btnConversations" Grid.Column="3" Click="btnConversations_Click" Content="Conversations"></Button>
+            <Button Name="btnParametres" Grid.Column="4" Click="btnParametres_Click" Content="Paramètres"></Button>
+            <Button Name="btnDeconnexion" Grid.Column="5" Click="btnDeconnexion_Click" Content="Déconnexion"></Button>
+        </Grid>
+
+        <Border Grid.Row="0" VerticalAlignment="Bottom" BorderThickness="1" BorderBrush="Black"></Border>
+        <ContentPresenter Grid.Row="1" Name="presenteurContenu"></ContentPresenter>
+
+    </Grid>
+</UserControl>

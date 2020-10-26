@@ -1,10 +1,12 @@
-﻿using System;
+﻿using LeCollectionneur.Outils;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace LeCollectionneur.Modeles
 {
@@ -20,6 +22,8 @@ namespace LeCollectionneur.Modeles
         public string Manufacturier { get; set; }
         //public int Quantite { get; set; }
         public string Description { get; set; }
+       
+        public BitmapImage BmImage { get; set; }
         #endregion
 
         #region Constructeurs
@@ -30,6 +34,7 @@ namespace LeCollectionneur.Modeles
 
         public Item(DataRow drItem, bool estDansCollection=true)
         {
+            
             // Le DataRow contient * de Item et * de ItemCollection,Manufacturier,TypeItem,Condition.
             Id = (int)drItem["id"];
             Nom = (String)drItem["nomItem"];
@@ -43,7 +48,17 @@ namespace LeCollectionneur.Modeles
             // Reste à get le Type, Condition et Manufacturier.
             Type = (String)drItem["typeItem"];
                 Condition = (String)drItem["condition"]; 
-            
+            if (!(CheminImage is null))
+            {
+                BmImage = Fichier.TransformerBitmapEnBitmapImage(Fichier.RecupererImageServeur(CheminImage));
+                if (BmImage is null)
+                {
+                    ItemADO gestionItem = new ItemADO();
+                    CheminImage = null;
+                    gestionItem.EnleverCheminImage(Id);
+                }
+                    
+            }
             
         }
         #endregion

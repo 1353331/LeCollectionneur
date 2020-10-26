@@ -5,11 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace LeCollectionneur.VuesModeles
 {
@@ -24,8 +26,8 @@ namespace LeCollectionneur.VuesModeles
             get { return _mesCollections; }
             set
             {
-                // Hardcode de l'utilisateur 1 pour l'instant.
-                _mesCollections = gestionnaireCollections.Recuperer(UtilisateurADO.utilisateur.Id);
+                UtilisateurADO.collection = gestionnaireCollections.Recuperer(UtilisateurADO.utilisateur.Id);
+                _mesCollections = UtilisateurADO.collection;
                 OnPropertyChanged("MesCollections");
             }
         }
@@ -66,6 +68,9 @@ namespace LeCollectionneur.VuesModeles
                 cmdSupprimerItem = new Commande(cmdSupprimer_Item,UnItemSelectionne);
                  cmdDeplacerItem= new Commande(cmdDeplacer_Item, UnItemSelectionne);
                 cmdModifierItem = new Commande(cmdModifier_Item, UnItemSelectionne);
+                cmdAjouterImage = new Commande(cmdAjouter_Image, UnItemSelectionne);
+                NomFichier = null;
+                ChangerImageItem();
                 OnPropertyChanged("ItemSelectionne");
             }
         }
@@ -127,6 +132,46 @@ namespace LeCollectionneur.VuesModeles
             {
                 _manufacturier = value;
                 OnPropertyChanged("Manufacturier");
+            }
+        }
+        private string _nomFichier;
+        public string NomFichier
+        {
+            get
+            {
+                return _nomFichier;
+            }
+            set
+            {
+                _nomFichier = value;
+                NomCourtFichier = Path.GetFileName(NomFichier);
+                OnPropertyChanged("NomFichier");
+            }
+        }
+        private string _nomCourtFichier;
+        public string NomCourtFichier
+        {
+            get
+            {
+                return _nomCourtFichier;
+            }
+            set
+            {
+                _nomCourtFichier = value;
+                OnPropertyChanged("NomCourtFichier");
+            }
+        }
+        private BitmapImage _imageItemSelectionne;
+        public BitmapImage ImageItemSelectionne
+        {
+            get
+            {
+                return _imageItemSelectionne;
+            }
+            set
+            {
+                _imageItemSelectionne = value;
+                OnPropertyChanged("ImageItemSelectionne");
             }
         }
         public ObservableCollection<string> ConditionsPossibles { get; set; }
@@ -238,6 +283,25 @@ namespace LeCollectionneur.VuesModeles
                 ItemSelectionne = CollectionSelectionnee.ItemsCollection[CollectionSelectionnee.ItemsCollection.Count - 1]; 
            
         }
+
+        private ICommand _cmdAjouterImage;
+        public ICommand cmdAjouterImage
+        {
+            get
+            {
+                return _cmdAjouterImage;
+            }
+            set
+            {
+                _cmdAjouterImage = value;
+                OnPropertyChanged("cmdAjouterImage");
+            }
+        }
+        private void cmdAjouter_Image(object param)
+        {
+            NomFichier = Fichier.ImporterFichier();
+        }
+
         private ICommand _cmdModifierItem;
         public ICommand cmdModifierItem
         {
@@ -254,24 +318,41 @@ namespace LeCollectionneur.VuesModeles
         private void cmdModifier_Item(object param)
         {
             // cmdModifier_Item permet de modifier les informations de l'ItemSelectionne
-            MessageBoxResult resultat = MessageBox.Show($"Appliquer les modifications à l'item: {ItemSelectionne.Nom}?", "Attention", MessageBoxButton.YesNo);
-            // TODO: Validation des entrées
-            if (resultat==MessageBoxResult.Yes)
-            {   
-                int index=CollectionSelectionnee.ItemsCollection.IndexOf(ItemSelectionne);
-                int idCollection = CollectionSelectionnee.Id;
-                ItemSelectionne.Nom = Nom;
-                ItemSelectionne.DateSortie = DateSortie.GetValueOrDefault();
-                ItemSelectionne.Type = Type;
-                ItemSelectionne.Condition = Condition;
-                ItemSelectionne.Description = Description;
-                ItemSelectionne.Manufacturier = Manufacturier;
-                gestionnaireItems.Modifier(ItemSelectionne);
-                initialisationEcran(false);
-                CollectionSelectionnee=ReselectionnerCollection(true,idCollection);
-                ItemSelectionne = CollectionSelectionnee.ItemsCollection[index];
+            if (Nom.Trim().Length>0)
+            {
+                MessageBoxResult resultat = MessageBox.Show($"Appliquer les modifications à l'item: {ItemSelectionne.Nom}?", "Attention", MessageBoxButton.YesNo);
+                 // TODO: Validation des entrées
+                if (resultat==MessageBoxResult.Yes)
+                {   
+                    int index=CollectionSelectionnee.ItemsCollection.IndexOf(ItemSelectionne);
+                    int idCollection = CollectionSelectionnee.Id;
+                
+                    ItemSelectionne.Nom = Validateur.Echappement(Nom.Trim());
+                    ItemSelectionne.DateSortie = DateSortie.GetValueOrDefault();
+                    ItemSelectionne.Type = Type;
+                    ItemSelectionne.Condition = Condition;
+                    ItemSelectionne.Description = Validateur.Echappement(Description.Trim());
+                    ItemSelectionne.Manufacturier = Validateur.Echappement(Manufacturier.Trim());
+                    if (!(NomFichier is null)&&NomFichier.Trim().Length>0)
+                    {
+                        Fichier.TeleverserFichierFTP(ItemSelectionne.Id,NomFichier);
+                        gestionnaireItems.AjouterCheminImage(ItemSelectionne.Id);
+                    }
+                    gestionnaireItems.Modifier(ItemSelectionne);
+                    initialisationEcran(false);
+                    CollectionSelectionnee=ReselectionnerCollection(true,idCollection);
+                    ItemSelectionne = CollectionSelectionnee.ItemsCollection[index];
+                
+                
+                
+                }
+                RemplirChamps();
             }
-            RemplirChamps();
+            else
+            {
+                MessageBox.Show("Vous devez au moins fournir un nom à l'item pour pouvoir le modifier.");
+            }
+           
         }
         private ICommand _cmdDeplacerItem;
         public ICommand cmdDeplacerItem
@@ -339,13 +420,16 @@ namespace LeCollectionneur.VuesModeles
             cmdModifierItem = new Commande(cmdModifier_Item,UnItemSelectionne);
             cmdDeplacerItem = new Commande(cmdDeplacer_Item, UnItemSelectionne);
             cmdSupprimerItem = new Commande(cmdSupprimer_Item, UnItemSelectionne);
+            cmdAjouterImage = new Commande(cmdAjouter_Image, UnItemSelectionne);
             initialisationEcran();
         }
 
         private void initialisationEcran(bool estPremierChargement = true)
         {
             // Récupère toutes les collections de l'utilisateur courant et les rempli avec leurs items respectifs.
+
             MesCollections = new ObservableCollection<Collection>();
+            ChangerImageItem();
             // Récupérer tous les états possibles d'items.
             if (estPremierChargement)
             {
@@ -393,6 +477,7 @@ namespace LeCollectionneur.VuesModeles
             Condition = null;
             Type = null;
             Description = null;
+            NomFichier = null;
         }
 
         private void RemplirChamps()
@@ -403,6 +488,23 @@ namespace LeCollectionneur.VuesModeles
             Condition = ItemSelectionne.Condition;
             Type = ItemSelectionne.Type;
             Description = ItemSelectionne.Description;
+        }
+        private void ChangerImageItem()
+        {
+            if (!(ItemSelectionne is null) && !(ItemSelectionne.BmImage==null))
+            {
+                ImageItemSelectionne = ItemSelectionne.BmImage;
+            }
+            else
+            {
+                ImageItemSelectionne = new BitmapImage();
+                ImageItemSelectionne.BeginInit();
+                ImageItemSelectionne.UriSource = new Uri("pack://application:,,,/LeCollectionneur;component/images/noimage.png",UriKind.Absolute);
+                
+                ImageItemSelectionne.EndInit();
+            }
+               
+            
         }
         #endregion
     }

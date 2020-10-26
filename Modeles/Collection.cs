@@ -19,6 +19,7 @@ namespace LeCollectionneur.Modeles
         
         public ObservableCollection<Item> ItemsCollection { get; set; }
         #endregion
+
         #region Constructeurs
         public Collection()
         {

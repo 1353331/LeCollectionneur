@@ -8,15 +8,18 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace LeCollectionneur.VuesModeles
 {
     class AjoutCollection_VM : INotifyPropertyChanged
     {
+        #region Propriétés
         public string NomNeoCollection { get; set; }
-        public string LblErreur { get; set; }
         private CollectionADO gestionnaireCollections = new CollectionADO();
+        #endregion
+
         #region Commandes
         // Collection
         private ICommand _cmdAjouterCollection;
@@ -46,7 +49,7 @@ namespace LeCollectionneur.VuesModeles
             else
             {
                 // Ajouter un message d'erreur dans la fenêtre.
-                LblErreur = "La longueur du nom doit être entre 1 et 50 caractères.";
+                MessageBox.Show( "La longueur du nom doit être entre 1 et 50 caractères.");
             }
 
         }
@@ -69,12 +72,15 @@ namespace LeCollectionneur.VuesModeles
             fenetre.Fermer();
         }
         #endregion
+
+        #region Constructeur
         public AjoutCollection_VM()
         {
-            LblErreur = "";
+            
             cmdAjouterCollection = new Commande(cmdAjouter_Collection);
             cmdAnnuler = new Commande(cmd_Annuler);
         }
+        #endregion
 
         #region PropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;

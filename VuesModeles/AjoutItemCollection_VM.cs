@@ -5,15 +5,18 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace LeCollectionneur.VuesModeles
 {
     class AjoutItemCollection_VM : INotifyPropertyChanged
     {
+        #region Propriétés
         public ObservableCollection<string> ConditionsPossibles { get; set; }
         public ObservableCollection<string> TypesPossibles { get; set; }
         public Collection CollectionAjoutItem { get; set; }
@@ -40,10 +43,26 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _nomFichier = value;
+                NomCourtFichier = Path.GetFileName(NomFichier);
                 OnPropertyChanged("NomFichier");
             }
         }
+        private string _nomCourtFichier;
+        public string NomCourtFichier
+        {
+            get
+            {
+                return _nomCourtFichier;
+            }
+            set
+            {
+                _nomCourtFichier = value;
+                OnPropertyChanged("NomCourtFichier");
+            }
+        }
         private ItemADO gestionnaireItem = new ItemADO();
+        #endregion
+
         #region Commandes
         // Collection
         private ICommand _cmdAjouterItem;
@@ -63,14 +82,39 @@ namespace LeCollectionneur.VuesModeles
         {
             IFenetreFermeable fenetre = param as IFenetreFermeable;
             
-            if (ItemAjout.Nom.Length>0 &&ItemAjout.Type.Length>0&&ItemAjout.Condition.Length>0)
+            if (!(ItemAjout.Nom is null)&&ItemAjout.Nom.Trim().Length>0 && !(ItemAjout.Type is null) && ItemAjout.Type.Length>0&& !(ItemAjout.Condition is null) && ItemAjout.Condition.Length>0)
             {
+                if (ItemAjout.Nom.Trim().Length>60)
+                {
+                    MessageBox.Show("Le nom de l'item doit contenir un maximum de 60 caractères.");
+                    return;
+                }
+                ItemAjout.Nom = Validateur.Echappement(ItemAjout.Nom.Trim());
+                if (!(ItemAjout.Description is null)&&ItemAjout.Description.Trim().Length > 0)
+                    ItemAjout.Description = Validateur.Echappement(ItemAjout.Description.Trim());
+                
+                if (!(ItemAjout.Manufacturier is null) && ItemAjout.Manufacturier.Trim().Length > 0)
+                    if (!(ItemAjout.Manufacturier.Trim().Length>50))
+                    ItemAjout.Manufacturier = Validateur.Echappement(ItemAjout.Manufacturier.Trim());
+                    else
+                    {
+                        MessageBox.Show("Le nom du producteur doit avoir un maximum de 50 caractères.");
+                        return;
+                    }
+               
+                int id =gestionnaireItem.AjouterAvecRetourId(ItemAjout, CollectionAjoutItem);
                 if (NomFichier.Length > 0)
-                    Fichier.TeleverserFichierFTP(1, NomFichier);
-                gestionnaireItem.Ajouter(ItemAjout, CollectionAjoutItem);
+                {
+                    Fichier.TeleverserFichierFTP(id, NomFichier);
+                    gestionnaireItem.AjouterCheminImage(id);
+                }
+                   
                 fenetre.Fermer();
             }
-
+            else
+            {
+                MessageBox.Show("Veuillez au minimum choisir un nom, un type et une condition.");
+            }
         }
         private ICommand _cmdAjouterImage;
         public ICommand cmdAjouterImage
@@ -82,7 +126,7 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _cmdAjouterImage = value;
-                OnPropertyChanged("cmdjouterImage");
+                OnPropertyChanged("cmdAjouterImage");
             }
         }
         private void cmdAjouter_Image(object param)
@@ -109,6 +153,8 @@ namespace LeCollectionneur.VuesModeles
             fenetre.Fermer();
         }
         #endregion
+
+        #region Constructeur
         public AjoutItemCollection_VM(Collection laCollection)
         {
             LblErreur = "";
@@ -121,6 +167,7 @@ namespace LeCollectionneur.VuesModeles
             TypesPossibles = gestionnaireItem.TypesPossibles;
             NomFichier = "";
         }
+        #endregion
 
         #region PropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
