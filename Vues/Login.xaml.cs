@@ -47,5 +47,12 @@ namespace LeCollectionneur.Vues
                 MessageBox.Show("Champs invalide");
 
         }
+
+        private void btnConnectionAdmin_Click(object sender, RoutedEventArgs e)
+        {
+            UtilisateurADO temp = new UtilisateurADO();
+            temp.Connection("admin","admin");
+            this.Close();
+        }
     }
 }

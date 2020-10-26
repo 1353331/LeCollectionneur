@@ -1,4 +1,5 @@
-﻿using LeCollectionneur.VuesModeles;
+﻿using LeCollectionneur.Modeles;
+using LeCollectionneur.VuesModeles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,6 @@ namespace LeCollectionneur.Vues
         {
             InitializeComponent();
             DataContext = new Conversation_VM();
-            var e = 11; 
         }
 
         private void btnAjouterConversation_Click(object sender, RoutedEventArgs e)
@@ -33,5 +33,8 @@ namespace LeCollectionneur.Vues
             ajouterConversation ajouterConversation = new ajouterConversation();
             ajouterConversation.ShowDialog();
         }
+
+       
+       
     }
 }

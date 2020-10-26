@@ -17,6 +17,7 @@ namespace LeCollectionneur.Modeles
         #region Variable
         public static Utilisateur utilisateur;
         public static ObservableCollection<Collection> collection;
+        public static bool admin;
         #endregion
 
         #region Constructeur
@@ -87,6 +88,8 @@ namespace LeCollectionneur.Modeles
             {
                 utilisateur = new Utilisateur(GetUserDataSet(User));
                 chargerColletion();
+                admin = utilisateur.NomUtilisateur == "admin";
+                       
                 return true;
             }
             return false;

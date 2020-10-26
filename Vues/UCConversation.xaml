@@ -8,36 +8,42 @@
              d:DesignHeight="405" d:DesignWidth="1000">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
             <RowDefinition Height="290"/>
             <RowDefinition/>
            
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="300"/>
             <ColumnDefinition Width="50"/>
-            <ColumnDefinition Width="600"/>
+            <ColumnDefinition Width="450"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
         
-        <Button Content="+" Grid.Column="1" Grid.Row="0" Height="25" Width="50" Name="btnAjouterConversation" Click="btnAjouterConversation_Click"/>
 
-        <ListBox Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2" ItemsSource="{Binding MesConversation }" SelectedItem="{Binding UtilisateurSelectionner }"  >
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock Text="{Binding NomUtilisateur}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <ListView Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Name="lstCollections" SelectedItem="{Binding ConversationSelectionne}"  ItemsSource="{Binding MesConversation}" >
+            <ListView.View>
+                <GridView >
+                    <GridView.Columns>
+                        <GridViewColumn Header="Utilisateur" DisplayMemberBinding="{Binding NomUserAutre}"  />
+                        <GridViewColumn Header="Courriel" DisplayMemberBinding="{Binding lastMessage}"/>
+                        <GridViewColumn Header="Date DernierMessage" DisplayMemberBinding="{Binding date}"/>
+                        <GridViewColumn DisplayMemberBinding="{Binding o}">
+                            <Button Content="+" Height="25" Width="50" Name="btnAjouterConversation" Click="btnAjouterConversation_Click"/>
+                        </GridViewColumn>
+                    </GridView.Columns>
+
+                </GridView>
+
+            </ListView.View>
+
+        </ListView>
+        <TextBox Grid.Row="1" Grid.Column="2" Name="txbMessage" Text="{Binding messageContenu}"/>
+        <Button  Command="{Binding cmdEnvoyerMessage}" Content="Envoyer" Grid.Column="3" Grid.Row="3" Height="50" Width="100" Name="btnEnvoyer" />
         
-        <TextBox Grid.Row="2" Grid.Column="2"/>
-        <Button Content="Envoyer" Grid.Column="3" Grid.Row="3" Height="50" Width="100" Name="btnEnvoyer"/>
-
-        <TextBox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" IsReadOnly="True"/>
+        <TextBox Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" IsReadOnly="True"/>
         
     </Grid>
 </UserControl>
+ 

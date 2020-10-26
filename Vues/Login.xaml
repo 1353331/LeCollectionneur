@@ -34,6 +34,6 @@
         <TextBox Name="User" Grid.Row="3" Grid.Column="1" Width="250" Height="25" Grid.ColumnSpan="2"/>
         <TextBox  Name="MDP" Grid.Row="4" Grid.Column="1" Width="250" Height="25" Grid.ColumnSpan="2"/>
         <Button Grid.Column="1" Grid.Row="8" Height="25" Content="Connection Prof" Name="btnConnectionProf" Click="btnConnectionProf_Click"/>
-        <Button Grid.Column="1" Grid.Row="9" Height="25" Content="Connection Prof Admin"/>
+        <Button Grid.Column="1" Grid.Row="9" Height="25" Content="Connection Prof Admin" Name="btnConnectionAdmin" Click="btnConnectionAdmin_Click"/>
     </Grid>
 </Window>
