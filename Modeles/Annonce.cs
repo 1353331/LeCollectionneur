@@ -27,11 +27,13 @@ namespace LeCollectionneur.Modeles
             UtilisateurADO UtilisateurConnecte = new UtilisateurADO();
             ListeItems = new ObservableCollection<Item>();
             Annonceur = UtilisateurConnecte.RetourUtilisateurActif();
+            DatePublication = DateTime.Now.Date;
         }
 
         public Annonce(DataRow dr)
         {
             UtilisateurADO ud = new UtilisateurADO();
+            AnnonceADO annonceADO = new AnnonceADO();
             
             Id = (int)dr["Id"];
             Annonceur = ud.RechercherUtilisateurById((int)dr["IdUtilisateur"]);
@@ -39,7 +41,7 @@ namespace LeCollectionneur.Modeles
             DatePublication = (DateTime)dr["Date"];
             Type = (string)dr["typeAnnonce"];
             Description = (string)dr["Description"];
-            // TODO: Aller chercher la liste d'item
+            ListeItems = annonceADO.RecupererListeItems(Id);
             Montant = (double)dr["montant"];
         }
         #endregion

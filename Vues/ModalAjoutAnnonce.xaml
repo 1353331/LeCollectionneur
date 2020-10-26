@@ -1,4 +1,5 @@
 ﻿<Window xmlns:syncfusion="http://schemas.syncfusion.com/wpf"  x:Class="LeCollectionneur.Vues.ModalAjoutAnnonce"
+        x:Name="WindowAjoutAnnonce"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -21,18 +22,16 @@
 
         <!--Titre-->
         <Label Content="Titre" HorizontalAlignment="left" VerticalAlignment="bottom" Margin="10,0,0,0"></Label>
-        <TextBox x:Name="txtTitre" Grid.Column="1" Margin="0,20,20,0" Grid.ColumnSpan="2"></TextBox>
+        <TextBox x:Name="txtTitre" Grid.Column="1" Margin="0,20,20,0" Grid.ColumnSpan="2" Text="{Binding Titre}"></TextBox>
 
         <!--Type annonce-->
         <Label Content="Type d'annonce" Grid.Row="1"  HorizontalAlignment="left" VerticalAlignment="Center" Margin="10,0,0,0"></Label>
-        <ComboBox Name="cmbType" Grid.Row="1" Grid.Column="1" Margin="0,20,20,20" Grid.ColumnSpan="2">
-            <ComboBoxItem>Vente</ComboBoxItem>
-            <ComboBoxItem>Échange</ComboBoxItem>
-        </ComboBox>
+        <ComboBox Name="cmbType" Grid.Row="1" Grid.Column="1" Margin="0,20,20,20" Grid.ColumnSpan="2" ItemsSource="{Binding Path=LesTypesAnnonce}" SelectedItem="{Binding Path=Type}" />
+
 
         <!--Description-->
         <Label Content="Description" Grid.Row="2"  HorizontalAlignment="left" VerticalAlignment="Top" Margin="10,0,0,0"></Label>
-        <TextBox x:Name="txtDescription" Grid.Column="1" Grid.Row="2" Margin="0,0,20,20" Grid.ColumnSpan="2" TextWrapping="Wrap"></TextBox>
+        <TextBox x:Name="txtDescription" Grid.Column="1" Grid.Row="2" Margin="0,0,20,20" Grid.ColumnSpan="2" TextWrapping="Wrap" Text="{Binding Description}"></TextBox>
 
         <!--Offre-->
         <GroupBox Grid.Row="3" Grid.ColumnSpan="3" Header="Offre" Margin="10,0,20,0" >
@@ -48,34 +47,31 @@
                 </Grid.ColumnDefinitions>
 
                 <!--Items-->
-                <ListView Grid.Row="0" Grid.ColumnSpan="2">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="Item" Width="130"/>
-                            <GridViewColumn Header="Condition" Width="125"/>
-                            <GridViewColumn Header="Quantité" Width="80"/>
-                            <GridViewColumn Header="Détails" Width="120"/>
-                        </GridView>
-                    </ListView.View>
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListView_SelectItem"/>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                </ListView>
-
+                <DataGrid ItemsSource="{Binding LesItems}" SelectedItem="{Binding ItemSelectionne}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" Grid.Row="0" Grid.ColumnSpan="2" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Path=Nom}" Header="Nom" Width="130"></DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=Condition}" Header="Condition" Width="125"></DataGridTextColumn>
+                        <DataGridTemplateColumn Header="Détails" Width="120">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button>Détails</Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
                 <!--Bouton Retirer et Ajouter item-->
                 <Button Content="Retirer Item" Grid.Row="1" Width="200" Height="30" HorizontalAlignment="Right" Margin="0,0,10,0"></Button>
-                <Button Content="Ajouter Item" Grid.Row="1" Grid.Column="1" Width="200" Height="30" HorizontalAlignment="Left" Margin="10,0,0,0"></Button>
+                <Button Content="Ajouter Item" Grid.Row="1" Grid.Column="1" Width="200" Height="30" HorizontalAlignment="Left" Margin="10,0,0,0" Command="{Binding cmdAjouterItem_Annonce}" CommandParameter="{Binding ElementName=WindowAjoutAnnonce}"></Button>
 
                 <!--Montant d'argent-->
                 <Label Content="Montant en argent" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center"></Label>
-                <TextBox x:Name="txtMontant" Grid.Row="2" Grid.Column="1" Margin="0,15"></TextBox>
+                <TextBox x:Name="txtMontant" Grid.Row="2" Grid.Column="1" Margin="0,15" Text="{Binding Montant}"></TextBox>
             </Grid>
         </GroupBox>
 
         <!--Bouton Annuler/Publier l'annonce-->
         <Button x:Name="btnAnnuler" HorizontalAlignment="Right" Content="Annuler" Grid.Row="4" Margin="0,0,10,0" Grid.Column="1"  Click="btnAnnuler_Click" Height="30" Width="100"></Button>
-        <Button Name="btnPublier" Content="Publier" Grid.Row="4" Grid.Column="2" HorizontalAlignment="left" Margin="10,0,0,0" Height="30" Width="100" Click="btnPublier_Click"></Button>
+        <Button Name="btnPublier" Content="Publier" Grid.Row="4" Grid.Column="2" HorizontalAlignment="left" Margin="10,0,0,0" Height="30" Width="100" Command="{Binding cmdAjouter_Annonce}" CommandParameter="{Binding ElementName=WindowAjoutAnnonce}"></Button>
     </Grid>
 </Window>

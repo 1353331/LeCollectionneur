@@ -12,23 +12,20 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using LeCollectionneur.Modeles;
+using LeCollectionneur.Outils.Interfaces;
+using LeCollectionneur.VuesModeles;
 
 namespace LeCollectionneur.Vues
 {
     /// <summary>
     /// Logique d'interaction pour ModalAjoutAnnonce.xaml
     /// </summary>
-    public partial class ModalAjoutAnnonce : Window
+    public partial class ModalAjoutAnnonce : Window, IFenetreFermeable, IOuvreModal
     {
         public ModalAjoutAnnonce()
         {
             InitializeComponent();
- 
-        }
-
-        private void ListView_SelectItem(object sender, MouseButtonEventArgs e)
-        {
-
+            DataContext = new ModalAjoutAnnonce_VM();
         }
 
         private void btnAnnuler_Click(object sender, RoutedEventArgs e)
@@ -36,18 +33,16 @@ namespace LeCollectionneur.Vues
             this.Close();
         }
 
-        private void btnPublier_Click(object sender, RoutedEventArgs e)
+        public void Fermer()
         {
-            Annonce NeoAnnonce = new Annonce();
-            NeoAnnonce.Titre = txtTitre.Text;
-            NeoAnnonce.Montant = Convert.ToDouble(txtMontant.Text);
-            NeoAnnonce.DatePublication = DateTime.Now.Date;
-            NeoAnnonce.Type = cmbType.Text;
-            NeoAnnonce.Description = txtDescription.Text;
-            AnnonceADO annonceADO = new AnnonceADO();
-            annonceADO.Ajouter(NeoAnnonce);
-
             this.Close();
+        }
+
+        public void OuvrirModal()
+        {
+            ModalAjoutItemAnnonce viewProp = new ModalAjoutItemAnnonce();
+            viewProp.Owner = Window.GetWindow(this);
+            viewProp.ShowDialog();
         }
     }
 }

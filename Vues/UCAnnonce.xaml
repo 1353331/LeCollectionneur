@@ -40,7 +40,7 @@
                 <!-- Checkbox pour filtre de recherche textuel-->
                 <CheckBox Grid.Row="1" VerticalAlignment="Center" IsChecked="{Binding Path=FiltrerParTitreAnnonce, Mode=TwoWay}">Titre</CheckBox>
                 <CheckBox Grid.Row="1" VerticalAlignment="Center" Grid.Column="1" IsChecked="{Binding Path=FiltrerParNomAnnonceur, Mode=TwoWay}">Annonceur</CheckBox>
-                <CheckBox Grid.Row="1" VerticalAlignment="Center" Grid.Column="2" Grid.ColumnSpan="2">Items</CheckBox>
+                <CheckBox Grid.Row="1" VerticalAlignment="Center" Grid.Column="2" Grid.ColumnSpan="2" IsChecked="{Binding Path=FiltrerParNomItem, Mode=TwoWay}">Items</CheckBox>
             </Grid>
         </GroupBox>
         
@@ -60,11 +60,11 @@
 
                 <!-- Recherche par type objets-->
                 <Label Content="Type Objets" VerticalAlignment="Center"></Label>
-                <ComboBox Grid.Column="1" VerticalAlignment="Center" ItemsSource="{Binding Path=LesAnnonces}" DisplayMemberPath=""></ComboBox>
+                <ComboBox Grid.Column="1" VerticalAlignment="Center" ItemsSource="{Binding Path=LesTypesItems}" SelectedItem="{Binding Path=TypeItemFiltre}" ></ComboBox>
 
                 <!-- Recherche par type annonces-->
                 <Label Content="Type Annonces" VerticalAlignment="Center" Grid.Row="1"></Label>
-                <ComboBox Name="cmbTypesAnnonce" Grid.Column="1" VerticalAlignment="Center" Grid.Row="1"  ItemsSource="{Binding Path=LesTypesAnnonce}" SelectedItem="{Binding Path=TypeAnnonceFiltre}"></ComboBox>
+                <ComboBox Grid.Column="1" VerticalAlignment="Center" Grid.Row="1"  ItemsSource="{Binding Path=LesTypesAnnonce}" SelectedItem="{Binding Path=TypeAnnonceFiltre}"></ComboBox>
 
                 <!-- Recherche par dates-->
                 <Label Content="Date entre" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center"></Label>
@@ -77,8 +77,8 @@
 
         <!-- Boutons d'action pour annonce-->
         <StackPanel Grid.Column="3" VerticalAlignment="Center" Margin="0,0,15,0">
-            <Button x:Name="btnAjoutAnnonce" Content="Ajouter une annonce" Margin="5,5,5,5" Command="{Binding cmdAjouter_Annonce}"></Button>
-            <CheckBox Content="Mes annonces" Margin="5,0,5,5" HorizontalAlignment="Center" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"></CheckBox>
+            <Button x:Name="btnAjoutAnnonce" Content="Ajouter une annonce" Margin="5,5,5,5" Command="{Binding cmdAjouterAnnonce_Annonce}" CommandParameter="{Binding ElementName=UCVueAnnonce}"></Button>
+            <CheckBox Content="Mes annonces" Margin="5,0,5,5" HorizontalAlignment="Center" IsChecked="{Binding Path=FiltrerParMesAnnonces, Mode=TwoWay}" Command="{Binding cmdFiltrerMesAnnonces_Annonce}"></CheckBox>
         </StackPanel>
     
         <!-- Listes des annonces-->
@@ -127,29 +127,26 @@
 
                 <!--Affichage des items de l'annonce-->
                 <Label Content="Items annoncés" Grid.Row="4" ></Label>
-                <ListView Grid.Row="5" Grid.ColumnSpan="2">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="Item" Width="100"/>
-                            <GridViewColumn Header="Condition" Width="80"/>
-                            <GridViewColumn Header="Quantité" Width="55"/>
-                            <GridViewColumn Header="Détails" Width="60"/>
-                        </GridView>
-                    </ListView.View>
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListView_SelectItem"/>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                </ListView>
+                <DataGrid ItemsSource="{Binding LesItems}" SelectedItem="{Binding ItemSelectionne}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" Grid.Row="5" Grid.ColumnSpan="2" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Path=Nom}" Header="Nom" Width="100"></DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=Condition}" Header="Condition" Width="100"></DataGridTextColumn>
+                        <DataGridTemplateColumn Header="Détails" Width="90">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button>Détails</Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
 
                 <!--Description de l'annonce-->
                 <Label Content="Description de l'annonce" Grid.Row="6" Grid.ColumnSpan="2"></Label>
                 <TextBox Name="txt_description" Text="{Binding Description}" TextWrapping="Wrap" Grid.Row="7" Grid.ColumnSpan="2" IsReadOnly="True"></TextBox>
 
                 <!--Bouton du bas de l'annonce, change en fonction de la checkbox "Mes annonces"-->
-                <Button Name="btnPropAnnonce" Content="Proposer un échange" Grid.Row="8" Grid.ColumnSpan="2" Margin="40,5" Command="{Binding cmdProposer_Annonce}" CommandParameter="{Binding ElementName=UCVueAnnonce}"></Button>
-                <Button Name="btnModAnnonce" Content="Modifier mon annonce" Grid.Row="8" Grid.ColumnSpan="2" Margin="40,5" Visibility="Hidden"></Button>
+                <Button Name="btnPropAnnonce" Content="{Binding Path=ProposerOuModifier}" Grid.Row="8" Grid.ColumnSpan="2" Margin="40,5" Command="{Binding cmdProposerOuModifier_Annonce}" CommandParameter="{Binding ElementName=UCVueAnnonce}"></Button>
             </Grid>
         </GroupBox>
     </Grid>

@@ -22,7 +22,7 @@ namespace LeCollectionneur.Vues
     /// <summary>
     /// Logique d'interaction pour UCAnnonce.xaml
     /// </summary>
-    public partial class UCAnnonce : UserControl, IOuvreModalAvecParametre<Annonce>
+    public partial class UCAnnonce : UserControl, IOuvreModalAvecParametre<Annonce>, IOuvreModal
    {
         public UCAnnonce()
         {
@@ -40,30 +40,18 @@ namespace LeCollectionneur.Vues
 
         }
 
-        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        public void OuvrirModal()
         {
-            btnPropAnnonce.Visibility = Visibility.Hidden;
-            btnModAnnonce.Visibility = Visibility.Visible;
-
+            ModalAjoutAnnonce viewProp = new ModalAjoutAnnonce();
+            viewProp.Owner = Window.GetWindow(this);
+            viewProp.ShowDialog();
         }
 
-        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
-        {
-            btnPropAnnonce.Visibility = Visibility.Visible;
-            btnModAnnonce.Visibility = Visibility.Hidden;
-        }
-
-        private void btnAjoutAnnonce_Click(object sender, RoutedEventArgs e)
-        {
-            ModalAjoutAnnonce viewAjoutAnnonce = new ModalAjoutAnnonce();
-            viewAjoutAnnonce.Show();
-        }
-
-		  public void OuvrirModal(Annonce annonce)
-		  {
+        public void OuvrirModal(Annonce annonce)
+		{
             ModalNouvelleProposition viewProp = new ModalNouvelleProposition(annonce);
             viewProp.Owner = Window.GetWindow(this);
             viewProp.Show();
-		  }
+		}
 	}
 }
