@@ -21,7 +21,7 @@ namespace LeCollectionneur.Vues
 	/// <summary>
 	/// Logique d'interaction pour ModalNouvelleProposition.xaml
 	/// </summary>
-	public partial class ModalNouvelleProposition : Window, IFenetreFermeable, IOuvreModal
+	public partial class ModalNouvelleProposition : Window, IFenetreFermeable, IOuvreModal, IOuvreModalAvecParametre<Item>
 	{
 		private static readonly Regex _regexMontant = new Regex("[^0-9.]+");
 		private static bool texteMontantCorrect(string texte)
@@ -52,6 +52,13 @@ namespace LeCollectionneur.Vues
 			ModalAjoutItemProposition viewProp = new ModalAjoutItemProposition();
 			viewProp.Owner = Window.GetWindow(this);
 			viewProp.ShowDialog();
+		}
+
+		public void OuvrirModal(Item itemSelectionne)
+		{
+			ModalDetailsItem modalDetails = new ModalDetailsItem(itemSelectionne);
+			modalDetails.Owner = Window.GetWindow(this);
+			modalDetails.ShowDialog();
 		}
 	}
 }

@@ -4,8 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LeCollectionneur.Vues"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             xmlns:converters="clr-namespace:LeCollectionneur.Outils"
+             mc:Ignorable="d"
+             x:Name="UCPropositions"
+             d:DesignHeight="450" d:DesignWidth="800"
+             >
 
     <!-- Pour utiliser l'image de message comme un bouton et éviter que l'image disparaisse lors d'un MouseOver -->
     <UserControl.Resources>
@@ -43,15 +46,23 @@
 
            <!-- RadioButton propositions -->
         <StackPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <RadioButton Name="radPropositionsRecues" Content="Propositions reçues" IsChecked="True" Checked="radPropositionsRecues_Checked"></RadioButton>
-            <RadioButton Name="radPropositionsEnvoyees" Content="Propositions envoyées" Checked="radPropositionsEnvoyees_Checked"></RadioButton>
+            <RadioButton Name="radPropositionsRecues" Content="Propositions reçues" IsChecked="True" Checked="radPropositionsRecues_Checked" Command="{Binding cmdChangementContexteRecuesEnvoyees}"></RadioButton>
+            <RadioButton Name="radPropositionsEnvoyees" Content="Propositions envoyées" Checked="radPropositionsEnvoyees_Checked" Command="{Binding cmdChangementContexteRecuesEnvoyees}"></RadioButton>
         </StackPanel>
 
         <!-- Listes Reçues/Envoyées -->
-        <ListBox Name="lstPropositionsRecues" Grid.Row="1" Grid.Column="0" Margin="10" Visibility="Visible">
-        </ListBox>
-        <ListBox Name="lstPropositionsEnvoyees" Grid.Row="1" Grid.Column="0" Margin="10" Visibility="Hidden">
-        </ListBox>
+        <DataGrid Name="dgRecues" ItemsSource="{Binding PropositionsRecues}" SelectedItem="{Binding PropositionSelectionnee}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" IsReadOnly="True" Grid.Row="1"  Margin="7,10,0,0">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Path=AnnonceLiee.Titre}" Header="Annonce Concernée" Width="2*"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=EtatProposition}" Header="État" Width="*"></DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <DataGrid Name="dgEnvoyees" ItemsSource="{Binding PropositionsEnvoyees}" SelectedItem="{Binding PropositionSelectionnee}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" IsReadOnly="True" Grid.Row="1"  Margin="7,10,0,0" Visibility="Hidden">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Path=AnnonceLiee.Titre}" Header="Annonce Concernée" Width="2*"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=EtatProposition}" Header="État" Width="*"></DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
 
         <!-- Section détails -->
         <GroupBox Header="Détails" Grid.Row="1" Margin="10,0,10,10" Grid.Column="1" BorderBrush="Black" FontWeight="Bold">
@@ -80,18 +91,31 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
 
-                        <ListView Grid.ColumnSpan="2" Name="lvProposition" Margin="8">
+                        <ListView Grid.ColumnSpan="2" Name="lvProposition" Margin="8" ItemsSource="{Binding PropositionSelectionnee.ItemsProposes}">
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn Header="Item" Width="Auto"></GridViewColumn>
-                                    <GridViewColumn Header="Condition" Width="Auto"></GridViewColumn>
-                                    <GridViewColumn Header="" Width="Auto"></GridViewColumn>
+                                    <GridViewColumn Header="Item" DisplayMemberBinding="{Binding Nom}" Width="Auto"></GridViewColumn>
+                                    <GridViewColumn Header="Condition" DisplayMemberBinding="{Binding Condition}" Width="Auto"></GridViewColumn>
+                                    <GridViewColumn Header="" Width="Auto">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Content="Détails" Command="{Binding DataContext.cmdDetails_Item, ElementName=lvProposition}">
+                                                    <Button.CommandParameter>
+                                                        <MultiBinding Converter="{converters:ConvertisseurParametre}">
+                                                            <Binding></Binding>
+                                                            <Binding Path="" ElementName="UCPropositions"></Binding>
+                                                        </MultiBinding>
+                                                    </Button.CommandParameter>
+                                                </Button>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
                                 </GridView>
                             </ListView.View>
                         </ListView>
 
                         <Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">Montant en argent</Label>
-                        <TextBox Name="tbxMontantProposition" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsEnabled="False" Text="0" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center"></TextBox>
+                        <TextBox Name="tbxMontantProposition" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsEnabled="False" Text="{Binding PropositionSelectionnee.Montant}" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center"></TextBox>
 
                         <Button Name="btnMessageProposition" Grid.Row="2" Grid.Column="1" Style="{StaticResource btnMessageImageStyle}" Margin="60,0,0,0"></Button>
                     </Grid>
@@ -110,25 +134,38 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
 
-                        <ListView Grid.ColumnSpan="2" Name="lvOffre" Margin="8">
+                        <ListView Grid.ColumnSpan="2" Name="lvOffre" Margin="8" ItemsSource="{Binding PropositionSelectionnee.AnnonceLiee.ListeItems}">
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn Header="Item" Width="Auto"></GridViewColumn>
-                                    <GridViewColumn Header="Condition" Width="Auto"></GridViewColumn>
-                                    <GridViewColumn Header="" Width="Auto"></GridViewColumn>
+                                    <GridViewColumn Header="Item" DisplayMemberBinding="{Binding Nom}" Width="Auto"></GridViewColumn>
+                                    <GridViewColumn Header="Condition" DisplayMemberBinding="{Binding Condition}" Width="Auto"></GridViewColumn>
+                                    <GridViewColumn Header="" Width="Auto">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Content="Détails" Command="{Binding DataContext.cmdDetails_Item, ElementName=lvProposition}">
+                                                    <Button.CommandParameter>
+                                                        <MultiBinding Converter="{converters:ConvertisseurParametre}">
+                                                            <Binding></Binding>
+                                                            <Binding Path="" ElementName="UCPropositions"></Binding>
+                                                        </MultiBinding>
+                                                    </Button.CommandParameter>
+                                                </Button>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
                                 </GridView>
                             </ListView.View>
                         </ListView>
 
                         <Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">Montant en argent</Label>
-                        <TextBox Name="tbxMontantOffre" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsEnabled="False" Text="0" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center"></TextBox>
+                        <TextBox Name="tbxMontantOffre" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsEnabled="False" Text="{Binding PropositionSelectionnee.AnnonceLiee.Montant}" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center"></TextBox>
 
                         <Button Name="btnMessageOffre" Grid.Row="2" Grid.Column="1" Style="{StaticResource btnMessageImageStyle}" Margin="60,0,0,0" Visibility="Hidden"></Button>
                     </Grid>
                 </GroupBox>
 
                 <!-- Propositions reçues -->
-                <Button Name="btnRefuserProposition" Grid.RowSpan="2" Grid.Row="1" Grid.Column="0"  HorizontalAlignment="Stretch" Margin="100,10,100,10" Visibility="Visible" Content="Refuser">
+                <Button Name="btnRefuserProposition" Grid.RowSpan="2" Grid.Row="1" Grid.Column="0"  HorizontalAlignment="Stretch" Margin="100,10,100,10" Visibility="Visible" Content="Refuser" Command="{Binding cmdRefuserProposition}">
                     <!-- Sert à arrondir les coins du bouton -->
                     <Button.Resources>
                         <Style TargetType="Border">
@@ -136,7 +173,7 @@
                         </Style>
                     </Button.Resources>
                 </Button>
-                <Button Name="btnAccepterProposition" Grid.RowSpan="2" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="100,10,100,10" Visibility="Visible" Content="Accepter">
+                <Button Name="btnAccepterProposition" Grid.RowSpan="2" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="100,10,100,10" Visibility="Visible" Content="Accepter" Command="{Binding cmdAccepterProposition}">
                     <!-- Sert à arrondir les coins du bouton -->
                     <Button.Resources>
                         <Style TargetType="Border">
@@ -147,8 +184,8 @@
 
                 <!-- Propositions envoyées -->
                 <Label Name="lblEtatProposition" Grid.Row="1" Grid.Column="0"  HorizontalAlignment="Right" Visibility="Hidden" VerticalAlignment="Center">État de la proposition: </Label>
-                <TextBox Text="État" Name="txbEtatProposition" Grid.Row="1" Grid.Column="1"  HorizontalAlignment="Left" Visibility="Hidden" VerticalAlignment="Center" IsEnabled="False"></TextBox>
-                <Button Name="btnAnnulerProposition" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,5,0,0" Visibility="Hidden" Content="Annuler proposition">
+                <TextBox Text="{Binding PropositionSelectionnee.EtatProposition}" Name="txbEtatProposition" Grid.Row="1" Grid.Column="1"  HorizontalAlignment="Left" Visibility="Hidden" VerticalAlignment="Center" IsEnabled="False"></TextBox>
+                <Button Name="btnAnnulerProposition" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,5,0,0" Visibility="Hidden" Content="Annuler proposition" Command="{Binding cmdAnnulerProposition}">
                     <!-- Sert à arrondir les coins du bouton -->
                     <Button.Resources>
                         <Style TargetType="Border">

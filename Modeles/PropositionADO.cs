@@ -102,6 +102,54 @@ namespace LeCollectionneur.Modeles
 			return (int)tableId.Rows[0]["Id"];
 		}
 
+		public ObservableCollection<Proposition> RecupererPropositionsEnvoyees(int idUtilisateur)
+		{
+			string requete = $@"
+				SELECT p.Id, p.idAnnonce, p.idUtilisateur, p.montant, p.date AS dateProposition, ep.Nom AS etatProposition
+				FROM Propositions p
+				LEFT JOIN EtatsProposition ep
+				ON p.IdEtatProposition = ep.Id
+				WHERE p.idUtilisateur = {idUtilisateur} AND p.idEtatProposition NOT IN (SELECT epsq.Id FROM EtatsProposition epsq WHERE (Nom = 'Acceptée' OR Nom = 'Annulée'));
+			";
+			ObservableCollection<Proposition> ocPropositions = new ObservableCollection<Proposition>();
+			DataSet setProposition = MaBd.Selection(requete);
+			DataTable TableProposition = setProposition.Tables[0];
+
+			foreach (DataRow drProposition in TableProposition.Rows)
+			{
+				Proposition propTemp = new Proposition(drProposition);
+				propTemp.ItemsProposes = recupererItemsProposition(propTemp.Id);
+
+				ocPropositions.Add(propTemp);
+			}
+			return ocPropositions;
+		}
+
+		public ObservableCollection<Proposition> RecupererPropositionsRecues(int idUtilisateur)
+		{
+			string requete = $@"
+				SELECT p.Id, p.idAnnonce, p.idUtilisateur, p.montant, p.date AS dateProposition, ep.Nom AS etatProposition
+				FROM Propositions p
+				INNER JOIN EtatsProposition ep
+				ON p.IdEtatProposition = ep.Id
+				LEFT JOIN Annonces a
+				ON p.idAnnonce = a.Id
+				WHERE a.idUtilisateur = {idUtilisateur} AND idEtatProposition = (SELECT Id FROM EtatsProposition WHERE Nom = 'En attente');
+			";
+			ObservableCollection<Proposition> ocPropositions = new ObservableCollection<Proposition>();
+			DataSet setProposition = MaBd.Selection(requete);
+			DataTable TableProposition = setProposition.Tables[0];
+
+			foreach (DataRow drProposition in TableProposition.Rows)
+			{
+				Proposition propTemp = new Proposition(drProposition);
+				propTemp.ItemsProposes = recupererItemsProposition(propTemp.Id);
+
+				ocPropositions.Add(propTemp);
+			}
+			return ocPropositions;
+		}
+
 		#endregion
 
 		#region UPDATE
@@ -145,9 +193,8 @@ namespace LeCollectionneur.Modeles
 			ObservableCollection<Item> items = new ObservableCollection<Item>();
 
 			string reqItemsProp = $@"
-         SELECT i.Id, i.Nom AS nomItem, i.Description, i.dateSortie, i.cheminImage, t.Nom AS typeItem, m.Nom AS manufacturier, c.Nom AS 'condition'
+         SELECT i.Id, i.Nom AS nomItem, i.Description, i.dateSortie, i.cheminImage, t.Nom AS typeItem, i.Manufacturier, c.Nom AS 'condition'
          FROM Items i
-         INNER JOIN Manufacturiers m ON i.IdManufacturier = m.Id
          INNER JOIN TypesItem as t ON i.idTypeItem = t.Id
          INNER JOIN Conditions c ON i.idCondition = c.Id
          LEFT JOIN ItemProposition ip ON i.Id = ip.IdItem

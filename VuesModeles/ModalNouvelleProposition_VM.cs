@@ -114,10 +114,11 @@ namespace LeCollectionneur.VuesModeles
 
 		private void cmdDetailsItem(object param)
 		{
-			//On reçoit l'item qui est sur la ligne du bouton Détails, puis on le passe à la fenêtre de détails d'un item
-			Item itemDetails = param as Item;
-			//TODO: Afficher la fenêtre modale de détails d'items
-
+			// On recoit en paramètre l'item à détailler en premier et l'interface de la vue en deuxième.
+			// On passe l'item à l'interface pour ouvrir une modal de détails
+			Item itemDetails = ((object[])param)[0] as Item;
+			IOuvreModalAvecParametre<Item> interfaceV = ((object[])param)[1] as IOuvreModalAvecParametre<Item>;
+			interfaceV.OuvrirModal(itemDetails);
 		}
 
 		private void cmdProposer(object param)

@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using LeCollectionneur.Modeles;
+using LeCollectionneur.VuesModeles;
 
 namespace LeCollectionneur.Vues
 {
@@ -25,6 +26,7 @@ namespace LeCollectionneur.Vues
 		public UCPropositionsRecuesEnvoyees()
 		{
 			InitializeComponent();
+			DataContext = new PropositionsRecuesEnvoyees_VM();
 		}
 
 		private void radPropositionsRecues_Checked(object sender, RoutedEventArgs e)
@@ -35,11 +37,13 @@ namespace LeCollectionneur.Vues
 				btnRefuserProposition.Visibility = Visibility.Visible;
 				btnAccepterProposition.Visibility = Visibility.Visible;
 				btnMessageProposition.Visibility = Visibility.Visible;
+				dgRecues.Visibility = Visibility.Visible;
 
 				lblEtatProposition.Visibility = Visibility.Hidden;
 				txbEtatProposition.Visibility = Visibility.Hidden;
 				btnMessageOffre.Visibility = Visibility.Hidden;
 				btnAnnulerProposition.Visibility = Visibility.Hidden;
+				dgEnvoyees.Visibility = Visibility.Hidden;
 			}
 		}
 
@@ -48,11 +52,13 @@ namespace LeCollectionneur.Vues
 			btnRefuserProposition.Visibility = Visibility.Hidden;
 			btnAccepterProposition.Visibility = Visibility.Hidden;
 			btnMessageProposition.Visibility = Visibility.Hidden;
+			dgRecues.Visibility = Visibility.Hidden;
 
 			lblEtatProposition.Visibility = Visibility.Visible;
 			txbEtatProposition.Visibility = Visibility.Visible;
 			btnMessageOffre.Visibility = Visibility.Visible;
 			btnAnnulerProposition.Visibility = Visibility.Visible;
+			dgEnvoyees.Visibility = Visibility.Visible;
 		}
 	}
 }

@@ -74,7 +74,7 @@ namespace LeCollectionneur.Modeles
 
         public Annonce RecupererUn(int id)
         {
-            string sel = "SELECT a.*, ta.Nom AS typeAnnonce from annonces a LEFT JOIN typesannonce ta ON a.idTypeAnnonce = ta.Id WHERE Id = " + id;
+            string sel = "SELECT a.*, ta.Nom AS typeAnnonce from annonces a LEFT JOIN typesannonce ta ON a.idTypeAnnonce = ta.Id WHERE a.Id = " + id;
             DataSet SetAnnonce = MaBD.Selection(sel);
             DataTable TableAnnonce = SetAnnonce.Tables[0];
 

@@ -6,7 +6,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LeCollectionneur.Vues"
         mc:Ignorable="d"
-        Title="Nouvelle proposition" Height="450" Width="800">
+        Title="Nouvelle proposition" Height="450" Width="800"
+        xmlns:converters="clr-namespace:LeCollectionneur.Outils">
+        <!-- Ligne en haut de celle-ci à ajouter pour avoir accès aux outils -->
     <Window.Resources>
         <ImageBrush x:Key="btnMessageImage" ImageSource="/Images/Icones/message.png" Stretch="Uniform" />
 
@@ -61,7 +63,14 @@
                             <GridViewColumn Header="" Width="Auto">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Content="Détails" Command="{Binding DataContext.cmdDetails_Item, ElementName=lvProposition}" CommandParameter="{Binding}" />
+                                        <Button Content="Détails" Command="{Binding DataContext.cmdDetails_Item, ElementName=lvProposition}">
+                                            <Button.CommandParameter>
+                                                <MultiBinding Converter="{converters:ConvertisseurParametre}">
+                                                    <Binding></Binding>
+                                                    <Binding Path="" ElementName="WindowNouvelleProposition"></Binding>
+                                                </MultiBinding>
+                                            </Button.CommandParameter>
+                                        </Button>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
@@ -109,7 +118,18 @@
                             <GridViewColumn Header="" Width="Auto">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Button Content="Détails" Command="{Binding DataContext.cmdDetails_Item, ElementName=lvOffre}" CommandParameter="{Binding}" />
+                                        <Button Content="Détails" Command="{Binding DataContext.cmdDetails_Item, ElementName=lvProposition}">
+                                            <Button.CommandParameter>
+                                                <!-- Pour que ça fonctionne, il faut ajouter une ligne à la déclaration de la fenêtre. Juste monter dans les premières lignes du XAML
+                                                de cette page-ci pour voir laquelle, je vais mettre un commentaire à côté
+                                                -->
+                                                <MultiBinding Converter="{converters:ConvertisseurParametre}">
+                                                    <!-- La balise Binding vide veut dire que c'est un binding à l'objet de la ligne, donc à l'item -->
+                                                    <Binding></Binding>
+                                                    <Binding Path="" ElementName="WindowNouvelleProposition"></Binding>
+                                                </MultiBinding>
+                                            </Button.CommandParameter>
+                                        </Button>
                                     </DataTemplate>
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>

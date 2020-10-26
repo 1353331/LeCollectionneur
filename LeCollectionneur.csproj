@@ -132,6 +132,7 @@
     <Compile Include="Modeles\UtilisateurADO.cs" />
     <Compile Include="Outils\BdBase.cs" />
     <Compile Include="Outils\Commande.cs" />
+    <Compile Include="Outils\ConvertisseurParametre.cs" />
     <Compile Include="Outils\Evenements.cs" />
     <Compile Include="Outils\Fichier.cs" />
     <Compile Include="Outils\Interfaces\IFenetreFermeable.cs" />
@@ -141,14 +142,17 @@
     <Compile Include="Outils\Messages\EvenementSysteme.cs" />
     <Compile Include="Outils\Validateur.cs" />
     <Compile Include="VuesModeles\AjoutCollection_VM.cs" />
+    <Compile Include="VuesModeles\AjoutItemAnnonce_VM.cs" />
     <Compile Include="VuesModeles\AjoutItemCollection_VM.cs" />
     <Compile Include="VuesModeles\Annonce_VM.cs" />
     <Compile Include="VuesModeles\Collection_VM.cs" />
     <Compile Include="VuesModeles\Conversation_VM.cs" />
     <Compile Include="VuesModeles\DeplacementItem_VM.cs" />
+    <Compile Include="VuesModeles\ModalAjoutAnnonce_VM.cs" />
     <Compile Include="VuesModeles\ModalAjoutItem_VM.cs" />
+    <Compile Include="VuesModeles\ModalDetailsItem_VM.cs" />
     <Compile Include="VuesModeles\ModalNouvelleProposition_VM.cs" />
-    <Compile Include="VuesModeles\Proposition_VM.cs" />
+    <Compile Include="VuesModeles\PropositionsRecuesEnvoyees_VM.cs" />
     <Compile Include="Vues\ajouterConversation.xaml.cs">
       <DependentUpon>ajouterConversation.xaml</DependentUpon>
     </Compile>
@@ -170,6 +174,9 @@
     <Compile Include="Vues\ModalAjoutCollection.xaml.cs">
       <DependentUpon>ModalAjoutCollection.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Vues\ModalAjoutItemAnnonce.xaml.cs">
+      <DependentUpon>ModalAjoutItemAnnonce.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Vues\ModalAjoutItemCollection.xaml.cs">
       <DependentUpon>ModalAjoutItemCollection.xaml</DependentUpon>
     </Compile>
@@ -178,6 +185,9 @@
     </Compile>
     <Compile Include="Vues\ModalDeplacementItem.xaml.cs">
       <DependentUpon>ModalDeplacementItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vues\ModalDetailsItem.xaml.cs">
+      <DependentUpon>ModalDetailsItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Vues\ModalNouvelleProposition.xaml.cs">
       <DependentUpon>ModalNouvelleProposition.xaml</DependentUpon>
@@ -237,6 +247,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Vues\ModalAjoutItemAnnonce.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Vues\ModalAjoutItemCollection.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -246,6 +260,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Vues\ModalDeplacementItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Vues\ModalDetailsItem.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
