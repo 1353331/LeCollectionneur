@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LeCollectionneur"
         mc:Ignorable="d"
-        Title="Le Collectionneur" Height="450" Width="1000">
+        Title="Le Collectionneur" Height="700" Width="1000">
     <Grid>
       
         <!-- Présenter le contexte approprié (utilisateur ou admin)-->

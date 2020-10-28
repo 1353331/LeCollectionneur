@@ -23,7 +23,7 @@
             <ColumnDefinition/>
             <ColumnDefinition Width="50"/>
         </Grid.ColumnDefinitions>
-        <Label Content="Paramêtre" FontSize="45" HorizontalAlignment="Center" Grid.ColumnSpan="4" FontWeight="Bold"/>
+        <Label Content="Paramètres" FontSize="45" HorizontalAlignment="Center" Grid.ColumnSpan="4" FontWeight="Bold"/>
         <Label Content="Nouveau nom d'utilisateur" Grid.Row="1"/>
         <Label Content="Nouveau Courriel" Grid.Row="2"/>
         <Label Content="Mot de passe actuel" Grid.Row="3"/>

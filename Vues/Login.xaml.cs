@@ -54,5 +54,12 @@ namespace LeCollectionneur.Vues
             temp.Connection("admin","admin");
             this.Close();
         }
-    }
+
+		private void btnConnectionProf2_Click(object sender, RoutedEventArgs e)
+		{
+         UtilisateurADO temp = new UtilisateurADO();
+         temp.Connection("collectionneur2", "collectionneur");
+         this.Close();
+      }
+	}
 }
