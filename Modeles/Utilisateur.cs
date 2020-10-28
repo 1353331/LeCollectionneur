@@ -32,6 +32,13 @@ namespace LeCollectionneur.Modeles
             this.NomUtilisateur = Compte.Tables[0].Rows[0]["NomUtilisateur"].ToString();
             this.Courriel = Compte.Tables[0].Rows[0]["Courriel"].ToString();
         }
+        //Contrusteur par DataRow
+        public Utilisateur(DataRow Compte)
+        {
+            this.Id = (int)Compte["id"];
+            this.NomUtilisateur = Compte["NomUtilisateur"].ToString();
+            this.Courriel = Compte["Courriel"].ToString();
+        }
         //Constructeur Vide pour Utilisateur Ado
         public Utilisateur(){ }
         #endregion

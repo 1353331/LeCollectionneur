@@ -1,5 +1,7 @@
-﻿using System;
+﻿using LeCollectionneur.Modeles;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,11 +24,36 @@ namespace LeCollectionneur.Vues
         public ajouterConversation()
         {
             InitializeComponent();
+            miseAJour();
         }
 
         private void btnRecherche_Click(object sender, RoutedEventArgs e)
         {
+            miseAJour(UtilisateurADO.getAllUtilisateur(txbRecherche.Text));
+        }
+        private void miseAJour()
+        {
+            lstUser.Items.Clear();
+            var temp = UtilisateurADO.getAllUtilisateur();
+            foreach (var item in temp)
+            {
+                lstUser.Items.Add(new Utilisateur(item.Id, item.NomUtilisateur, item.Courriel));
+            }
+        }
+        private void miseAJour(List<Utilisateur> temp)
+        {
+            lstUser.Items.Clear();
+            foreach (var item in temp)
+            {
+                lstUser.Items.Add(new Utilisateur(item.Id,item.NomUtilisateur,item.Courriel));
+            }
+        }
+        private void btnAjoutConversation_Click(object sender, RoutedEventArgs e)
+        {
 
+            var utlisateur = (Utilisateur)lstUser.SelectedItem;
+            //ConversationADO.ChercherIdConversation(UtilisateurADO.utilisateur, utlisateur);
+            ConversationADO.CreerNouvelleConversation(UtilisateurADO.utilisateur, utlisateur);
         }
     }
 }

@@ -27,7 +27,7 @@
                 <GridView >
                     <GridView.Columns>
                         <GridViewColumn Header="Utilisateur" DisplayMemberBinding="{Binding NomUserAutre}"  />
-                        <GridViewColumn Header="Courriel" DisplayMemberBinding="{Binding lastMessage}"/>
+                        <GridViewColumn Header="Dernier Message" DisplayMemberBinding="{Binding lastMessage}"/>
                         <GridViewColumn Header="Date DernierMessage" DisplayMemberBinding="{Binding date}"/>
                         <GridViewColumn DisplayMemberBinding="{Binding o}">
                             <Button Content="+" Height="25" Width="50" Name="btnAjouterConversation" Click="btnAjouterConversation_Click"/>

@@ -66,7 +66,7 @@ namespace LeCollectionneur.Modeles
             return new List<Message>();
 
         }
-        private static int ChercherIdConversation(Utilisateur UserActif, Utilisateur UserAutre)
+        public static int ChercherIdConversation(Utilisateur UserActif, Utilisateur UserAutre)
         {
             // Deux possibilité d'eregistrement en bd
             string req = "SELECT id FROM `conversations` WHERE IdUtilisateur1 = " + UserActif.Id + " AND IdUtilisateur2 = " + UserAutre.Id;
@@ -88,14 +88,18 @@ namespace LeCollectionneur.Modeles
 
         }
        
-        private static int CreerNouvelleConversation(Utilisateur UserActif, Utilisateur UserAutre)
+        public static int CreerNouvelleConversation(Utilisateur UserActif, Utilisateur UserAutre)
         {
-            string req = "INSERT INTO `conversations` (`IdUtilisateur1`, `IdUtilisateur2`) VALUES (" + UserActif.Id + ", " + UserAutre.Id + ");";
-            BD.Commande(req);
-            req = "SELECT id FROM `conversations` WHERE IdUtilisateur1 = " + UserActif.Id + " AND IdUtilisateur2 = " + UserAutre.Id;
-            DataSet temp = BD.Selection(req);
-            return (int)temp.Tables[0].Rows[0]["id"];
+            
+
+                string req = "INSERT INTO `conversations` (`IdUtilisateur1`, `IdUtilisateur2`) VALUES (" + UserActif.Id + ", " + UserAutre.Id + ");";
+                BD.Commande(req);
+                req = "SELECT id FROM `conversations` WHERE IdUtilisateur1 = " + UserActif.Id + " AND IdUtilisateur2 = " + UserAutre.Id;
+                DataSet temp = BD.Selection(req);
+                return (int)temp.Tables[0].Rows[0]["id"];
+            
         }
+       
 
         public void EnvoyerMessage(string Contenu)
         {

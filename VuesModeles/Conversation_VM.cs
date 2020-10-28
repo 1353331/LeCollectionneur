@@ -143,6 +143,7 @@ namespace LeCollectionneur.VuesModeles
 
 
         #endregion
+
         #region Méthodes
         public void EnvoyerMessage(Message message)
         {
@@ -157,8 +158,18 @@ namespace LeCollectionneur.VuesModeles
             var temp = conversationADO.RecupererConversationUtilisateur();
             foreach(var d in temp)
             {
-                d.lastMessage = conversationADO.GetMessages(d.Id)[conversationADO.GetMessages(d.Id).Count()-1].Contenu;
-                MesConversation.Add(d);
+                try
+                {
+
+                    d.lastMessage = conversationADO.GetMessages(d.Id)[conversationADO.GetMessages(d.Id).Count()-1].Contenu;
+                    MesConversation.Add(d);
+                }
+                catch
+                {
+                    d.lastMessage = "";
+                    MesConversation.Add(d);
+                }
+                
             }
 
             OnPropertyChanged("MesConversation");

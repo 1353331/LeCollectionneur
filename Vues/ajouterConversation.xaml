@@ -10,6 +10,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>
             <RowDefinition/>
+            <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="240"></ColumnDefinition>
@@ -18,6 +19,18 @@
 
         <TextBox Name="txbRecherche" Height="30" ></TextBox>
         <Button x:Name="btnRecherche" Click="btnRecherche_Click" Grid.Column="1" Width="100" Height="30" Content="Rechercher"></Button>
-        <DataGrid Grid.Row="1" Grid.ColumnSpan="2"></DataGrid>
+        <ListView Grid.Row="1" Grid.ColumnSpan="2" Name="lstUser">
+            <ListView.View>
+                <GridView >
+                    <GridView.Columns>
+                        <GridViewColumn Header="Utilisateur" DisplayMemberBinding="{Binding Utilisateur}"/>
+                        <GridViewColumn Header="Courriel" DisplayMemberBinding="{Binding Courriel}"/>
+                    </GridView.Columns>
+
+                </GridView>
+
+            </ListView.View>
+        </ListView>
+        <Button Name="btnAjoutConversation" Click="btnAjoutConversation_Click" Width="200" Height="30" Content="Ajouter conversation" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"></Button>
     </Grid>
 </Window>

@@ -26,6 +26,30 @@ namespace LeCollectionneur.Modeles
         #endregion
 
         #region Method
+        public static List<Utilisateur> getAllUtilisateur()
+        {
+            var listUser = new List<Utilisateur>();
+            DataSet user = BD.Selection("SELECT * FROM `utilisateurs`");
+
+            foreach (DataRow item in user.Tables[0].Rows)
+            {
+                if((int)item["id"] != UtilisateurADO.utilisateur.Id)
+                    listUser.Add(new Utilisateur(item));
+            }
+            return listUser;
+        }
+        public static List<Utilisateur> getAllUtilisateur(string Recherche)
+        {
+            var listUser = new List<Utilisateur>();
+            DataSet user = BD.Selection("SELECT * FROM `utilisateurs`");
+
+            foreach (DataRow item in user.Tables[0].Rows)
+            {
+                if ((int)item["id"] != UtilisateurADO.utilisateur.Id && item["NomUtilisateur"].ToString().Contains(Recherche)) 
+                    listUser.Add(new Utilisateur(item));
+            }
+            return listUser;
+        }
         //Retourne Un utilisateur par son Id, si l'utilisateur n'existe pas retourne un utilisateur vide
         public Utilisateur RechercherUtilisateurById(int Id)
         {
