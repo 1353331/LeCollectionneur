@@ -122,8 +122,8 @@ namespace LeCollectionneur.Modeles
                 (i.CheminImage is null ? "NULL," : $"'{i.CheminImage}',") +
                 $"(SELECT id from TypesItem WHERE nom='{i.Type}')," +
                 $"'{i.Description}'," +
-                $"dateSortie = " + (i.DateSortie.HasValue ? $"'{i.DateSortie.GetValueOrDefault().Year}-{i.DateSortie.GetValueOrDefault().Month}-{i.DateSortie.GetValueOrDefault().Day}'" : "NULL") + ", " +
-                $"Manufacturier = " + (!(i.Manufacturier is null) ? $"'{i.Manufacturier}'" : "NULL") + "); ";
+                 (i.DateSortie.HasValue ? $"'{i.DateSortie.GetValueOrDefault().Year}-{i.DateSortie.GetValueOrDefault().Month}-{i.DateSortie.GetValueOrDefault().Day}'" : "NULL") + ", " +
+                 (!(i.Manufacturier is null) ? $"'{i.Manufacturier}'" : "NULL") + "); ";
 
             MaBD.Commande(req);
         }
@@ -135,8 +135,8 @@ namespace LeCollectionneur.Modeles
                 (i.CheminImage is null ? "NULL," : $"'{i.CheminImage}',") +
                 $"(SELECT id from TypesItem WHERE nom='{i.Type}')," +
                 $"'{i.Description}'," +
-                $"dateSortie = " + (i.DateSortie.HasValue ? $"'{i.DateSortie.GetValueOrDefault().Year}-{i.DateSortie.GetValueOrDefault().Month}-{i.DateSortie.GetValueOrDefault().Day}'" : "NULL") + ", " +
-                $"Manufacturier = " + (!(i.Manufacturier is null ) ? $"'{i.Manufacturier}'" : "NULL") + "); "+
+                (i.DateSortie.HasValue ? $"'{i.DateSortie.GetValueOrDefault().Year}-{i.DateSortie.GetValueOrDefault().Month}-{i.DateSortie.GetValueOrDefault().Day}'" : "NULL") + ", " +
+                (!(i.Manufacturier is null ) ? $"'{i.Manufacturier}'" : "NULL") + "); "+
                 $"SELECT LAST_INSERT_ID();";
             int id=MaBD.CommandeCreationAvecRetourId(req);
             return id;

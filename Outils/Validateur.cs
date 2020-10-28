@@ -15,7 +15,7 @@ namespace LeCollectionneur.Outils
             {
                 if (entree[i] == '\'' || entree[i] == ';')
                 {
-                    modif += "\\";
+                    modif += $"\\{entree[i]}";
                 }
                 else if (entree[i]=='\\')
                 {
