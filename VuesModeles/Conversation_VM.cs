@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-
+using LeCollectionneur.VuesModeles;
 namespace LeCollectionneur.VuesModeles
 {
     class Conversation_VM : INotifyPropertyChanged
@@ -89,7 +89,6 @@ namespace LeCollectionneur.VuesModeles
                 utilisateur = _conversationSelectionne.UserAutre;
                 conversations = _conversationSelectionne.ListMessage;
 
-
                 OnPropertyChanged("ConversationSelectionne");
             }
         }
@@ -130,7 +129,32 @@ namespace LeCollectionneur.VuesModeles
             conversationADO.EnvoyerMessage(messageContenu,id);
             
             messageContenu = "";
+            GetConversations();
+            
             OnPropertyChanged("cmdEnvoyerMessage_Message");
+        }
+
+        private ICommand _cmdAjouterConversation;
+        public ICommand cmdAjouterConversation
+        {
+            get
+            {
+                return _cmdAjouterConversation;
+            }
+            set
+            {
+                _cmdAjouterConversation = value;
+                OnPropertyChanged("cmdAjouterMessage");
+            }
+        }
+
+        public void cmdAjouter_Conversation(object param)
+        {
+            LeCollectionneur.Vues.ajouterConversation ajouterConversation = new LeCollectionneur.Vues.ajouterConversation();
+            ajouterConversation.ShowDialog();
+
+            GetConversations();
+            OnPropertyChanged("MesConversation");
         }
         #endregion
 
@@ -138,6 +162,7 @@ namespace LeCollectionneur.VuesModeles
         public Conversation_VM()
         {
             cmdEnvoyerMessage = new Commande(cmdEnvoyerMessage_Message);
+            cmdAjouterConversation = new Commande(cmdAjouter_Conversation);
             GetConversations();
         }
 
@@ -160,7 +185,6 @@ namespace LeCollectionneur.VuesModeles
             {
                 try
                 {
-
                     d.lastMessage = conversationADO.GetMessages(d.Id)[conversationADO.GetMessages(d.Id).Count()-1].Contenu;
                     MesConversation.Add(d);
                 }
@@ -169,7 +193,6 @@ namespace LeCollectionneur.VuesModeles
                     d.lastMessage = "";
                     MesConversation.Add(d);
                 }
-                
             }
 
             OnPropertyChanged("MesConversation");

@@ -30,8 +30,10 @@ namespace LeCollectionneur.Vues
 
         private void btnAjouterConversation_Click(object sender, RoutedEventArgs e)
         {
+            
             ajouterConversation ajouterConversation = new ajouterConversation();
             ajouterConversation.ShowDialog();
+            
         }
 
        

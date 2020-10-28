@@ -30,7 +30,7 @@
                         <GridViewColumn Header="Dernier Message" DisplayMemberBinding="{Binding lastMessage}"/>
                         <GridViewColumn Header="Date DernierMessage" DisplayMemberBinding="{Binding date}"/>
                         <GridViewColumn DisplayMemberBinding="{Binding o}">
-                            <Button Content="+" Height="25" Width="50" Name="btnAjouterConversation" Click="btnAjouterConversation_Click"/>
+                            <Button Content="+" Height="25" Width="50" Name="btnAjouterConversation" Command="{Binding cmdAjouterConversation}"/>
                         </GridViewColumn>
                     </GridView.Columns>
 
@@ -42,8 +42,16 @@
         <TextBox Grid.Row="1" Grid.Column="2" Name="txbMessage" Text="{Binding messageContenu}"/>
         <Button  Command="{Binding cmdEnvoyerMessage}" Content="Envoyer" Grid.Column="3" Grid.Row="3" Height="50" Width="100" Name="btnEnvoyer" />
         
-        <TextBox Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" IsReadOnly="True"/>
-        
+        <!--<TextBox Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" IsReadOnly="True"/>-->
+        <ListView Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Name="lstConversation" ItemsSource="{Binding conversations}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Utilisateur" DisplayMemberBinding="{Binding Contenu}"/>
+                    <GridViewColumn Header="Date" DisplayMemberBinding="{Binding Date}"/>
+                    <GridViewColumn Header="Message" DisplayMemberBinding="{Binding user}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </UserControl>
  

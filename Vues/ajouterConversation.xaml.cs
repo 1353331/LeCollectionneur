@@ -50,10 +50,9 @@ namespace LeCollectionneur.Vues
         }
         private void btnAjoutConversation_Click(object sender, RoutedEventArgs e)
         {
-
             var utlisateur = (Utilisateur)lstUser.SelectedItem;
-            //ConversationADO.ChercherIdConversation(UtilisateurADO.utilisateur, utlisateur);
-            ConversationADO.CreerNouvelleConversation(UtilisateurADO.utilisateur, utlisateur);
+            ConversationADO.ChercherIdConversation(UtilisateurADO.utilisateur, utlisateur);
+            this.Close();   
         }
     }
 }
