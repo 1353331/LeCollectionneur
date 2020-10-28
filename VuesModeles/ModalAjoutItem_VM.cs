@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using LeCollectionneur.Modeles;
 using LeCollectionneur.Outils;
@@ -22,6 +23,7 @@ namespace LeCollectionneur.VuesModeles
 			set 
 			{ 
 				_itemSelectionne = value;
+				cmdAjouter_Item = new Commande(cmdAjouter, boutonAjouterActif);
 				OnPropertyChanged("ItemSelectionne");
 			}
 		}
@@ -52,13 +54,22 @@ namespace LeCollectionneur.VuesModeles
 			}
 		}
 
+		private ICommand _cmdAjouter_Item;
 
-		public ICommand cmdAjouter_Item { get; set; }
+		public ICommand cmdAjouter_Item
+		{
+			get { return _cmdAjouter_Item; }
+			set 
+			{
+				_cmdAjouter_Item = value;
+				OnPropertyChanged("cmdAjouter_Item");
+			}
+		}
+
 
 		public ModalAjoutItem_VM()
 		{
-			cmdAjouter_Item = new Commande(cmdAjouter);
-
+			cmdAjouter_Item = new Commande(cmdAjouter, boutonAjouterActif);
 			lstCollections = new CollectionADO().Recuperer(UtilisateurADO.utilisateur.Id);
 		}
 
@@ -66,6 +77,13 @@ namespace LeCollectionneur.VuesModeles
 		{
 			//Envoie l'évènement d'ajout d'item avec l'item sélectionné pour qu'il soit reçu par ModalNouvelleProposition_VM
 			EvenementSysteme.Publier<EnvoyerItemMessage>(new EnvoyerItemMessage() { Item = ItemSelectionne });
+
+			ItemSelectionne = null;
+		}
+
+		private bool boutonAjouterActif()
+		{
+			return !(ItemSelectionne is null);
 		}
 
 		#region OnPropertyChanged

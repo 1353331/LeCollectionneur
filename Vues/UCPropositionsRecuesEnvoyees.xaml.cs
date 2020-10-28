@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using LeCollectionneur.Modeles;
+using LeCollectionneur.Outils.Interfaces;
 using LeCollectionneur.VuesModeles;
 
 namespace LeCollectionneur.Vues
@@ -21,7 +22,7 @@ namespace LeCollectionneur.Vues
 	/// <summary>
 	/// Logique d'interaction pour UCProposition.xaml
 	/// </summary>
-	public partial class UCPropositionsRecuesEnvoyees : UserControl
+	public partial class UCPropositionsRecuesEnvoyees : UserControl, IOuvreModalAvecParametre<Item>
 	{
 		public UCPropositionsRecuesEnvoyees()
 		{
@@ -59,6 +60,13 @@ namespace LeCollectionneur.Vues
 			btnMessageOffre.Visibility = Visibility.Visible;
 			btnAnnulerProposition.Visibility = Visibility.Visible;
 			dgEnvoyees.Visibility = Visibility.Visible;
+		}
+
+		public void OuvrirModal(Item itemSelectionne)
+		{
+			ModalDetailsItem modalDetails = new ModalDetailsItem(itemSelectionne);
+			modalDetails.Owner = Window.GetWindow(this);
+			modalDetails.ShowDialog();
 		}
 	}
 }

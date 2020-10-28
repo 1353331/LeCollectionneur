@@ -20,7 +20,19 @@ namespace LeCollectionneur.VuesModeles
 
 		public ICommand cmdAnnuler_Proposition { get; set; }
 		public ICommand cmdDetails_Item { get; set; }
-		public ICommand cmdProposer_Proposition { get; set; }
+
+		private ICommand _cmdProposer_Proposition;
+
+		public ICommand cmdProposer_Proposition
+		{
+			get { return _cmdProposer_Proposition; }
+			set 
+			{ 
+				_cmdProposer_Proposition = value;
+				OnPropertyChanged("cmdProposer_Proposition");
+			}
+		}
+
 		public ICommand cmdAjouterItem_Proposition { get; set; }
 		public ICommand cmdSupprimerItem_Proposition { get; set; }
 
@@ -42,6 +54,8 @@ namespace LeCollectionneur.VuesModeles
 			{
 				_montantProposition = Math.Round(value, 2);
 				nouvelleProposition.Montant = _montantProposition;
+				cmdProposer_Proposition = new Commande(cmdProposer, boutonProposerActif);
+				OnPropertyChanged("MontantProposition");
 			}
 		}
 
@@ -53,6 +67,7 @@ namespace LeCollectionneur.VuesModeles
 			{
 				_itemsProposition = value;
 				nouvelleProposition.ItemsProposes = value;
+				cmdProposer_Proposition = new Commande(cmdProposer, boutonProposerActif);
 				OnPropertyChanged("ItemsProposition");
 			}
 		}
@@ -76,7 +91,7 @@ namespace LeCollectionneur.VuesModeles
 			// Initialiser les commandes
 			cmdAnnuler_Proposition = new Commande(cmdAnnuler);
 			cmdDetails_Item = new Commande(cmdDetailsItem);
-			cmdProposer_Proposition = new Commande(cmdProposer);
+			cmdProposer_Proposition = new Commande(cmdProposer, boutonProposerActif);
 			cmdAjouterItem_Proposition = new Commande(cmdAjouterItem);
 			cmdSupprimerItem_Proposition = new Commande(cmdSupprimerItem);
 
@@ -154,11 +169,17 @@ namespace LeCollectionneur.VuesModeles
 			if (resultat == MessageBoxResult.Yes)
 			{
 				ItemsProposition.Remove(ItemSelectionne);
+				ItemsProposition = ItemsProposition;
 				ItemSelectionne = null;
 			}
 		}
 
 		#endregion
+
+		private bool boutonProposerActif()
+		{
+			return (MontantProposition > 0 || ItemsProposition.Count > 0);
+		}
 
 		private bool itemEstDansProposition(Item item)
 		{
@@ -177,7 +198,10 @@ namespace LeCollectionneur.VuesModeles
 		{
 			if (!itemEstDansProposition(msg.Item))
 			{
-				ItemsProposition.Add(msg.Item);
+				ObservableCollection<Item> itemsProp = ItemsProposition;
+				itemsProp.Add(msg.Item);
+				ItemsProposition = itemsProp;
+				MessageBox.Show($"Vous avez ajouté l'item {msg.Item.Nom}", "Ajout réussi", MessageBoxButton.OK, MessageBoxImage.Information);
 			}
 			else
 			{

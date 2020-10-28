@@ -8,14 +8,50 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using LeCollectionneur.Modeles;
 using LeCollectionneur.Outils;
+using LeCollectionneur.Outils.Interfaces;
 
 namespace LeCollectionneur.VuesModeles
 {
 	public class PropositionsRecuesEnvoyees_VM : INotifyPropertyChanged
 	{
-		public ICommand cmdAccepterProposition { get; set; }
-		public ICommand cmdRefuserProposition { get; set; }
-		public ICommand cmdAnnulerProposition { get; set; }
+		private ICommand _cmdAccepterProposition;	
+
+		public ICommand cmdAccepterProposition
+		{
+			get { return _cmdAccepterProposition; }
+			set 
+			{ 
+				_cmdAccepterProposition = value;
+				OnPropertyChanged("cmdAccepterProposition");
+			}
+		}
+
+		private ICommand _cmdRefuserProposition;
+
+		public ICommand cmdRefuserProposition
+		{
+			get { return _cmdRefuserProposition; }
+			set
+			{
+				_cmdRefuserProposition = value;
+				OnPropertyChanged("cmdRefuserProposition");
+			}
+		}
+
+		private ICommand _cmdAnnulerProposition;
+
+		public ICommand cmdAnnulerProposition
+		{
+			get { return _cmdAnnulerProposition; }
+			set
+			{
+				_cmdAnnulerProposition = value;
+				OnPropertyChanged("cmdAnnulerProposition");
+			}
+		}
+
+		public ICommand cmdDetails_Item { get; set; }
+
 		public ICommand cmdChangementContexteRecuesEnvoyees { get; set; }
 
 		#region Propriétés
@@ -53,6 +89,7 @@ namespace LeCollectionneur.VuesModeles
 			set
 			{
 				_propositionSelectionnee = value;
+				changementVisibiliteCommandes();
 				OnPropertyChanged("PropositionSelectionnee");
 			}
 		}
@@ -63,10 +100,9 @@ namespace LeCollectionneur.VuesModeles
 			PropositionsEnvoyees = propADO.RecupererPropositionsEnvoyees(UtilisateurADO.utilisateur.Id);
 			PropositionsRecues = propADO.RecupererPropositionsRecues(UtilisateurADO.utilisateur.Id);
 
-			cmdAccepterProposition = new Commande(cmdAccepter);
-			cmdRefuserProposition = new Commande(cmdRefuser);
-			cmdAnnulerProposition = new Commande(cmdAnnuler);
+			changementVisibiliteCommandes();
 			cmdChangementContexteRecuesEnvoyees = new Commande(cmdChangement);
+			cmdDetails_Item = new Commande(cmdDetailsItem);
 		}
 
 		#region Implémentation des commandes
@@ -108,7 +144,28 @@ namespace LeCollectionneur.VuesModeles
 		{
 			PropositionSelectionnee = null;
 		}
+
+		private void cmdDetailsItem(object param)
+		{
+			// On recoit en paramètre l'item à détailler en premier et l'interface de la vue en deuxième.
+			// On passe l'item à l'interface pour ouvrir une modal de détails
+			Item itemDetails = ((object[])param)[0] as Item;
+			IOuvreModalAvecParametre<Item> interfaceV = ((object[])param)[1] as IOuvreModalAvecParametre<Item>;
+			interfaceV.OuvrirModal(itemDetails);
+		}
 		#endregion
+
+		public bool UnePropositionSelectionnee()
+		{
+			return !(PropositionSelectionnee is null);
+		}
+
+		private void changementVisibiliteCommandes()
+		{
+			cmdAccepterProposition = new Commande(cmdAccepter, UnePropositionSelectionnee);
+			cmdRefuserProposition = new Commande(cmdRefuser, UnePropositionSelectionnee);
+			cmdAnnulerProposition = new Commande(cmdAnnuler, UnePropositionSelectionnee);
+		}
 
 		#region NotifyPropertyChanged
 		public event PropertyChangedEventHandler PropertyChanged;

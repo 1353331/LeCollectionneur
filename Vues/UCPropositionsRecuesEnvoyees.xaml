@@ -91,28 +91,26 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
 
-                        <ListView Grid.ColumnSpan="2" Name="lvProposition" Margin="8" ItemsSource="{Binding PropositionSelectionnee.ItemsProposes}">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="Item" DisplayMemberBinding="{Binding Nom}" Width="Auto"></GridViewColumn>
-                                    <GridViewColumn Header="Condition" DisplayMemberBinding="{Binding Condition}" Width="Auto"></GridViewColumn>
-                                    <GridViewColumn Header="" Width="Auto">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <Button Content="Détails" Command="{Binding DataContext.cmdDetails_Item, ElementName=lvProposition}">
-                                                    <Button.CommandParameter>
-                                                        <MultiBinding Converter="{converters:ConvertisseurParametre}">
-                                                            <Binding></Binding>
-                                                            <Binding Path="" ElementName="UCPropositions"></Binding>
-                                                        </MultiBinding>
-                                                    </Button.CommandParameter>
-                                                </Button>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
+                        <DataGrid Name="dgProposition" ItemsSource="{Binding PropositionSelectionnee.ItemsProposes}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" Grid.ColumnSpan="2" IsReadOnly="True">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding Path=Nom}" Header="Nom" Width="3*"></DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Path=Condition}" Header="Condition" Width="3*"></DataGridTextColumn>
+                                <DataGridTemplateColumn Width="2*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="Détails" Command="{Binding DataContext.cmdDetails_Item, ElementName=dgProposition}">
+                                                <Button.CommandParameter>
+                                                    <MultiBinding Converter="{converters:ConvertisseurParametre}">
+                                                        <Binding></Binding>
+                                                        <Binding Path="" ElementName="UCPropositions"></Binding>
+                                                    </MultiBinding>
+                                                </Button.CommandParameter>
+                                            </Button>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
 
                         <Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">Montant en argent</Label>
                         <TextBox Name="tbxMontantProposition" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsEnabled="False" Text="{Binding PropositionSelectionnee.Montant}" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center"></TextBox>
@@ -134,28 +132,26 @@
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
 
-                        <ListView Grid.ColumnSpan="2" Name="lvOffre" Margin="8" ItemsSource="{Binding PropositionSelectionnee.AnnonceLiee.ListeItems}">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="Item" DisplayMemberBinding="{Binding Nom}" Width="Auto"></GridViewColumn>
-                                    <GridViewColumn Header="Condition" DisplayMemberBinding="{Binding Condition}" Width="Auto"></GridViewColumn>
-                                    <GridViewColumn Header="" Width="Auto">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <Button Content="Détails" Command="{Binding DataContext.cmdDetails_Item, ElementName=lvProposition}">
-                                                    <Button.CommandParameter>
-                                                        <MultiBinding Converter="{converters:ConvertisseurParametre}">
-                                                            <Binding></Binding>
-                                                            <Binding Path="" ElementName="UCPropositions"></Binding>
-                                                        </MultiBinding>
-                                                    </Button.CommandParameter>
-                                                </Button>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
+                        <DataGrid Name="dgOffre" ItemsSource="{Binding PropositionSelectionnee.AnnonceLiee.ListeItems}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" Grid.ColumnSpan="2" IsReadOnly="True">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding Path=Nom}" Header="Nom" Width="3*"></DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Path=Condition}" Header="Condition" Width="3*"></DataGridTextColumn>
+                                <DataGridTemplateColumn Width="2*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="Détails" Command="{Binding DataContext.cmdDetails_Item, ElementName=dgOffre}">
+                                                <Button.CommandParameter>
+                                                    <MultiBinding Converter="{converters:ConvertisseurParametre}">
+                                                        <Binding></Binding>
+                                                        <Binding Path="" ElementName="UCPropositions"></Binding>
+                                                    </MultiBinding>
+                                                </Button.CommandParameter>
+                                            </Button>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
 
                         <Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">Montant en argent</Label>
                         <TextBox Name="tbxMontantOffre" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsEnabled="False" Text="{Binding PropositionSelectionnee.AnnonceLiee.Montant}" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center"></TextBox>
