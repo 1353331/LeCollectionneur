@@ -28,7 +28,6 @@
         <Label Content="Type d'annonce" Grid.Row="1"  HorizontalAlignment="left" VerticalAlignment="Center" Margin="10,0,0,0"></Label>
         <ComboBox Name="cmbType" Grid.Row="1" Grid.Column="1" Margin="0,20,20,20" Grid.ColumnSpan="2" ItemsSource="{Binding Path=LesTypesAnnonce}" SelectedItem="{Binding Path=Type}" />
 
-
         <!--Description-->
         <Label Content="Description" Grid.Row="2"  HorizontalAlignment="left" VerticalAlignment="Top" Margin="10,0,0,0"></Label>
         <TextBox x:Name="txtDescription" Grid.Column="1" Grid.Row="2" Margin="0,0,20,20" Grid.ColumnSpan="2" TextWrapping="Wrap" Text="{Binding Description}"></TextBox>
@@ -54,14 +53,15 @@
                         <DataGridTemplateColumn Header="Détails" Width="120">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button>Détails</Button>
+                                    <Button Name="btnDetails" Command="{Binding Path=DataContext.cmdDetails_Annonce, ElementName=WindowAjoutAnnonce}" CommandParameter="{Binding ElementName=WindowAjoutAnnonce}">Détails</Button>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
+                
                 <!--Bouton Retirer et Ajouter item-->
-                <Button Content="Retirer Item" Grid.Row="1" Width="200" Height="30" HorizontalAlignment="Right" Margin="0,0,10,0"></Button>
+                <Button Content="Retirer Item" Grid.Row="1" Width="200" Height="30" HorizontalAlignment="Right" Margin="0,0,10,0" Command="{Binding cmdSupprimerItem_Annonce}" CommandParameter="{Binding ElementName=WindowAjoutAnnonce}"></Button>
                 <Button Content="Ajouter Item" Grid.Row="1" Grid.Column="1" Width="200" Height="30" HorizontalAlignment="Left" Margin="10,0,0,0" Command="{Binding cmdAjouterItem_Annonce}" CommandParameter="{Binding ElementName=WindowAjoutAnnonce}"></Button>
 
                 <!--Montant d'argent-->

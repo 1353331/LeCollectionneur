@@ -137,6 +137,7 @@
     <Compile Include="Outils\Fichier.cs" />
     <Compile Include="Outils\Interfaces\IFenetreFermeable.cs" />
     <Compile Include="Outils\Interfaces\IOuvreModal.cs" />
+    <Compile Include="Outils\Interfaces\IOuvreModalAvecChoixEtParam.cs" />
     <Compile Include="Outils\Interfaces\IOuvreModalAvecParametre.cs" />
     <Compile Include="Outils\Messages\EnvoyerItemMessage.cs" />
     <Compile Include="Outils\Messages\EvenementSysteme.cs" />

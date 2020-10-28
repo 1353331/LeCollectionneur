@@ -7,8 +7,8 @@ using LeCollectionneur.Modeles;
 
 namespace LeCollectionneur.Outils.Interfaces
 {
-	public interface IOuvreModalAvecParametre<T>
-	{
-		void OuvrirModal(T objet);
-	}
+    public interface IOuvreModalAvecChoixEtParam<T>
+    {
+        void OuvrirModal(T objet, string nom);
+    }
 }

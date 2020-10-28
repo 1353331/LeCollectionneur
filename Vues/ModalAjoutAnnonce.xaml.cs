@@ -20,7 +20,7 @@ namespace LeCollectionneur.Vues
     /// <summary>
     /// Logique d'interaction pour ModalAjoutAnnonce.xaml
     /// </summary>
-    public partial class ModalAjoutAnnonce : Window, IFenetreFermeable, IOuvreModal
+    public partial class ModalAjoutAnnonce : Window, IFenetreFermeable, IOuvreModal, IOuvreModalAvecParametre<Item>
     {
         public ModalAjoutAnnonce()
         {
@@ -43,6 +43,13 @@ namespace LeCollectionneur.Vues
             ModalAjoutItemAnnonce viewProp = new ModalAjoutItemAnnonce();
             viewProp.Owner = Window.GetWindow(this);
             viewProp.ShowDialog();
+        }
+
+        public void OuvrirModal(Item item)
+        {
+            ModalDetailsItem viewProp = new ModalDetailsItem(item);
+            viewProp.Owner = Window.GetWindow(this);
+            viewProp.Show();
         }
     }
 }

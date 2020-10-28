@@ -134,13 +134,13 @@
                         <DataGridTemplateColumn Header="Détails" Width="90">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button>Détails</Button>
+                                    <Button Name="btnDetails" Command="{Binding Path=DataContext.cmdDetails_Annonce, ElementName=UCVueAnnonce}" CommandParameter="{Binding ElementName=UCVueAnnonce}">Détails</Button>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
-
+                 
                 <!--Description de l'annonce-->
                 <Label Content="Description de l'annonce" Grid.Row="6" Grid.ColumnSpan="2"></Label>
                 <TextBox Name="txt_description" Text="{Binding Description}" TextWrapping="Wrap" Grid.Row="7" Grid.ColumnSpan="2" IsReadOnly="True"></TextBox>

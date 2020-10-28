@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
 using System.Drawing.Text;
+using System.IO.Packaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,8 @@ namespace LeCollectionneur.VuesModeles
         private const string FILTRE_NULL = "Aucune sélection";
         private const string PROPOSER = "Proposer une offre";
         private const string MODIFIER = "Modifier mon annonce";
+        private const string NOM_MODAL_PROPOSITION = "proposition";
+        private const string NOM_MODAL_MODIFICATION = "modifier";
 
         public ICommand cmdFiltrer_Annonce { get; set; }
         public ICommand cmdAjouterAnnonce_Annonce { get; set; }
@@ -32,6 +35,7 @@ namespace LeCollectionneur.VuesModeles
             cmdProposerOuModifier_Annonce = new Commande(cmdProposer, UneAnnonceSelectionnee);
             cmdAjouterAnnonce_Annonce = new Commande(cmdAjouterAnnonce);
             cmdFiltrerMesAnnonces_Annonce = new Commande(cmdFiltrerMesAnnonces);
+            cmdDetails_Annonce = new Commande(cmdDetails);
 
             ProposerOuModifier = PROPOSER;
 
@@ -80,7 +84,6 @@ namespace LeCollectionneur.VuesModeles
                     ProposerOuModifier = PROPOSER;
                     cmdProposerOuModifier_Annonce = new Commande(cmdProposer, UneAnnonceSelectionnee);
                 }
-
 
                 OnPropertyChanged("AnnonceSelectionnee");
             } 
@@ -184,6 +187,17 @@ namespace LeCollectionneur.VuesModeles
             {
                 _cmdProposerOuModifier_Annonce = value;
                 OnPropertyChanged("cmdProposerOuModifier_Annonce");
+            }
+        }
+
+        private ICommand _cmdDetails_Annonce;
+        public ICommand cmdDetails_Annonce
+        {
+            get { return _cmdDetails_Annonce; }
+            set
+            {
+                _cmdDetails_Annonce = value;
+                OnPropertyChanged("cmdDetails_Annonce");
             }
         }
 
@@ -340,16 +354,26 @@ namespace LeCollectionneur.VuesModeles
         private void cmdProposer(object param)
         {
             //Pour obtenir l'interface de la fenêtre, il faut la passer en paramètre lors de l'envoi de la commande (Voir le XAML du bouton, CommandParameter={...})
-            IOuvreModalAvecParametre<Annonce> modal = param as IOuvreModalAvecParametre<Annonce>;
+            IOuvreModalAvecChoixEtParam<Annonce> modal = param as IOuvreModalAvecChoixEtParam<Annonce>;
+            string nomModal = NOM_MODAL_PROPOSITION;
             if (modal != null)
             {
-                modal.OuvrirModal(AnnonceSelectionnee);
+                modal.OuvrirModal(AnnonceSelectionnee, nomModal);
             }
         }
 
         private void cmdModifier(object param)
         {
 
+        }
+
+        private void cmdDetails(object param)
+        {
+            IOuvreModalAvecParametre<Item> modal = param as IOuvreModalAvecParametre<Item>;
+            if(modal != null)
+            {
+                modal.OuvrirModal(ItemSelectionne);
+            }
         }
 
         public bool UneAnnonceSelectionnee()
