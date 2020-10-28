@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,6 +23,12 @@ namespace LeCollectionneur.Vues
     /// </summary>
     public partial class ModalAjoutAnnonce : Window, IFenetreFermeable, IOuvreModal, IOuvreModalAvecParametre<Item>
     {
+        private static readonly Regex _regexMontant = new Regex("[^0-9.]+");
+        private static bool texteMontantCorrect(string texte)
+        {
+            return !_regexMontant.IsMatch(texte);
+        }
+
         public ModalAjoutAnnonce()
         {
             InitializeComponent();
@@ -36,6 +43,12 @@ namespace LeCollectionneur.Vues
         public void Fermer()
         {
             this.Close();
+        }
+
+        // Pour empêcher l'entrée de caractères autre que des nombres
+        private void tbxMontant_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = !texteMontantCorrect(e.Text);
         }
 
         public void OuvrirModal()

@@ -119,7 +119,7 @@ namespace LeCollectionneur.VuesModeles
             get { return _montant; }
             set
             {
-                _montant = value;
+                _montant = Math.Round(value, 2);
                 cmdAjouter_Annonce = new Commande(cmdAjouter, champsRemplis);
                 OnPropertyChanged("Montant");
             }
@@ -179,10 +179,10 @@ namespace LeCollectionneur.VuesModeles
         private void cmdAjouter(object param)
         {
             //Ici on veut ajouter l'annonce en BD
-            NouvelleAnnonce.Titre = Titre;
+            NouvelleAnnonce.Titre = Validateur.Echappement(Titre.Trim());
             NouvelleAnnonce.Montant = Math.Round(Montant, 2);
             NouvelleAnnonce.Type = Type;
-            NouvelleAnnonce.Description = Description;
+            NouvelleAnnonce.Description = Validateur.Echappement(Description.Trim());
             NouvelleAnnonce.ListeItems = LesItems;
 
             //On ajoute l'annonce en BD
