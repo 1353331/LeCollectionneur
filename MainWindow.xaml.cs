@@ -31,7 +31,10 @@ namespace LeCollectionneur
 			Window login = new Login();
 			login.ShowDialog();
 			if (UtilisateurADO.utilisateur != null)
-				presenteurContenu.Content = new ContexteUtilisateur();
+				if (!UtilisateurADO.admin)
+					presenteurContenu.Content = new UCContexteUtilisateur();
+				else
+					presenteurContenu.Content = new UCContexteAdmin();
 			else
 				this.Close();
 		}

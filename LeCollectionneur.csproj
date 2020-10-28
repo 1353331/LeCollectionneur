@@ -156,8 +156,17 @@
     <Compile Include="Vues\ajouterConversation.xaml.cs">
       <DependentUpon>ajouterConversation.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Vues\ContexteUtilisateur.xaml.cs">
-      <DependentUpon>ContexteUtilisateur.xaml</DependentUpon>
+    <Compile Include="Vues\UCContexteAdmin.xaml.cs">
+      <DependentUpon>UCContexteAdmin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vues\ContexteAdmin\UCAnnonces.xaml.cs">
+      <DependentUpon>UCAnnonces.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vues\ContexteAdmin\UCUtilisateurs.xaml.cs">
+      <DependentUpon>UCUtilisateurs.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vues\UCContexteUtilisateur.xaml.cs">
+      <DependentUpon>UCContexteUtilisateur.xaml</DependentUpon>
     </Compile>
     <Compile Include="Vues\Conversation.xaml.cs">
       <DependentUpon>Conversation.xaml</DependentUpon>
@@ -223,7 +232,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Vues\ContexteUtilisateur.xaml">
+    <Page Include="Vues\UCContexteAdmin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Vues\ContexteAdmin\UCAnnonces.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Vues\ContexteAdmin\UCUtilisateurs.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Vues\UCContexteUtilisateur.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

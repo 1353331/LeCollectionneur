@@ -20,9 +20,9 @@ namespace LeCollectionneur.Vues
     /// <summary>
     /// Logique d'interaction pour ContexteUtilisateur.xaml
     /// </summary>
-    public partial class ContexteUtilisateur : UserControl
+    public partial class UCContexteUtilisateur : UserControl
     {
-        public ContexteUtilisateur()
+        public UCContexteUtilisateur()
         {
             InitializeComponent();
 			presenteurContenu.Content = new UCCollection();
