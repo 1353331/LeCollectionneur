@@ -115,7 +115,7 @@
                         <Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">Montant en argent</Label>
                         <TextBox Name="tbxMontantProposition" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsEnabled="False" Text="{Binding PropositionSelectionnee.Montant}" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center"></TextBox>
 
-                        <Button Name="btnMessageProposition" Grid.Row="2" Grid.Column="1" Style="{StaticResource btnMessageImageStyle}" Margin="60,0,0,0"></Button>
+                        <Button Name="btnMessageProposition" Grid.Row="2" Grid.Column="1" Style="{StaticResource btnMessageImageStyle}" Command="{Binding cmdEnvoyerMessage}"  Margin="60,0,0,0"></Button>
                     </Grid>
                 </GroupBox>
 
@@ -156,7 +156,7 @@
                         <Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">Montant en argent</Label>
                         <TextBox Name="tbxMontantOffre" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsEnabled="False" Text="{Binding PropositionSelectionnee.AnnonceLiee.Montant}" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center"></TextBox>
 
-                        <Button Name="btnMessageOffre" Grid.Row="2" Grid.Column="1" Style="{StaticResource btnMessageImageStyle}" Margin="60,0,0,0" Visibility="Hidden"></Button>
+                        <Button Name="btnMessageOffre" Grid.Row="2" Grid.Column="1" Style="{StaticResource btnMessageImageStyle}" Command="{Binding cmdEnvoyerMessage}"  Margin="60,0,0,0" Visibility="Hidden"></Button>
                     </Grid>
                 </GroupBox>
 

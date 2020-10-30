@@ -100,7 +100,11 @@ namespace LeCollectionneur.VuesModeles
             get { return _description; }
             set
             {
-                _description = value;
+               if (string.IsNullOrWhiteSpace(value))
+                  _description = "";
+               else
+                  _description = value;
+
                 OnPropertyChanged("Description");
             }
         }
@@ -130,7 +134,11 @@ namespace LeCollectionneur.VuesModeles
             get { return _manufacturier; }
             set
             {
-                _manufacturier = value;
+               if (string.IsNullOrWhiteSpace(value))
+                  _manufacturier = "";
+               else
+                  _manufacturier = value;
+
                 OnPropertyChanged("Manufacturier");
             }
         }

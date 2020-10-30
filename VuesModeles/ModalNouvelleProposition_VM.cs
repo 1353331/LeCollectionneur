@@ -35,6 +35,7 @@ namespace LeCollectionneur.VuesModeles
 
 		public ICommand cmdAjouterItem_Proposition { get; set; }
 		public ICommand cmdSupprimerItem_Proposition { get; set; }
+		public ICommand cmdEnvoyerMessage { get; set; }
 
 		#endregion
 
@@ -94,6 +95,7 @@ namespace LeCollectionneur.VuesModeles
 			cmdProposer_Proposition = new Commande(cmdProposer, boutonProposerActif);
 			cmdAjouterItem_Proposition = new Commande(cmdAjouterItem);
 			cmdSupprimerItem_Proposition = new Commande(cmdSupprimerItem);
+			cmdEnvoyerMessage = new Commande(cmdMessage);
 
 			//Initialiser la nouvelle proposition avec les informations qui ne changeront pas
 			nouvelleProposition = new Proposition();
@@ -172,6 +174,11 @@ namespace LeCollectionneur.VuesModeles
 				ItemsProposition = ItemsProposition;
 				ItemSelectionne = null;
 			}
+		}
+
+		private void cmdMessage(object param)
+		{
+			MessageBox.Show("La fonction d'envoi de message n'est pas encore implémentée.", "Inexistant", MessageBoxButton.OK, MessageBoxImage.Error);	
 		}
 
 		#endregion
