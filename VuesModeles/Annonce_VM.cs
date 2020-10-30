@@ -12,6 +12,7 @@ using System.IO.Packaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Annotations;
 using System.Windows.Input;
 using System.Windows.Markup;
 
@@ -72,7 +73,9 @@ namespace LeCollectionneur.VuesModeles
                 Type = _annonceSelectionnee.Type;
                 Description = _annonceSelectionnee.Description;
                 Montant = _annonceSelectionnee.Montant;
+
                 LesItems = _annonceSelectionnee.ListeItems;
+
 
                 if (EstMonAnnonce())
                 {
@@ -86,6 +89,8 @@ namespace LeCollectionneur.VuesModeles
                 }
 
                 OnPropertyChanged("AnnonceSelectionnee");
+
+
             } 
         }
 
@@ -151,6 +156,7 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _lesItems = value;
+
                 OnPropertyChanged("LesItems");
             }
         }
@@ -364,7 +370,16 @@ namespace LeCollectionneur.VuesModeles
 
         private void cmdModifier(object param)
         {
-
+            //Pour obtenir l'interface de la fenêtre, il faut la passer en paramètre lors de l'envoi de la commande (Voir le XAML du bouton, CommandParameter={...})
+            IOuvreModalAvecChoixEtParam<Annonce> modal = param as IOuvreModalAvecChoixEtParam<Annonce>;
+            string nomModal = NOM_MODAL_MODIFICATION;
+            if (modal != null)
+            {
+                Annonce AnnonceTEMP = AnnonceSelectionnee;
+                modal.OuvrirModal(AnnonceSelectionnee, nomModal);
+                LesAnnonces = annonceADO.Recuperer();
+                AnnonceSelectionnee = LesAnnonces.Single(a => a.Id == AnnonceTEMP.Id);
+            }
         }
 
         private void cmdDetails(object param)
@@ -412,7 +427,6 @@ namespace LeCollectionneur.VuesModeles
         private void cmdFiltrer(object param)
         {
             LesAnnonces = annonceADO.Recuperer();
-
 
             if (TypeAnnonceFiltre != null && TypeAnnonceFiltre != FILTRE_NULL)
                 LesAnnonces = FiltrerParTypeAnnonce();

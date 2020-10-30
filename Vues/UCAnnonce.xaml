@@ -7,6 +7,30 @@
              xmlns:local="clr-namespace:LeCollectionneur.Vues"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="1000">
+    
+    <!-- Pour utiliser l'image de message comme un bouton et éviter que l'image disparaisse lors d'un MouseOver -->
+    <UserControl.Resources>
+        <ImageBrush x:Key="btnMessageImage" ImageSource="/Images/Icones/message.png" Stretch="Uniform" />
+
+        <Style x:Key="btnMessageImageStyle" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="{StaticResource btnMessageImage}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource btnMessageImage}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="100"></RowDefinition>
@@ -102,7 +126,8 @@
                     <RowDefinition Height="0.8*"></RowDefinition>
                     <RowDefinition Height="3*"></RowDefinition>
                     <RowDefinition Height="0.8*"></RowDefinition>
-                    <RowDefinition Height="3*"></RowDefinition>
+                    <RowDefinition Height="2*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -127,6 +152,7 @@
 
                 <!--Affichage des items de l'annonce-->
                 <Label Content="Items annoncés" Grid.Row="4" ></Label>
+                <Button Name="btnMessageProposition" Grid.Row="4" Grid.Column="1" Style="{StaticResource btnMessageImageStyle}" Margin="60,0,60,0"></Button>
                 <DataGrid ItemsSource="{Binding LesItems}" SelectedItem="{Binding ItemSelectionne}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" Grid.Row="5" Grid.ColumnSpan="2" IsReadOnly="True">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Path=Nom}" Header="Nom" Width="100"></DataGridTextColumn>
@@ -145,8 +171,12 @@
                 <Label Content="Description de l'annonce" Grid.Row="6" Grid.ColumnSpan="2"></Label>
                 <TextBox Name="txt_description" Text="{Binding Description}" TextWrapping="Wrap" Grid.Row="7" Grid.ColumnSpan="2" IsReadOnly="True"></TextBox>
 
+                <!--Montant de l'annonce-->
+                <Label Content="Montant ($)" Grid.Row="8" VerticalAlignment="Center"></Label>
+                <TextBox Name="txt_Montant" Text="{Binding Montant}" Grid.Row="8" Grid.Column="2" Margin="0,3" IsReadOnly="True"></TextBox>
+                
                 <!--Bouton du bas de l'annonce, change en fonction de la checkbox "Mes annonces"-->
-                <Button Name="btnPropAnnonce" Content="{Binding Path=ProposerOuModifier}" Grid.Row="8" Grid.ColumnSpan="2" Margin="40,5" Command="{Binding cmdProposerOuModifier_Annonce}" CommandParameter="{Binding ElementName=UCVueAnnonce}"></Button>
+                <Button Name="btnPropAnnonce" Content="{Binding Path=ProposerOuModifier}" Grid.Row="9" Grid.ColumnSpan="2" Margin="40,5" Command="{Binding cmdProposerOuModifier_Annonce}" CommandParameter="{Binding ElementName=UCVueAnnonce}"></Button>
             </Grid>
         </GroupBox>
     </Grid>

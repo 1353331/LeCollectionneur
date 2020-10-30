@@ -121,8 +121,17 @@ namespace LeCollectionneur.Modeles
         public void Modifier(Annonce a)
         {
             string req = $"UPDATE annonces SET Id={a.Id}, Nom='{a.Titre}', IdUtilisateur={a.Annonceur.Id} , Montant={a.Montant}, Date='{a.DatePublication}', idTypeAnnonce= (Select Id from typesannonce where nom = '{a.Type}'), Description = '{a.Description}' WHERE id ={a.Id}";
-            // TODO: UPDATE de la liste d'items
             MaBD.Commande(req);
+            
+            req = $"delete from itemannonce where idAnnonce = {a.Id}";
+            MaBD.Commande(req);
+
+            //Ajouter ses items
+            foreach (Item i in a.ListeItems)
+            {
+                req = $"INSERT INTO `itemannonce`(`Id`, `IdAnnonce`, `IdItem`) VALUES ( null, (select Id FROM annonces where Id = {a.Id}), (select Id FROM items where Id = {i.Id}) )";
+                MaBD.Commande(req);
+            }
         }
 
         public void Ajouter(Annonce a)

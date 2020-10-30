@@ -14,22 +14,22 @@ using System.Windows.Input;
 
 namespace LeCollectionneur.VuesModeles
 {
-    class ModalAjoutAnnonce_VM : INotifyPropertyChanged
+    class ModalModifierAnnonce_VM : INotifyPropertyChanged
     {
         public ICommand cmdAjouterItem_Annonce { get; set; }
         public ICommand cmdSupprimerItem_Annonce { get; set; }
 
         #region Constructeur
-        public ModalAjoutAnnonce_VM()
+        public ModalModifierAnnonce_VM(Annonce annonceLiee)
         {
             //on initialise les commandes utiles au VM
-            cmdAjouter_Annonce = new Commande(cmdAjouter, champsRemplis);
+            cmdModifier_Annonce = new Commande(cmdModifier, champsRemplis);
             cmdAjouterItem_Annonce = new Commande(cmdAjouterItem);
             cmdSupprimerItem_Annonce = new Commande(cmdSupprimerItem);
             cmdDetails_Annonce = new Commande(cmdDetails);
 
             //on initialise la nouvelle annonce et ses variables
-            InitNouvelleAnnonce();
+            InitModificationAnnonce(annonceLiee);
 
             //Abonnement à l'évènement Ajout d'un item à une annonce
             EvenementSysteme.Abonnement<EnvoyerItemMessage>(ajouterItemMessage);
@@ -50,14 +50,14 @@ namespace LeCollectionneur.VuesModeles
         }
 
         //La nouvelle annonce
-        private Annonce _nouvelleAnnonce { get; set; }
-        public Annonce NouvelleAnnonce
+        private Annonce _annonceAMod { get; set; }
+        public Annonce AnnonceAMod
         {
-            get { return _nouvelleAnnonce; }
+            get { return _annonceAMod; }
             set
             {
-                _nouvelleAnnonce = value;
-                OnPropertyChanged("NouvelleAnnonce");
+                _annonceAMod = value;
+                OnPropertyChanged("AnnonceAMod");
             }
         }
 
@@ -69,21 +69,21 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _titre = value;
-                cmdAjouter_Annonce = new Commande(cmdAjouter, champsRemplis);
+                cmdModifier_Annonce = new Commande(cmdModifier, champsRemplis);
                 OnPropertyChanged("Titre");
             }
         }
 
         //Les items de la nouvelle annonce
-        private ObservableCollection<Item> _lesItems { get; set; }
-        public ObservableCollection<Item> LesItems
+        private ObservableCollection<Item> _lesItemsMod { get; set; }
+        public ObservableCollection<Item> LesItemsMod
         {
-            get { return _lesItems; }
+            get { return _lesItemsMod; }
             set
             {
-                _lesItems = value;
-                cmdAjouter_Annonce = new Commande(cmdAjouter, champsRemplis);
-                OnPropertyChanged("LesItems");
+                _lesItemsMod = value;
+                cmdModifier_Annonce = new Commande(cmdModifier, champsRemplis);
+                OnPropertyChanged("LesItemsMod");
             }
         }
 
@@ -95,7 +95,7 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _type = value;
-                cmdAjouter_Annonce = new Commande(cmdAjouter, champsRemplis);
+                cmdModifier_Annonce = new Commande(cmdModifier, champsRemplis);
                 OnPropertyChanged("Type");
             }
         }
@@ -120,32 +120,32 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _montant = Math.Round(value, 2);
-                cmdAjouter_Annonce = new Commande(cmdAjouter, champsRemplis);
+                cmdModifier_Annonce = new Commande(cmdModifier, champsRemplis);
                 OnPropertyChanged("Montant");
             }
         }
 
         //L'item sélectionné dans la liste des items de la nouvelle annonce
-        private Item _itemSelectionne;
-        public Item ItemSelectionne
+        private Item _itemSelectionneMod;
+        public Item ItemSelectionneMod
         {
-            get { return _itemSelectionne; }
+            get { return _itemSelectionneMod; }
             set
             {
-                _itemSelectionne = value;
-                OnPropertyChanged("ItemSelectionne");
+                _itemSelectionneMod = value;
+                OnPropertyChanged("ItemSelectionneMod");
             }
         }
 
         //La commande de publication de la nouvelle annonce 
-        private ICommand _cmdAjouter_Annonce;
-        public ICommand cmdAjouter_Annonce
+        private ICommand _cmdModifier_Annonce;
+        public ICommand cmdModifier_Annonce
         {
-            get { return _cmdAjouter_Annonce; }
+            get { return _cmdModifier_Annonce; }
             set
             {
-                _cmdAjouter_Annonce = value;
-                OnPropertyChanged("cmdAjouter_Annonce");
+                _cmdModifier_Annonce = value;
+                OnPropertyChanged("cmdModifier_Annonce");
             }
         }
 
@@ -162,39 +162,57 @@ namespace LeCollectionneur.VuesModeles
         #endregion
 
         #region Méthodes
-        private void InitNouvelleAnnonce()
+        private void InitModificationAnnonce(Annonce annonceLiee)
         {
-            NouvelleAnnonce = new Annonce();
+            AnnonceAMod = annonceLiee;
+            //AnnonceAMod = new Annonce();
+            //AnnonceAMod.Id = annonceLiee.Id;
+            //AnnonceAMod.Titre = annonceLiee.Titre;
+            //AnnonceAMod.Type = annonceLiee.Type;
+            //AnnonceAMod.Description = annonceLiee.Description;
+            //AnnonceAMod.ListeItems = annonceLiee.ListeItems;
+            //AnnonceAMod.Montant = annonceLiee.Montant;
+
             LesTypesAnnonce = new ObservableCollection<string>();
             AnnonceADO annonceADO = new AnnonceADO();
 
             //On va récupérer les types d'annonce possibles
             LesTypesAnnonce = annonceADO.RecupererTypes();
 
-            LesItems = new ObservableCollection<Item>();
-            Montant = 0;
+            LesItemsMod = new ObservableCollection<Item>();
+
+            foreach(Item i in AnnonceAMod.ListeItems)
+            {
+                LesItemsMod.Add(i);
+            }
+
+            Titre = AnnonceAMod.Titre;
+            Type = AnnonceAMod.Type;
+            Description = AnnonceAMod.Description;
+            //LesItemsMod = AnnonceAMod.ListeItems;
+            Montant = AnnonceAMod.Montant;
         }
 
-        //Méthode d'ajout de la nouvelle annonce en BD
-        private void cmdAjouter(object param)
+        //Méthode de modification de l'annonce en BD
+        private void cmdModifier(object param)
         {
             //Ici on veut ajouter l'annonce en BD
-            NouvelleAnnonce.Titre = Validateur.Echappement(Titre.Trim());
-            NouvelleAnnonce.Montant = Math.Round(Montant, 2);
-            NouvelleAnnonce.Type = Type;
-            if(String.IsNullOrWhiteSpace(Description))
+            AnnonceAMod.Titre = Validateur.Echappement(Titre.Trim());
+            AnnonceAMod.Montant = Math.Round(Montant, 2);
+            AnnonceAMod.Type = Type;
+            if (String.IsNullOrWhiteSpace(Description))
             {
-                NouvelleAnnonce.Description = "";
+                AnnonceAMod.Description = "";
             }
             else
             {
-                NouvelleAnnonce.Description = Validateur.Echappement(Description.Trim());
+                AnnonceAMod.Description = Validateur.Echappement(Description.Trim());
             }
-            NouvelleAnnonce.ListeItems = LesItems;
+            AnnonceAMod.ListeItems = LesItemsMod;
 
-            //On ajoute l'annonce en BD
+            //On modifie l'annonce en BD
             AnnonceADO annonceADO = new AnnonceADO();
-            annonceADO.Ajouter(NouvelleAnnonce);
+            annonceADO.Modifier(AnnonceAMod);
 
             //Puis on ferme la fenêtre
             IFenetreFermeable fenetre = param as IFenetreFermeable;
@@ -213,13 +231,13 @@ namespace LeCollectionneur.VuesModeles
             fenetre.OuvrirModal();
 
             //On met à jour la commande d'ajout d'annonce pour vérifier si elle est exécutable
-            cmdAjouter_Annonce = new Commande(cmdAjouter, champsRemplis);
+            cmdModifier_Annonce = new Commande(cmdModifier, champsRemplis);
         }
 
         //Méthode de vérificaiton de si l'item est déjà présent dans la liste d'items de la nouvelle annonce
         private bool itemEstDansProposition(Item item)
         {
-            foreach (Item i in LesItems)
+            foreach (Item i in LesItemsMod)
             {
                 if (item.Id == i.Id)
                     return true;
@@ -233,41 +251,41 @@ namespace LeCollectionneur.VuesModeles
             //Si l'item n'est pas déjà présent dans la liste d'item, alors on l'ajoute à la liste, sinon on affiche le message d'erreur
             if (!itemEstDansProposition(msg.Item))
             {
-                LesItems.Add(msg.Item);
+                LesItemsMod.Add(msg.Item);
                 MessageBox.Show($"Vous avez ajouté l'item {msg.Item.Nom}", "Ajout réussi", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
                 MessageBox.Show($"Cet objet existe déjà dans l'annonce.", "Attention", MessageBoxButton.OK, MessageBoxImage.Warning);
 
             //On met à jour la commande d'ajout d'annonce pour vérifier si elle est exécutable
-            cmdAjouter_Annonce = new Commande(cmdAjouter, champsRemplis);
+            cmdModifier_Annonce = new Commande(cmdModifier, champsRemplis);
         }
 
         //Méthode pour supprimer un item de la liste d'item de la nouvelle annonce
         private void cmdSupprimerItem(object param)
         {
             //on s'assure qu'il y a bien un item de sélectionné
-            if (ItemSelectionne == null)
+            if (ItemSelectionneMod == null)
                 return;
 
             //On affiche le message de confirmation
-            MessageBoxResult resultat = MessageBox.Show($"Voulez-vous vraiment supprimer {ItemSelectionne.Nom} de l'annonce?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            MessageBoxResult resultat = MessageBox.Show($"Voulez-vous vraiment supprimer {ItemSelectionneMod.Nom} de l'annonce?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             //Si l'utilisateur veut bel et bien supprimer l'item de la liste, alors on retire l'item de la liste
             if (resultat == MessageBoxResult.Yes)
             {
-                LesItems.Remove(ItemSelectionne);
-                ItemSelectionne = null;
+                LesItemsMod.Remove(ItemSelectionneMod);
+                ItemSelectionneMod = null;
             }
 
             //On met à jour la commande d'ajout d'annonce pour vérifier si elle est exécutable
-            cmdAjouter_Annonce = new Commande(cmdAjouter, champsRemplis);
+            cmdModifier_Annonce = new Commande(cmdModifier, champsRemplis);
         }
 
         //Méthode qui vérifie si les champs obligatoires sont remplis ou non
         private bool champsRemplis()
         {
-            if (string.IsNullOrEmpty(Titre) || string.IsNullOrEmpty(Type) || LesItems.Count == 0 || Montant < 0)
+            if (string.IsNullOrEmpty(Titre) || string.IsNullOrEmpty(Type) || LesItemsMod.Count == 0 || Montant < 0)
                 return false;
 
             //Les champs obligatoires sont remplis
@@ -279,14 +297,14 @@ namespace LeCollectionneur.VuesModeles
             IOuvreModalAvecParametre<Item> modal = param as IOuvreModalAvecParametre<Item>;
             if (modal != null)
             {
-                modal.OuvrirModal(ItemSelectionne);
+                modal.OuvrirModal(ItemSelectionneMod);
             }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string nomPropriete)
         {
-            
+
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(nomPropriete));

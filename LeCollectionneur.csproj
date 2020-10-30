@@ -167,6 +167,7 @@
     <Compile Include="VuesModeles\ModalAjoutAnnonce_VM.cs" />
     <Compile Include="VuesModeles\ModalAjoutItem_VM.cs" />
     <Compile Include="VuesModeles\ModalDetailsItem_VM.cs" />
+    <Compile Include="VuesModeles\ModalModifierAnnonce_VM.cs" />
     <Compile Include="VuesModeles\ModalNouvelleProposition_VM.cs" />
     <Compile Include="VuesModeles\PropositionsRecuesEnvoyees_VM.cs" />
     <Compile Include="Vues\ajouterConversation.xaml.cs">
@@ -174,6 +175,9 @@
     </Compile>
     <Compile Include="Vues\Conversation.xaml.cs">
       <DependentUpon>Conversation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vues\ModalModifierAnnonce.xaml.cs">
+      <DependentUpon>ModalModifierAnnonce.xaml</DependentUpon>
     </Compile>
     <Compile Include="Vues\UCContexteAdmin.xaml.cs">
       <DependentUpon>UCContexteAdmin.xaml</DependentUpon>
@@ -249,6 +253,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Vues\Conversation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Vues\ModalModifierAnnonce.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

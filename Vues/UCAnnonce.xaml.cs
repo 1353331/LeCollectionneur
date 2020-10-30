@@ -56,6 +56,12 @@ namespace LeCollectionneur.Vues
                     viewProp.Owner = Window.GetWindow(this);
                     viewProp.Show();
                     break;
+
+                case "modifier":
+                    ModalModifierAnnonce viewMod = new ModalModifierAnnonce(annonce);
+                    viewMod.Owner = Window.GetWindow(this);
+                    viewMod.ShowDialog();
+                    break;
             }
         }
 
