@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using LeCollectionneur.Modeles;
 using LeCollectionneur.Outils;
@@ -53,6 +54,8 @@ namespace LeCollectionneur.VuesModeles
 		public ICommand cmdDetails_Item { get; set; }
 
 		public ICommand cmdChangementContexteRecuesEnvoyees { get; set; }
+
+		public ICommand cmdEnvoyerMessage { get; set; }
 
 		#region Propriétés
 		PropositionADO propADO = new PropositionADO();
@@ -103,6 +106,7 @@ namespace LeCollectionneur.VuesModeles
 			changementVisibiliteCommandes();
 			cmdChangementContexteRecuesEnvoyees = new Commande(cmdChangement);
 			cmdDetails_Item = new Commande(cmdDetailsItem);
+			cmdEnvoyerMessage = new Commande(cmdMessage);
 		}
 
 		#region Implémentation des commandes
@@ -152,6 +156,11 @@ namespace LeCollectionneur.VuesModeles
 			Item itemDetails = ((object[])param)[0] as Item;
 			IOuvreModalAvecParametre<Item> interfaceV = ((object[])param)[1] as IOuvreModalAvecParametre<Item>;
 			interfaceV.OuvrirModal(itemDetails);
+		}
+
+		private void cmdMessage(object param)
+		{
+			MessageBox.Show("La fonction d'envoi de message n'est pas encore implémentée.", "Inexistant", MessageBoxButton.OK, MessageBoxImage.Error);
 		}
 		#endregion
 
