@@ -42,7 +42,7 @@
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <GroupBox Grid.Row="0" Grid.Column="0" Header="Proposition" Margin="5" BorderBrush="Black" FontWeight="DemiBold">
+        <GroupBox Grid.Row="0" Grid.Column="0" Header="{Binding TitreEncadreProposition}" Margin="5" BorderBrush="Black" FontWeight="DemiBold">
             <!-- Grid interne de Proposition -->
             <Grid Margin="5">
                 <Grid.RowDefinitions>
@@ -136,7 +136,7 @@
                 <Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">Montant demandé ($)</Label>
                 <TextBox IsReadOnly="True" Name="tbxMontantOffre" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Text="{Binding MontantDemande}" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center"></TextBox>
 
-                <Button Name="btnMessageOffre" Grid.Row="2" Grid.Column="1" Style="{StaticResource btnMessageImageStyle}" Margin="60,0,0,0" Command="{Binding cmdEnvoyerMessage}"></Button>
+                <Button Name="btnMessageOffre" Grid.Row="2" Grid.Column="1" Style="{StaticResource btnMessageImageStyle}" Margin="60,0,0,0" Command="{Binding cmdEnvoyerMessage}" CommandParameter="{Binding ElementName=WindowNouvelleProposition}"></Button>
             </Grid>
         </GroupBox>
 

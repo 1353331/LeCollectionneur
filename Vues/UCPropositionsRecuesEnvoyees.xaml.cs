@@ -22,7 +22,7 @@ namespace LeCollectionneur.Vues
 	/// <summary>
 	/// Logique d'interaction pour UCProposition.xaml
 	/// </summary>
-	public partial class UCPropositionsRecuesEnvoyees : UserControl, IOuvreModalAvecParametre<Item>
+	public partial class UCPropositionsRecuesEnvoyees : UserControl, IOuvreModalAvecParametre<Item>, IOuvreModalAvecParametre<Utilisateur>
 	{
 		public UCPropositionsRecuesEnvoyees()
 		{
@@ -67,6 +67,13 @@ namespace LeCollectionneur.Vues
 			ModalDetailsItem modalDetails = new ModalDetailsItem(itemSelectionne);
 			modalDetails.Owner = Window.GetWindow(this);
 			modalDetails.ShowDialog();
+		}
+
+		public void OuvrirModal(Utilisateur destinataire)
+		{
+			ModalEnvoyerMessage modalMessage = new ModalEnvoyerMessage(destinataire);
+			modalMessage.Owner = Window.GetWindow(this);
+			modalMessage.ShowDialog();
 		}
 	}
 }

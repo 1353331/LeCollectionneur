@@ -55,7 +55,8 @@ namespace LeCollectionneur.VuesModeles
 
 		public ICommand cmdChangementContexteRecuesEnvoyees { get; set; }
 
-		public ICommand cmdEnvoyerMessage { get; set; }
+		public ICommand cmdEnvoyerMessageProposition { get; set; }
+		public ICommand cmdEnvoyerMessageAnnonce { get; set; }
 
 		#region Propriétés
 		PropositionADO propADO = new PropositionADO();
@@ -106,7 +107,8 @@ namespace LeCollectionneur.VuesModeles
 			changementVisibiliteCommandes();
 			cmdChangementContexteRecuesEnvoyees = new Commande(cmdChangement);
 			cmdDetails_Item = new Commande(cmdDetailsItem);
-			cmdEnvoyerMessage = new Commande(cmdMessage);
+			cmdEnvoyerMessageProposition = new Commande(cmdEnvMessageProposition);
+			cmdEnvoyerMessageAnnonce = new Commande(cmdEnvMessageAnnonce);
 		}
 
 		#region Implémentation des commandes
@@ -158,22 +160,40 @@ namespace LeCollectionneur.VuesModeles
 			interfaceV.OuvrirModal(itemDetails);
 		}
 
-		private void cmdMessage(object param)
+		private void cmdEnvMessageProposition(object param)
 		{
-			MessageBox.Show("La fonction d'envoi de message n'est pas encore implémentée.", "Inexistant", MessageBoxButton.OK, MessageBoxImage.Error);
+			if (UnePropositionSelectionnee())
+			{
+				IOuvreModalAvecParametre<Utilisateur> fenetre = param as IOuvreModalAvecParametre<Utilisateur>;
+				fenetre.OuvrirModal(PropositionSelectionnee.Proposeur);
+			}
+		}
+
+		private void cmdEnvMessageAnnonce(object param)
+		{
+			if (UnePropositionSelectionnee())
+			{
+				IOuvreModalAvecParametre<Utilisateur> fenetre = param as IOuvreModalAvecParametre<Utilisateur>;
+				fenetre.OuvrirModal(PropositionSelectionnee.AnnonceLiee.Annonceur);
+			}
 		}
 		#endregion
 
-		public bool UnePropositionSelectionnee()
+		private bool UnePropositionSelectionnee()
 		{
 			return !(PropositionSelectionnee is null);
+		}
+
+		private bool BoutonAnnulerPropositionActif()
+		{
+			return (UnePropositionSelectionnee() && PropositionSelectionnee.EtatProposition == "En attente");
 		}
 
 		private void changementVisibiliteCommandes()
 		{
 			cmdAccepterProposition = new Commande(cmdAccepter, UnePropositionSelectionnee);
 			cmdRefuserProposition = new Commande(cmdRefuser, UnePropositionSelectionnee);
-			cmdAnnulerProposition = new Commande(cmdAnnuler, UnePropositionSelectionnee);
+			cmdAnnulerProposition = new Commande(cmdAnnuler, BoutonAnnulerPropositionActif);
 		}
 
 		#region NotifyPropertyChanged

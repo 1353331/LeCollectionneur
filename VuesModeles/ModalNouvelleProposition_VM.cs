@@ -85,6 +85,8 @@ namespace LeCollectionneur.VuesModeles
 		}
 
 		public ObservableCollection<Item> ItemsAnnonce { get; set; }
+		public string TitreEncadreProposition { get; set; }
+
 		#endregion
 
 		public ModalNouvelleProposition_VM(Annonce annonce)
@@ -95,7 +97,7 @@ namespace LeCollectionneur.VuesModeles
 			cmdProposer_Proposition = new Commande(cmdProposer, boutonProposerActif);
 			cmdAjouterItem_Proposition = new Commande(cmdAjouterItem);
 			cmdSupprimerItem_Proposition = new Commande(cmdSupprimerItem);
-			cmdEnvoyerMessage = new Commande(cmdMessage);
+			cmdEnvoyerMessage = new Commande(cmdEnvMessage);
 
 			//Initialiser la nouvelle proposition avec les informations qui ne changeront pas
 			nouvelleProposition = new Proposition();
@@ -106,6 +108,7 @@ namespace LeCollectionneur.VuesModeles
 		
 			MontantDemande = annonce.Montant;
 			ItemsAnnonce = annonce.ListeItems;
+			TitreEncadreProposition = $"Proposition sur {annonce.Titre}";
 
 			//Abonnement à l'évènement Ajout d'un item à une proposition
 			EvenementSysteme.Abonnement<EnvoyerItemMessage>(ajouterItemMessage);
@@ -176,9 +179,10 @@ namespace LeCollectionneur.VuesModeles
 			}
 		}
 
-		private void cmdMessage(object param)
+		private void cmdEnvMessage(object param)
 		{
-			MessageBox.Show("La fonction d'envoi de message n'est pas encore implémentée.", "Inexistant", MessageBoxButton.OK, MessageBoxImage.Error);	
+			IOuvreModalAvecParametre<Utilisateur> fenetre = param as IOuvreModalAvecParametre<Utilisateur>;
+			fenetre.OuvrirModal(nouvelleProposition.AnnonceLiee.Annonceur);
 		}
 
 		#endregion
