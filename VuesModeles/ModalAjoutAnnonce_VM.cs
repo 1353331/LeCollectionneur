@@ -283,7 +283,12 @@ namespace LeCollectionneur.VuesModeles
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public void cmdFermer(object sender, CancelEventArgs e)
+        {
+           EvenementSysteme.Desabonnement<EnvoyerItemMessage>(ajouterItemMessage);
+        }
+
+      public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string nomPropriete)
         {
             

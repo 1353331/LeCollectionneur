@@ -147,11 +147,15 @@
     <Compile Include="Modeles\ItemADO.cs" />
     <Compile Include="Modeles\Message.cs" />
     <Compile Include="Modeles\PropositionADO.cs" />
+    <Compile Include="Modeles\Transaction.cs" />
+    <Compile Include="Modeles\TransactionADO.cs" />
     <Compile Include="Modeles\Utilisateur.cs" />
     <Compile Include="Modeles\UtilisateurADO.cs" />
     <Compile Include="Outils\BdBase.cs" />
     <Compile Include="Outils\Commande.cs" />
     <Compile Include="Outils\ConvertisseurParametre.cs" />
+    <Compile Include="Outils\Enumerations\EtatsAnnonce.cs" />
+    <Compile Include="Outils\Enumerations\EtatsProposition.cs" />
     <Compile Include="Outils\Evenements.cs" />
     <Compile Include="Outils\Fichier.cs" />
     <Compile Include="Outils\Interfaces\IFenetreFermeable.cs" />

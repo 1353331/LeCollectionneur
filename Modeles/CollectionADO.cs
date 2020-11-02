@@ -87,6 +87,12 @@ namespace LeCollectionneur.Modeles
             MaBD.Commande(req);
         }
 
+        public int AjouterRetourId(Collection c, int IdUtilisateur)
+        {
+            string req = $"insert into Collections (id,idUtilisateur,nom) values(NULL,{IdUtilisateur},'{c.Nom}' ); SELECT LAST_INSERT_ID();";
+            return MaBD.CommandeCreationAvecRetourId(req);
+      }
+
         #endregion
 
     }

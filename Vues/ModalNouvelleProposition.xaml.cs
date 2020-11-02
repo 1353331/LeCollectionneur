@@ -32,7 +32,9 @@ namespace LeCollectionneur.Vues
 		{
 			InitializeComponent();
 			//Passer le paramètre au ViewModel
-			DataContext = new ModalNouvelleProposition_VM(annonceLiee);
+		   ModalNouvelleProposition_VM VM = new ModalNouvelleProposition_VM(annonceLiee);
+			DataContext = VM;
+			Closing += VM.cmdFermer;
 		}
 
 		//Implémentation de l'interface IFenetreFermeable, qui permet de fermer une fenêtre à partir du ViewModel et de respecter le modèle MVVM

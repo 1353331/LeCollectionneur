@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LeCollectionneur.Outils.Enumerations;
 
 namespace LeCollectionneur.Modeles
 {
@@ -19,15 +20,17 @@ namespace LeCollectionneur.Modeles
         public string Description { get; set; }
         public ObservableCollection<Item> ListeItems { get; set; }
         public double Montant { get; set; }
-        #endregion
+		  public string EtatAnnonce { get; set; }
+		#endregion
 
-        #region Constructeur
-        public Annonce()
+		#region Constructeur
+		public Annonce()
         {
             UtilisateurADO UtilisateurConnecte = new UtilisateurADO();
             ListeItems = new ObservableCollection<Item>();
             Annonceur = UtilisateurConnecte.RetourUtilisateurActif();
             DatePublication = DateTime.Now.Date;
+            EtatAnnonce = EtatsAnnonce.Active;
         }
 
         public Annonce(DataRow dr)
@@ -43,6 +46,7 @@ namespace LeCollectionneur.Modeles
             Description = (string)dr["Description"];
             ListeItems = annonceADO.RecupererListeItems(Id);
             Montant = (double)dr["montant"];
+            EtatAnnonce = (string)dr["etatAnnonce"];
         }
         #endregion
 

@@ -152,7 +152,7 @@
 
                 <!--Affichage des items de l'annonce-->
                 <Label Content="Items annoncés" Grid.Row="4" ></Label>
-                <Button Name="btnMessageProposition" Grid.Row="4" Grid.Column="1" Style="{StaticResource btnMessageImageStyle}" Margin="60,0,60,0"></Button>
+                <Button Name="btnMessageProposition" Grid.Row="4" Grid.Column="1" Style="{StaticResource btnMessageImageStyle}" Margin="60,0,60,0" Command="{Binding cmdEnvoyerMessage_Annonce}" CommandParameter="{Binding ElementName=UCVueAnnonce}"></Button>
                 <DataGrid ItemsSource="{Binding LesItems}" SelectedItem="{Binding ItemSelectionne}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" Grid.Row="5" Grid.ColumnSpan="2" IsReadOnly="True">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Path=Nom}" Header="Nom" Width="100"></DataGridTextColumn>

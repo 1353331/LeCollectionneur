@@ -1,4 +1,5 @@
 ﻿using LeCollectionneur.Outils;
+using LeCollectionneur.Outils.Enumerations;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,7 +25,14 @@ namespace LeCollectionneur.Modeles
         public ObservableCollection<Annonce> Recuperer()
         {
             ObservableCollection<Annonce> ListeAnnonces = new ObservableCollection<Annonce>();
-            string sel = "SELECT a.*, ta.Nom AS typeAnnonce from annonces a LEFT JOIN typesannonce ta ON a.idTypeAnnonce = ta.Id";
+            string sel = @"
+            SELECT a.*, ta.Nom AS typeAnnonce, ea.Nom as etatAnnonce 
+            FROM annonces a
+            INNER JOIN EtatsAnnonce ea
+            ON a.IdEtatAnnonce = ea.Id
+            LEFT JOIN typesannonce ta 
+            ON a.idTypeAnnonce = ta.Id
+            ";
             DataSet SetAnnonce = MaBD.Selection(sel);
             DataTable TableAnnonce = SetAnnonce.Tables[0];
 
@@ -59,7 +67,15 @@ namespace LeCollectionneur.Modeles
             Utilisateur UtilisateurConnecte = UtilisiateurADO.RetourUtilisateurActif();
             
             ObservableCollection<Annonce> ListeAnnonces = new ObservableCollection<Annonce>();
-            string sel = $"SELECT a.*, ta.Nom AS typeAnnonce from annonces a LEFT JOIN typesannonce ta ON a.idTypeAnnonce = ta.Id WHERE idUtilisateur = {UtilisateurConnecte.Id}";
+            string sel = $@"
+            SELECT a.*, ta.Nom AS typeAnnonce, ea.Nom AS etatAnnonce 
+            from annonces a 
+            INNER JOIN EtatsAnnonce ea
+            ON a.IdEtatAnnonce = ea.Id
+            LEFT JOIN typesannonce ta 
+            ON a.idTypeAnnonce = ta.Id 
+            WHERE idUtilisateur = {UtilisateurConnecte.Id}
+            ";
 
             DataSet SetAnnonce = MaBD.Selection(sel);
             DataTable TableAnnonce = SetAnnonce.Tables[0];
@@ -74,7 +90,14 @@ namespace LeCollectionneur.Modeles
 
         public Annonce RecupererUn(int id)
         {
-            string sel = "SELECT a.*, ta.Nom AS typeAnnonce from annonces a LEFT JOIN typesannonce ta ON a.idTypeAnnonce = ta.Id WHERE a.Id = " + id;
+            string sel = $@"
+            SELECT a.*, ta.Nom AS typeAnnonce, ea.Nom AS etatAnnonce 
+            FROM annonces a
+            INNER JOIN EtatsAnnonce ea
+            ON a.IdEtatAnnonce = ea.Id
+            LEFT JOIN typesannonce ta 
+            ON a.idTypeAnnonce = ta.Id 
+            WHERE a.Id = {id}";
             DataSet SetAnnonce = MaBD.Selection(sel);
             DataTable TableAnnonce = SetAnnonce.Tables[0];
 
@@ -120,7 +143,7 @@ namespace LeCollectionneur.Modeles
 
         public void Modifier(Annonce a)
         {
-            string req = $"UPDATE annonces SET Id={a.Id}, Nom='{a.Titre}', IdUtilisateur={a.Annonceur.Id} , Montant={a.Montant}, Date='{a.DatePublication}', idTypeAnnonce= (Select Id from typesannonce where nom = '{a.Type}'), Description = '{a.Description}' WHERE id ={a.Id}";
+            string req = $"UPDATE annonces SET Nom='{a.Titre.Replace("'", @"\'")}', IdUtilisateur={a.Annonceur.Id} , Montant={a.Montant}, Date='{a.DatePublication}', idTypeAnnonce= (Select Id from typesannonce where nom = '{a.Type}'), Description = '{a.Description.Replace("'", @"\'")}', IdEtatAnnonce = (SELECT Id FROM EtatsAnnonce WHERE Nom = '{a.EtatAnnonce}') WHERE id ={a.Id}";
             MaBD.Commande(req);
             
             req = $"delete from itemannonce where idAnnonce = {a.Id}";
@@ -134,10 +157,46 @@ namespace LeCollectionneur.Modeles
             }
         }
 
+        public void AnnulerAnnoncesActivesAvecItems(IEnumerable<Item> items)
+        {
+            if (items.Count() > 0)
+            {
+               string idItems = "";
+
+               foreach (Item item in items)
+               {
+                  idItems += $"{item.Id}";
+                  if (item != items.Last())
+                     idItems += ", ";
+               }
+
+               string requete = $@"
+				   UPDATE Annonces
+				   SET
+				   IdEtatAnnonce = (SELECT Id FROM EtatsAnnonce WHERE Nom = '{EtatsAnnonce.Annulee}')
+				   WHERE IdEtatAnnonce = (SELECT Id FROM EtatsAnnonce WHERE Nom = '{EtatsAnnonce.Active}')
+				   AND Id IN (
+								   SELECT IdAnnonce
+								   FROM ItemAnnonce
+								   WHERE IdItem IN ({idItems})
+						      );
+               DELETE FROM ItemAnnonce
+               WHERE IdItem IN ({idItems})
+               AND IdAnnonce IN (
+                                    SELECT Id
+                                    FROM Annonces
+                                    WHERE IdEtatAnnonce = (SELECT Id FROM EtatsAnnonce WHERE Nom = '{EtatsAnnonce.Annulee}')
+                                )
+				   ";
+
+               MaBD.Commande(requete);
+            }
+      }
+
         public void Ajouter(Annonce a)
         {
             //Ajouter l'annonce
-            string req = $"insert into Annonces values(NULL, '{a.Titre}', {a.Annonceur.Id}, {a.Montant}, '{a.DatePublication}', (Select Id from typesannonce Where Nom = '{a.Type}'), '{a.Description}'); SELECT LAST_INSERT_ID();";
+            string req = $"insert into Annonces values(NULL, '{a.Titre}', {a.Annonceur.Id}, {a.Montant}, '{a.DatePublication}', (Select Id from typesannonce Where Nom = '{a.Type}'), '{a.Description}', (SELECT Id FROM EtatsAnnonce WHERE nom = '{a.EtatAnnonce}')); SELECT LAST_INSERT_ID();";
             int Id = MaBD.CommandeCreationAvecRetourId(req);
 
             //Ajouter ses items

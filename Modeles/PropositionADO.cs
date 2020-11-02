@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LeCollectionneur.Outils;
+using LeCollectionneur.Outils.Enumerations;
 using MySql.Data.MySqlClient;
 
 namespace LeCollectionneur.Modeles
@@ -109,7 +110,7 @@ namespace LeCollectionneur.Modeles
 				FROM Propositions p
 				LEFT JOIN EtatsProposition ep
 				ON p.IdEtatProposition = ep.Id
-				WHERE p.idUtilisateur = {idUtilisateur} AND p.idEtatProposition NOT IN (SELECT epsq.Id FROM EtatsProposition epsq WHERE (Nom = 'Acceptée' OR Nom = 'Annulée'));
+				WHERE p.idUtilisateur = {idUtilisateur};
 			";
 			ObservableCollection<Proposition> ocPropositions = new ObservableCollection<Proposition>();
 			DataSet setProposition = MaBd.Selection(requete);
@@ -134,7 +135,7 @@ namespace LeCollectionneur.Modeles
 				ON p.IdEtatProposition = ep.Id
 				LEFT JOIN Annonces a
 				ON p.idAnnonce = a.Id
-				WHERE a.idUtilisateur = {idUtilisateur} AND idEtatProposition = (SELECT Id FROM EtatsProposition WHERE Nom = 'En attente');
+				WHERE a.idUtilisateur = {idUtilisateur};
 			";
 			ObservableCollection<Proposition> ocPropositions = new ObservableCollection<Proposition>();
 			DataSet setProposition = MaBd.Selection(requete);
@@ -168,6 +169,42 @@ namespace LeCollectionneur.Modeles
 			";
 
 			MaBd.Commande(requete);
+		}
+
+		public void AnnulerPropositionsActivesAvecItems(IEnumerable<Item> items)
+		{
+			if (items.Count() > 0)
+			{
+				string idItems = "";
+
+				foreach (Item item in items)
+				{
+					idItems += $"{item.Id}";
+					if (item != items.Last())
+						idItems += ", ";
+				}
+
+				string requete = $@"
+				UPDATE Propositions
+				SET
+				IdEtatProposition = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.Annulee}')
+				WHERE IdEtatProposition = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.EnAttente}')
+				AND Id IN (
+								SELECT IdProposition
+								FROM ItemProposition
+								WHERE IdItem IN ({idItems})
+						   );
+				DELETE FROM ItemProposition
+            WHERE IdItem IN ({idItems})
+            AND IdProposition IN (
+                                SELECT Id
+                                FROM Propositions
+                                WHERE IdEtatProposition = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.Annulee}')
+                             )
+				";
+
+				MaBd.Commande(requete);
+			}
 		}
 
 		#endregion

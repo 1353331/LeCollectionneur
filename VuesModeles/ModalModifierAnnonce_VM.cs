@@ -197,7 +197,7 @@ namespace LeCollectionneur.VuesModeles
         private void cmdModifier(object param)
         {
             //Ici on veut ajouter l'annonce en BD
-            AnnonceAMod.Titre = Validateur.Echappement(Titre.Trim());
+            AnnonceAMod.Titre = Titre.Trim();
             AnnonceAMod.Montant = Math.Round(Montant, 2);
             AnnonceAMod.Type = Type;
             if (String.IsNullOrWhiteSpace(Description))
@@ -206,7 +206,7 @@ namespace LeCollectionneur.VuesModeles
             }
             else
             {
-                AnnonceAMod.Description = Validateur.Echappement(Description.Trim());
+                AnnonceAMod.Description = Description.Trim();
             }
             AnnonceAMod.ListeItems = LesItemsMod;
 
@@ -301,7 +301,12 @@ namespace LeCollectionneur.VuesModeles
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public void cmdFermer(object sender, CancelEventArgs e)
+        {
+           EvenementSysteme.Desabonnement<EnvoyerItemMessage>(ajouterItemMessage);
+        }
+
+      public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string nomPropriete)
         {
 

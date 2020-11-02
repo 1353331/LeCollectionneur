@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Input;
 using LeCollectionneur.Modeles;
 using LeCollectionneur.Outils;
+using LeCollectionneur.Outils.Enumerations;
 using LeCollectionneur.Outils.Interfaces;
 
 namespace LeCollectionneur.VuesModeles
@@ -117,8 +118,8 @@ namespace LeCollectionneur.VuesModeles
 			if (PropositionSelectionnee != null)
 			{
 				//On modifie la propriété sélectionnée en BD, puis on reload les propositions reçues
-				PropositionSelectionnee.EtatProposition = "Acceptée";
-				propADO.Modifier(PropositionSelectionnee);
+				Transaction nouvelleTransaction = new Transaction(PropositionSelectionnee);
+				nouvelleTransaction.EffectuerTransaction();
 
 				PropositionsRecues = propADO.RecupererPropositionsRecues(UtilisateurADO.utilisateur.Id);
 			}
@@ -128,7 +129,7 @@ namespace LeCollectionneur.VuesModeles
 		{
 			if (PropositionSelectionnee != null)
 			{
-				PropositionSelectionnee.EtatProposition = "Refusée";
+				PropositionSelectionnee.EtatProposition = EtatsProposition.Refusee;
 				propADO.Modifier(PropositionSelectionnee);
 
 				PropositionsRecues = propADO.RecupererPropositionsRecues(UtilisateurADO.utilisateur.Id);
@@ -139,7 +140,7 @@ namespace LeCollectionneur.VuesModeles
 		{
 			if (PropositionSelectionnee != null)
 			{
-				PropositionSelectionnee.EtatProposition = "Annulée";
+				PropositionSelectionnee.EtatProposition = EtatsProposition.Annulee;
 				propADO.Modifier(PropositionSelectionnee);
 
 				PropositionsEnvoyees = propADO.RecupererPropositionsEnvoyees(UtilisateurADO.utilisateur.Id);
@@ -186,7 +187,7 @@ namespace LeCollectionneur.VuesModeles
 
 		private bool BoutonAnnulerPropositionActif()
 		{
-			return (UnePropositionSelectionnee() && PropositionSelectionnee.EtatProposition == "En attente");
+			return (UnePropositionSelectionnee() && PropositionSelectionnee.EtatProposition == EtatsProposition.EnAttente);
 		}
 
 		private void changementVisibiliteCommandes()

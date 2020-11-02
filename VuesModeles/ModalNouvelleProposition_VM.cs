@@ -185,6 +185,11 @@ namespace LeCollectionneur.VuesModeles
 			fenetre.OuvrirModal(nouvelleProposition.AnnonceLiee.Annonceur);
 		}
 
+		public void cmdFermer(object sender, CancelEventArgs e)
+		{
+			EvenementSysteme.Desabonnement<EnvoyerItemMessage>(ajouterItemMessage);
+		}
+
 		#endregion
 
 		private bool boutonProposerActif()

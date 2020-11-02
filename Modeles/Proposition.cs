@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LeCollectionneur.Outils.Enumerations;
 
 namespace LeCollectionneur.Modeles
 {
@@ -23,7 +24,7 @@ namespace LeCollectionneur.Modeles
 		public Proposition()
 		{
 			ItemsProposes = new ObservableCollection<Item>();
-			EtatProposition = "En attente";
+			EtatProposition = EtatsProposition.EnAttente;
 		}
 
 		public Proposition(DataRow dr)

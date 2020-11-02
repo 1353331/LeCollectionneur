@@ -32,8 +32,10 @@ namespace LeCollectionneur.Vues
         public ModalModifierAnnonce(Annonce annonceLiee)
         {
             InitializeComponent();
-            DataContext = new ModalModifierAnnonce_VM(annonceLiee);
-        }
+            ModalModifierAnnonce_VM VM = new ModalModifierAnnonce_VM(annonceLiee);
+            DataContext = VM;
+            Closing += VM.cmdFermer;
+      }
 
         private void btnAnnuler_Click(object sender, RoutedEventArgs e)
         {

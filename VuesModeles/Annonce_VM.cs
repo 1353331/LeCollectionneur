@@ -29,6 +29,7 @@ namespace LeCollectionneur.VuesModeles
         public ICommand cmdFiltrer_Annonce { get; set; }
         public ICommand cmdAjouterAnnonce_Annonce { get; set; }
         public ICommand cmdFiltrerMesAnnonces_Annonce { get; set; }
+        public ICommand cmdEnvoyerMessage_Annonce{ get; set; }
 
         public Annonce_VM()
         {
@@ -37,6 +38,7 @@ namespace LeCollectionneur.VuesModeles
             cmdAjouterAnnonce_Annonce = new Commande(cmdAjouterAnnonce);
             cmdFiltrerMesAnnonces_Annonce = new Commande(cmdFiltrerMesAnnonces);
             cmdDetails_Annonce = new Commande(cmdDetails);
+            cmdEnvoyerMessage_Annonce = new Commande(cmdEnvMessage);
 
             ProposerOuModifier = PROPOSER;
 
@@ -391,7 +393,16 @@ namespace LeCollectionneur.VuesModeles
             }
         }
 
-        public bool UneAnnonceSelectionnee()
+        private void cmdEnvMessage(object param)
+        {
+            if (UneAnnonceSelectionnee() && AnnonceSelectionnee.Annonceur.NomUtilisateur != UtilisateurADO.utilisateur.NomUtilisateur)
+            {
+               IOuvreModalAvecParametre<Utilisateur> fenetre = param as IOuvreModalAvecParametre<Utilisateur>;
+               fenetre.OuvrirModal(AnnonceSelectionnee.Annonceur);
+            }
+      }
+
+      public bool UneAnnonceSelectionnee()
         {
             return !(AnnonceSelectionnee is null);
         }

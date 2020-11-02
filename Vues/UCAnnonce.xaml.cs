@@ -22,7 +22,7 @@ namespace LeCollectionneur.Vues
     /// <summary>
     /// Logique d'interaction pour UCAnnonce.xaml
     /// </summary>
-    public partial class UCAnnonce : UserControl, IOuvreModal, IOuvreModalAvecChoixEtParam<Annonce>, IOuvreModalAvecParametre<Item>
+    public partial class UCAnnonce : UserControl, IOuvreModal, IOuvreModalAvecChoixEtParam<Annonce>, IOuvreModalAvecParametre<Item>, IOuvreModalAvecParametre<Utilisateur>
    {
         public UCAnnonce()
         {
@@ -71,5 +71,12 @@ namespace LeCollectionneur.Vues
             viewProp.Owner = Window.GetWindow(this);
             viewProp.Show();
         }
-    }
+
+        public void OuvrirModal(Utilisateur destinataire)
+        {
+           ModalEnvoyerMessage modalMessage = new ModalEnvoyerMessage(destinataire);
+           modalMessage.Owner = Window.GetWindow(this);
+           modalMessage.ShowDialog();
+        }
+   }
 }
