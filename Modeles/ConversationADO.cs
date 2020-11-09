@@ -39,6 +39,18 @@ namespace LeCollectionneur.Modeles
             }
             return temp;
         }
+        public static List<Message> GetMessagesList(int idConversation)
+        {
+            string req = "SELECT * FROM `messages` WHERE IdConversation = " + idConversation;
+            DataSet MessageConvo = BD.Selection(req);
+            List<Message> temp = new List<Message>();
+
+            for (int i = 0; i < MessageConvo.Tables[0].Rows.Count; i++)
+            {
+                temp.Add(new Message(MessageConvo.Tables[0].Rows[i]));
+            }
+            return temp;
+        }
         //Retourne les message de la conversation
         private static List<Message> GetMessages()
         {
@@ -87,7 +99,22 @@ namespace LeCollectionneur.Modeles
             return (int)Convo.Tables[0].Rows[0]["id"];
 
         }
-       
+
+        public static ObservableCollection<Message> chercherMessage(int idUtilisateurAutre)
+        {
+            
+            //1: Trouver la conversation
+            string req = "SELECT* FROM  conversations WHERE (idUtilisateur1 = " + UtilisateurADO.utilisateur.Id + " AND idUtilisateur2 = " + idUtilisateurAutre + ")OR (idUtilisateur1 = "+ idUtilisateurAutre + " AND idUtilisateur2 = "+ UtilisateurADO.utilisateur.Id+");";
+            var t = BD.Selection(req);
+            Conversation tf = new Conversation(t);
+            var temp = new ObservableCollection<Message>();
+            var e = GetMessagesList(tf.Id);
+            foreach (var item in e)
+            {
+                temp.Add(item);
+            }
+            return temp;
+        }
         public static int CreerNouvelleConversation(Utilisateur UserActif, Utilisateur UserAutre)
         {
             

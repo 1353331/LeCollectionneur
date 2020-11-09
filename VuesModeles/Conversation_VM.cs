@@ -17,7 +17,7 @@ namespace LeCollectionneur.VuesModeles
     {
         #region Propriétés
         int id;
-        List<Message> conversations;
+        private Utilisateur utlisateurASelection;
         private Utilisateur _utilisateur;
         public Utilisateur utilisateur
         {
@@ -82,16 +82,29 @@ namespace LeCollectionneur.VuesModeles
                 _conversationSelectionne = value;
                 if (_conversationSelectionne == null)
                     return;
+                
+
                 Conversation temp = _conversationSelectionne;
                 ConversationADO.Convo =temp;
                 id = _conversationSelectionne.Id;
                
                 utilisateur = _conversationSelectionne.UserAutre;
-                conversations = _conversationSelectionne.ListMessage;
-
+                utlisateurASelection = utilisateur;
+                listMessage = ConversationADO.chercherMessage(_conversationSelectionne.UserAutre.Id);
                 OnPropertyChanged("ConversationSelectionne");
             }
         }
+        private ObservableCollection<Message> _listMessage;
+        public ObservableCollection<Message> listMessage
+        {
+            get { return _listMessage; }
+            set 
+            {
+                _listMessage = value;
+                OnPropertyChanged("listMessage");
+            }
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string nomPropriete)
@@ -127,10 +140,8 @@ namespace LeCollectionneur.VuesModeles
                 return;
             ConversationSelectionne.lastMessage = messageContenu;
             conversationADO.EnvoyerMessage(messageContenu,id);
-            
             messageContenu = "";
-            GetConversations();
-            
+            listMessage = ConversationADO.chercherMessage(_conversationSelectionne.UserAutre.Id);
             OnPropertyChanged("cmdEnvoyerMessage_Message");
         }
 
@@ -173,6 +184,7 @@ namespace LeCollectionneur.VuesModeles
         public void EnvoyerMessage(Message message)
         {
             conversationADO.EnvoyerMessage(message.Contenu,id);
+            
         }
         private void GetConversations()
         {
