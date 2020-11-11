@@ -11,12 +11,16 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using LeCollectionneur.VuesModeles;
+using System.Threading;
+
 namespace LeCollectionneur.VuesModeles
 {
     class Conversation_VM : INotifyPropertyChanged
     {
         #region Propriétés
         int id;
+        Thread thread;
+        private bool stopThread = false;
         private Utilisateur utlisateurASelection;
         private Utilisateur _utilisateur;
         public Utilisateur utilisateur
@@ -75,10 +79,13 @@ namespace LeCollectionneur.VuesModeles
         private Conversation _conversationSelectionne;
         public Conversation ConversationSelectionne
         {
+           
             get { return _conversationSelectionne; }
 
             set
             {
+                stopThread = true;
+                
                 _conversationSelectionne = value;
                 if (_conversationSelectionne == null)
                     return;
@@ -91,6 +98,8 @@ namespace LeCollectionneur.VuesModeles
                 utilisateur = _conversationSelectionne.UserAutre;
                 utlisateurASelection = utilisateur;
                 listMessage = ConversationADO.chercherMessage(_conversationSelectionne.UserAutre.Id);
+
+                stopThread = false;
                 OnPropertyChanged("ConversationSelectionne");
             }
         }
@@ -128,20 +137,27 @@ namespace LeCollectionneur.VuesModeles
          
             set
             {
+                stopThread = true;
                 _cmdEnvoyerMessage = value;
+                stopThread = false;
                 OnPropertyChanged("cmdEnvoyerMessage");
-                
             }
         }
 
         private void cmdEnvoyerMessage_Message(object param)
         {
+            stopThread = true;
+
             if (messageContenu == "" || messageContenu==null || ConversationSelectionne ==null)
+            {
+               
                 return;
+            }
             ConversationSelectionne.lastMessage = messageContenu;
             conversationADO.EnvoyerMessage(messageContenu,id);
             messageContenu = "";
             listMessage = ConversationADO.chercherMessage(_conversationSelectionne.UserAutre.Id);
+            stopThread = false;
             OnPropertyChanged("cmdEnvoyerMessage_Message");
         }
 
@@ -161,10 +177,13 @@ namespace LeCollectionneur.VuesModeles
 
         public void cmdAjouter_Conversation(object param)
         {
-            LeCollectionneur.Vues.ajouterConversation ajouterConversation = new LeCollectionneur.Vues.ajouterConversation();
+            stopThread = true;
+
+             LeCollectionneur.Vues.ajouterConversation ajouterConversation = new LeCollectionneur.Vues.ajouterConversation();
             ajouterConversation.ShowDialog();
 
             GetConversations();
+            stopThread = false;
             OnPropertyChanged("MesConversation");
         }
         #endregion
@@ -175,21 +194,45 @@ namespace LeCollectionneur.VuesModeles
             cmdEnvoyerMessage = new Commande(cmdEnvoyerMessage_Message);
             cmdAjouterConversation = new Commande(cmdAjouter_Conversation);
             GetConversations();
+            thread = new Thread(RefreshMessage);
+            thread.Name = "Fillon Principal";
+            thread.Start();
+        }
+        ~Conversation_VM()
+        {
+            thread.Abort();
         }
 
 
         #endregion
 
         #region Méthodes
+
+        private void RefreshMessage()
+        {
+            while(!stopThread)
+            {
+                if(_conversationSelectionne !=null)
+                {
+                    listMessage = ConversationADO.chercherMessage(_conversationSelectionne.UserAutre.Id);
+                    OnPropertyChanged("listMessage");
+                }
+
+            
+                Thread.Sleep(2000);
+            }
+        }
         public void EnvoyerMessage(Message message)
         {
+            stopThread = true;
             conversationADO.EnvoyerMessage(message.Contenu,id);
-            
+            stopThread = false;
         }
         private void GetConversations()
         {
+            stopThread = true;
             MesConversation = new ObservableCollection<Conversation>();
-
+            
             ConversationADO conversationADO = new ConversationADO();
 
             var temp = conversationADO.RecupererConversationUtilisateur();
@@ -198,15 +241,20 @@ namespace LeCollectionneur.VuesModeles
                 try
                 {
                     d.lastMessage = conversationADO.GetMessages(d.Id)[conversationADO.GetMessages(d.Id).Count()-1].Contenu;
+                    d.date = conversationADO.GetMessages(d.Id)[conversationADO.GetMessages(d.Id).Count() - 1].Date;
+
                     MesConversation.Add(d);
                 }
                 catch
                 {
+                   
                     d.lastMessage = "";
+                    d.date = null;
+                    
                     MesConversation.Add(d);
                 }
             }
-
+            stopThread = false;
             OnPropertyChanged("MesConversation");
 
         }

@@ -19,7 +19,7 @@ namespace LeCollectionneur.Modeles
         public List<Message> ListMessage{ get; set; }
         public string NomUserAutre { get; set; }
         public string lastMessage { get; set; }
-        public DateTime date { get; set; }
+        public DateTime? date { get; set; }
         #endregion
 
         #region Constructeur
@@ -38,8 +38,16 @@ namespace LeCollectionneur.Modeles
         public Conversation(DataSet data)
         {
             this.Id = (int)data.Tables[0].Rows[0]["id"];
-            this.UserActif = new Utilisateur(UtilisateurADO.GetUserDataSet((int)data.Tables[0].Rows[0]["IdUtilisateur1"]));
-            this.UserAutre = new Utilisateur(UtilisateurADO.GetUserDataSet((int)data.Tables[0].Rows[0]["IdUtilisateur2"]));
+            if((int)data.Tables[0].Rows[0]["IdUtilisateur1"] == UtilisateurADO.utilisateur.Id)
+            {
+                this.UserActif = new Utilisateur(UtilisateurADO.GetUserDataSet((int)data.Tables[0].Rows[0]["IdUtilisateur1"]));
+                this.UserAutre = new Utilisateur(UtilisateurADO.GetUserDataSet((int)data.Tables[0].Rows[0]["IdUtilisateur2"]));
+            }
+            else
+            {
+                this.UserActif = new Utilisateur(UtilisateurADO.GetUserDataSet((int)data.Tables[0].Rows[0]["IdUtilisateur2"]));
+                this.UserAutre = new Utilisateur(UtilisateurADO.GetUserDataSet((int)data.Tables[0].Rows[0]["IdUtilisateur1"]));
+            }
             this.NomUserAutre = UserAutre.NomUtilisateur;
             this.lastMessage = getLastMessage().Contenu;
             this.date = getLastMessage().Date;
@@ -48,8 +56,16 @@ namespace LeCollectionneur.Modeles
         public Conversation(DataRow data)
         {
             this.Id = (int)data["id"];
-            this.UserActif = new Utilisateur(UtilisateurADO.GetUserDataSet((int)data["IdUtilisateur1"]));
-            this.UserAutre = new Utilisateur(UtilisateurADO.GetUserDataSet((int)data["IdUtilisateur2"]));
+            if ((int)data["IdUtilisateur1"] == UtilisateurADO.utilisateur.Id)
+            {
+                this.UserActif = new Utilisateur(UtilisateurADO.GetUserDataSet((int)data["IdUtilisateur1"]));
+                this.UserAutre = new Utilisateur(UtilisateurADO.GetUserDataSet((int)data["IdUtilisateur2"]));
+            }
+            else
+            {
+                this.UserActif = new Utilisateur(UtilisateurADO.GetUserDataSet((int)data["IdUtilisateur2"]));
+                this.UserAutre = new Utilisateur(UtilisateurADO.GetUserDataSet((int)data["IdUtilisateur1"]));
+            }
             this.NomUserAutre = UserAutre.NomUtilisateur;
             this.lastMessage = getLastMessage().Contenu;
             this.date = getLastMessage().Date;
