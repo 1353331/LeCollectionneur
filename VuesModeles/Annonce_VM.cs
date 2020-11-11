@@ -26,19 +26,20 @@ namespace LeCollectionneur.VuesModeles
         private const string NOM_MODAL_PROPOSITION = "proposition";
         private const string NOM_MODAL_MODIFICATION = "modifier";
 
-        public ICommand cmdFiltrer_Annonce { get; set; }
         public ICommand cmdAjouterAnnonce_Annonce { get; set; }
         public ICommand cmdFiltrerMesAnnonces_Annonce { get; set; }
         public ICommand cmdEnvoyerMessage_Annonce{ get; set; }
+        public ICommand cmdAfficherTout_Annonce { get; set; }
 
         public Annonce_VM()
         {
-            cmdFiltrer_Annonce = new Commande(cmdFiltrer);
+            cmdFiltrer_Annonce = new Commande(cmdFiltrer, UneColonneCochee);
             cmdProposerOuModifier_Annonce = new Commande(cmdProposer, UneAnnonceSelectionnee);
             cmdAjouterAnnonce_Annonce = new Commande(cmdAjouterAnnonce);
             cmdFiltrerMesAnnonces_Annonce = new Commande(cmdFiltrerMesAnnonces);
             cmdDetails_Annonce = new Commande(cmdDetails);
             cmdEnvoyerMessage_Annonce = new Commande(cmdEnvMessage);
+            cmdAfficherTout_Annonce = new Commande(cmdAfficherTout);
 
             ProposerOuModifier = PROPOSER;
 
@@ -209,6 +210,17 @@ namespace LeCollectionneur.VuesModeles
             }
         }
 
+        private ICommand _cmdFiltrer_Annonce;
+        public ICommand cmdFiltrer_Annonce 
+        { 
+            get { return _cmdFiltrer_Annonce; }
+            set 
+            {
+                _cmdFiltrer_Annonce = value;
+                OnPropertyChanged("cmdFiltrer_Annonce");
+            }
+        }
+
         private string _proposerOuModifier;
         public string ProposerOuModifier
         {
@@ -240,6 +252,7 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _typeAnnonceFiltre = value;
+                cmdFiltrer_Annonce.Execute(null);
                 OnPropertyChanged("TypeAnnonceFiltre");
             }
         }
@@ -262,6 +275,7 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _typeItemFiltre = value;
+                cmdFiltrer_Annonce.Execute(null);
                 OnPropertyChanged("TypeItemFiltre");
             }
         }
@@ -274,6 +288,7 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _dateDebutFiltre = value;
+                cmdFiltrer_Annonce.Execute(null);
                 OnPropertyChanged("DateDebutFiltre");
             }
         }
@@ -285,6 +300,7 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _dateFinFiltre = value;
+                cmdFiltrer_Annonce.Execute(null);
                 OnPropertyChanged("DateFinFiltre");
             }
         }
@@ -307,6 +323,7 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _filtrerParNomAnnonceur = value;
+                cmdFiltrer_Annonce = new Commande(cmdFiltrer, UneColonneCochee);
                 OnPropertyChanged("FiltrerParNomAnnonceur");
             }
         }
@@ -318,6 +335,7 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _filtrerParNomItem = value;
+                cmdFiltrer_Annonce = new Commande(cmdFiltrer, UneColonneCochee);
                 OnPropertyChanged("FiltrerParNomItem");
             }
         }
@@ -329,6 +347,7 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _filtrerParTitreAnnonce = value;
+                cmdFiltrer_Annonce = new Commande(cmdFiltrer, UneColonneCochee);
                 OnPropertyChanged("FiltrerParTitreAnnonce");
             }
         }
@@ -400,9 +419,9 @@ namespace LeCollectionneur.VuesModeles
                IOuvreModalAvecParametre<Utilisateur> fenetre = param as IOuvreModalAvecParametre<Utilisateur>;
                fenetre.OuvrirModal(AnnonceSelectionnee.Annonceur);
             }
-      }
+        }
 
-      public bool UneAnnonceSelectionnee()
+        public bool UneAnnonceSelectionnee()
         {
             return !(AnnonceSelectionnee is null);
         }
@@ -433,6 +452,8 @@ namespace LeCollectionneur.VuesModeles
 
             DateDebutFiltre = new DateTime(0001, 01, 01);
             DateFinFiltre = DateTime.Now;
+
+            FiltrerParTitreAnnonce = true;
         }
 
         private void cmdFiltrer(object param)
@@ -495,6 +516,22 @@ namespace LeCollectionneur.VuesModeles
             }
         }
 
+        private void cmdAfficherTout(object param)
+        {
+            FiltrerParNomAnnonceur = false;
+            FiltrerParNomItem = false;
+            FiltrerParTitreAnnonce = true;
+            RechercheTextuelle = "";
+            TypeItemFiltre = null;
+            TypeAnnonceFiltre = null;
+            DateDebutFiltre = new DateTime(0001, 01, 01);
+            DateFinFiltre = DateTime.Now;
+            FiltrerParMesAnnonces = false;
+
+            LesAnnonces = annonceADO.Recuperer();
+
+        }
+
         private bool FiltrerSelonChoix(Annonce a)
         {
             if (FiltrerParNomAnnonceur)
@@ -526,6 +563,16 @@ namespace LeCollectionneur.VuesModeles
                     return true;
                 }
             }
+            return false;
+        }
+
+        private bool UneColonneCochee()
+        {
+            if (FiltrerParTitreAnnonce || FiltrerParNomItem || FiltrerParNomAnnonceur)
+            {
+                return true;
+            }
+
             return false;
         }
         #endregion

@@ -17,7 +17,6 @@ namespace LeCollectionneur.VuesModeles
     class ModalModifierAnnonce_VM : INotifyPropertyChanged
     {
         public ICommand cmdAjouterItem_Annonce { get; set; }
-        public ICommand cmdSupprimerItem_Annonce { get; set; }
 
         #region Constructeur
         public ModalModifierAnnonce_VM(Annonce annonceLiee)
@@ -25,14 +24,15 @@ namespace LeCollectionneur.VuesModeles
             //on initialise les commandes utiles au VM
             cmdModifier_Annonce = new Commande(cmdModifier, champsRemplis);
             cmdAjouterItem_Annonce = new Commande(cmdAjouterItem);
-            cmdSupprimerItem_Annonce = new Commande(cmdSupprimerItem);
+            cmdSupprimerItem_Annonce = new Commande(cmdSupprimerItem, presenceItem);
             cmdDetails_Annonce = new Commande(cmdDetails);
 
             //on initialise la nouvelle annonce et ses variables
             InitModificationAnnonce(annonceLiee);
 
             //Abonnement à l'évènement Ajout d'un item à une annonce
-            EvenementSysteme.Abonnement<EnvoyerItemMessage>(ajouterItemMessage);
+            //EvenementSysteme.Abonnement<EnvoyerItemMessage>(ajouterItemMessage);
+            EvenementSysteme.Abonnement<EnvoyerItemsMessage>(ajouterItemsMessage);
         }
         #endregion
 
@@ -149,6 +149,17 @@ namespace LeCollectionneur.VuesModeles
             }
         }
 
+        private ICommand _cmdSupprimerItem_Annonce;
+        public ICommand cmdSupprimerItem_Annonce
+        {
+            get { return _cmdSupprimerItem_Annonce; }
+            set
+            {
+                _cmdSupprimerItem_Annonce = value;
+                OnPropertyChanged("cmdSupprimerItem_Annonce");
+            }
+        }
+
         private ICommand _cmdDetails_Annonce;
         public ICommand cmdDetails_Annonce
         {
@@ -165,13 +176,6 @@ namespace LeCollectionneur.VuesModeles
         private void InitModificationAnnonce(Annonce annonceLiee)
         {
             AnnonceAMod = annonceLiee;
-            //AnnonceAMod = new Annonce();
-            //AnnonceAMod.Id = annonceLiee.Id;
-            //AnnonceAMod.Titre = annonceLiee.Titre;
-            //AnnonceAMod.Type = annonceLiee.Type;
-            //AnnonceAMod.Description = annonceLiee.Description;
-            //AnnonceAMod.ListeItems = annonceLiee.ListeItems;
-            //AnnonceAMod.Montant = annonceLiee.Montant;
 
             LesTypesAnnonce = new ObservableCollection<string>();
             AnnonceADO annonceADO = new AnnonceADO();
@@ -189,7 +193,6 @@ namespace LeCollectionneur.VuesModeles
             Titre = AnnonceAMod.Titre;
             Type = AnnonceAMod.Type;
             Description = AnnonceAMod.Description;
-            //LesItemsMod = AnnonceAMod.ListeItems;
             Montant = AnnonceAMod.Montant;
         }
 
@@ -232,6 +235,7 @@ namespace LeCollectionneur.VuesModeles
 
             //On met à jour la commande d'ajout d'annonce pour vérifier si elle est exécutable
             cmdModifier_Annonce = new Commande(cmdModifier, champsRemplis);
+            cmdSupprimerItem_Annonce = new Commande(cmdSupprimerItem, presenceItem);
         }
 
         //Méthode de vérificaiton de si l'item est déjà présent dans la liste d'items de la nouvelle annonce
@@ -259,6 +263,28 @@ namespace LeCollectionneur.VuesModeles
 
             //On met à jour la commande d'ajout d'annonce pour vérifier si elle est exécutable
             cmdModifier_Annonce = new Commande(cmdModifier, champsRemplis);
+            cmdSupprimerItem_Annonce = new Commande(cmdSupprimerItem, presenceItem);
+        }
+
+        private void ajouterItemsMessage(EnvoyerItemsMessage msg)
+        {
+            foreach (Item i in msg.Items)
+            {
+                //Si l'item n'est pas déjà présent dans la liste d'item, alors on l'ajoute à la liste, sinon on affiche le message d'erreur
+                if (!itemEstDansProposition(i))
+                {
+                    LesItemsMod.Add(i);
+                    MessageBox.Show($"Vous avez ajouté l'item {i.Nom}", "Ajout réussi", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show($"L'objet {i.Nom} existe déjà dans l'annonce.", "Attention", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+
+            //On met à jour la commande d'ajout d'annonce pour vérifier si elle est exécutable
+            cmdModifier_Annonce = new Commande(cmdModifier, champsRemplis);
+            cmdSupprimerItem_Annonce = new Commande(cmdSupprimerItem, presenceItem);
         }
 
         //Méthode pour supprimer un item de la liste d'item de la nouvelle annonce
@@ -280,6 +306,7 @@ namespace LeCollectionneur.VuesModeles
 
             //On met à jour la commande d'ajout d'annonce pour vérifier si elle est exécutable
             cmdModifier_Annonce = new Commande(cmdModifier, champsRemplis);
+            cmdSupprimerItem_Annonce = new Commande(cmdSupprimerItem, presenceItem);
         }
 
         //Méthode qui vérifie si les champs obligatoires sont remplis ou non
@@ -301,12 +328,17 @@ namespace LeCollectionneur.VuesModeles
             }
         }
 
+        private bool presenceItem()
+        {
+            return LesItemsMod.Count > 0;
+        }
+
         public void cmdFermer(object sender, CancelEventArgs e)
         {
            EvenementSysteme.Desabonnement<EnvoyerItemMessage>(ajouterItemMessage);
         }
 
-      public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string nomPropriete)
         {
 

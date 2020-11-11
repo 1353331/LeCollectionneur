@@ -210,7 +210,7 @@ namespace LeCollectionneur.Modeles
         public void Supprimer(Annonce a)
         {
             // Supprimer toutes les items de l'annonce
-            string req = $"delete from itemcollectionannonce where idannonce = {a.Id}";
+            string req = $"delete from itemannonce where idannonce = {a.Id}";
             MaBD.Commande(req);
 
             //supprimer l'annonce

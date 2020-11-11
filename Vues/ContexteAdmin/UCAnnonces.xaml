@@ -1,4 +1,5 @@
 ﻿<UserControl x:Class="LeCollectionneur.Vues.ContexteAdmin.UCAnnonces"
+             x:Name="UCVueAnnonceAdmin"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -7,6 +8,88 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Label>Administration des annonces</Label>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="450"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="333.4"></ColumnDefinition>
+            <ColumnDefinition Width="333.4"></ColumnDefinition>
+            <ColumnDefinition Width="166.6"></ColumnDefinition>
+            <ColumnDefinition Width="166.6"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <!-- Listes des annonces-->
+        <DataGrid ItemsSource="{Binding LesAnnonces}" SelectedItem="{Binding AnnonceSelectionnee}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" IsReadOnly="True" Grid.ColumnSpan="2"  Margin="7,10,0,0">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Path=Titre}" Header="Titre" Width="250"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=Annonceur.NomUtilisateur}" Header="Annonceur" Width="150"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=DatePublication, StringFormat=yyyy-MM-dd}" Header="Date" Width="100"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=Type}" Header="Type d'annonce" Width="152"></DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!--GroupBox pour l'affichage d'une annonce-->
+        <GroupBox Header="Détails de l'annonce" Grid.Column="2" Grid.ColumnSpan="2"  Margin="7,10,17,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="0.8*"></RowDefinition>
+                    <RowDefinition Height="3*"></RowDefinition>
+                    <RowDefinition Height="0.8*"></RowDefinition>
+                    <RowDefinition Height="2*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.5*"></ColumnDefinition>
+                    <ColumnDefinition Width="2*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <!--titre de l'annonce-->
+                <Label Name="lbl_nom" Content="{Binding Titre}" FontSize="20" Grid.ColumnSpan="2" VerticalAlignment="Center"></Label>
+
+                <!--Type de l'annonce-->
+                <Label Content="Type d'annonce" Grid.Row="1" VerticalAlignment="Center"></Label>
+                <TextBox Name="txt_type" Text="{Binding Type}" Grid.Row="1" Grid.Column="1" Margin="0,3" IsReadOnly="True"></TextBox>
+
+                <!--Date de l'annonce-->
+                <Label Content="Date" Grid.Row="2" VerticalAlignment="Center"></Label>
+                <TextBox Name="txt_datePublication" Text="{Binding DatePublication, StringFormat=yyyy-MM-dd}" Grid.Row="2" Grid.Column="1" Margin="0,3" IsReadOnly="True"></TextBox>
+
+                <!--Nom de l'annonceur-->
+                <Label Content="Annonceur" Grid.Row="3" VerticalAlignment="Center"></Label>
+                <TextBox Name="txt_Annonceur" Text="{Binding Annonceur.NomUtilisateur}" Grid.Row="3" Grid.Column="1" Margin="0,3" IsReadOnly="True"></TextBox>
+
+                <!--Affichage des items de l'annonce-->
+                <Label Content="Items annoncés" Grid.Row="4" ></Label>
+                <DataGrid ItemsSource="{Binding LesItems}" SelectedItem="{Binding ItemSelectionne}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" Grid.Row="5" Grid.ColumnSpan="2" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding Path=Nom}" Header="Nom" Width="100"></DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=Condition}" Header="Condition" Width="100"></DataGridTextColumn>
+                        <DataGridTemplateColumn Header="Détails" Width="90">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Name="btnDetails" Command="{Binding Path=DataContext.cmdDetails_Annonce, ElementName=UCVueAnnonceAdmin}" CommandParameter="{Binding ElementName=UCVueAnnonceAdmin}">Détails</Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <!--Description de l'annonce-->
+                <Label Content="Description de l'annonce" Grid.Row="6" Grid.ColumnSpan="2"></Label>
+                <TextBox Name="txt_description" Text="{Binding Description}" TextWrapping="Wrap" Grid.Row="7" Grid.ColumnSpan="2" IsReadOnly="True"></TextBox>
+
+                <!--Montant de l'annonce-->
+                <Label Content="Montant ($)" Grid.Row="8" VerticalAlignment="Center"></Label>
+                <TextBox Name="txt_Montant" Text="{Binding Montant}" Grid.Row="8" Grid.Column="2" Margin="0,3" IsReadOnly="True"></TextBox>
+
+                <!--Bouton du bas de l'annonce pour supprimer une annonce-->
+                <Button Name="btnPropAnnonce" Content="Supprimer" Grid.Row="9" Grid.ColumnSpan="2" Margin="40,5" Command="{Binding cmdSupprimer_Annonce}" CommandParameter="{Binding ElementName=UCVueAnnonce}"></Button>
+            </Grid>
+        </GroupBox>
     </Grid>
 </UserControl>

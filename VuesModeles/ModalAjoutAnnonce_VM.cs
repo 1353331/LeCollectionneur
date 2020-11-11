@@ -3,6 +3,7 @@ using LeCollectionneur.Outils;
 using LeCollectionneur.Outils.Interfaces;
 using LeCollectionneur.Outils.Messages;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -11,13 +12,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interop;
 
 namespace LeCollectionneur.VuesModeles
 {
     class ModalAjoutAnnonce_VM : INotifyPropertyChanged
     {
         public ICommand cmdAjouterItem_Annonce { get; set; }
-        public ICommand cmdSupprimerItem_Annonce { get; set; }
 
         #region Constructeur
         public ModalAjoutAnnonce_VM()
@@ -25,14 +26,15 @@ namespace LeCollectionneur.VuesModeles
             //on initialise les commandes utiles au VM
             cmdAjouter_Annonce = new Commande(cmdAjouter, champsRemplis);
             cmdAjouterItem_Annonce = new Commande(cmdAjouterItem);
-            cmdSupprimerItem_Annonce = new Commande(cmdSupprimerItem);
+            cmdSupprimerItem_Annonce = new Commande(cmdSupprimerItem, presenceItem);
             cmdDetails_Annonce = new Commande(cmdDetails);
 
             //on initialise la nouvelle annonce et ses variables
             InitNouvelleAnnonce();
 
             //Abonnement à l'évènement Ajout d'un item à une annonce
-            EvenementSysteme.Abonnement<EnvoyerItemMessage>(ajouterItemMessage);
+            //EvenementSysteme.Abonnement<EnvoyerItemMessage>(ajouterItemMessage);
+            EvenementSysteme.Abonnement<EnvoyerItemsMessage>(ajouterItemsMessage);
         }
         #endregion
 
@@ -149,6 +151,17 @@ namespace LeCollectionneur.VuesModeles
             }
         }
 
+        private ICommand _cmdSupprimerItem_Annonce;
+        public ICommand cmdSupprimerItem_Annonce 
+        {
+            get { return _cmdSupprimerItem_Annonce; }
+            set 
+            {
+                _cmdSupprimerItem_Annonce = value;
+                OnPropertyChanged("cmdSupprimerItem_Annonce");
+            }
+        }
+
         private ICommand _cmdDetails_Annonce;
         public ICommand cmdDetails_Annonce
         {
@@ -237,10 +250,34 @@ namespace LeCollectionneur.VuesModeles
                 MessageBox.Show($"Vous avez ajouté l'item {msg.Item.Nom}", "Ajout réussi", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
+            {
                 MessageBox.Show($"Cet objet existe déjà dans l'annonce.", "Attention", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
 
             //On met à jour la commande d'ajout d'annonce pour vérifier si elle est exécutable
             cmdAjouter_Annonce = new Commande(cmdAjouter, champsRemplis);
+            cmdSupprimerItem_Annonce = new Commande(cmdSupprimerItem, presenceItem);
+        }
+
+        private void ajouterItemsMessage(EnvoyerItemsMessage msg)
+        {
+            foreach (Item i in msg.Items)
+            {
+                //Si l'item n'est pas déjà présent dans la liste d'item, alors on l'ajoute à la liste, sinon on affiche le message d'erreur
+                if (!itemEstDansProposition(i))
+                {
+                    LesItems.Add(i);
+                    MessageBox.Show($"Vous avez ajouté l'item {i.Nom}", "Ajout réussi", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                else
+                {
+                    MessageBox.Show($"L'objet {i.Nom} existe déjà dans l'annonce.", "Attention", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+
+            //On met à jour la commande d'ajout d'annonce pour vérifier si elle est exécutable
+            cmdAjouter_Annonce = new Commande(cmdAjouter, champsRemplis);
+            cmdSupprimerItem_Annonce = new Commande(cmdSupprimerItem, presenceItem);
         }
 
         //Méthode pour supprimer un item de la liste d'item de la nouvelle annonce
@@ -262,6 +299,7 @@ namespace LeCollectionneur.VuesModeles
 
             //On met à jour la commande d'ajout d'annonce pour vérifier si elle est exécutable
             cmdAjouter_Annonce = new Commande(cmdAjouter, champsRemplis);
+            cmdSupprimerItem_Annonce = new Commande(cmdSupprimerItem, presenceItem);
         }
 
         //Méthode qui vérifie si les champs obligatoires sont remplis ou non
@@ -283,12 +321,17 @@ namespace LeCollectionneur.VuesModeles
             }
         }
 
+        private bool presenceItem()
+        {
+            return LesItems.Count > 0;
+        }
+
         public void cmdFermer(object sender, CancelEventArgs e)
         {
            EvenementSysteme.Desabonnement<EnvoyerItemMessage>(ajouterItemMessage);
         }
 
-      public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string nomPropriete)
         {
             

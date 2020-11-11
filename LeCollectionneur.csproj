@@ -154,6 +154,7 @@
     <Compile Include="Outils\BdBase.cs" />
     <Compile Include="Outils\Commande.cs" />
     <Compile Include="Outils\ConvertisseurParametre.cs" />
+    <Compile Include="Outils\CustomDataGrid.cs" />
     <Compile Include="Outils\Enumerations\EtatsAnnonce.cs" />
     <Compile Include="Outils\Enumerations\EtatsProposition.cs" />
     <Compile Include="Outils\Evenements.cs" />
@@ -162,6 +163,7 @@
     <Compile Include="Outils\Interfaces\IOuvreModal.cs" />
     <Compile Include="Outils\Interfaces\IOuvreModalAvecChoixEtParam.cs" />
     <Compile Include="Outils\Interfaces\IOuvreModalAvecParametre.cs" />
+    <Compile Include="Outils\Messages\EnvoyerItemsMessage.cs" />
     <Compile Include="Outils\Messages\EnvoyerItemMessage.cs" />
     <Compile Include="Outils\Messages\EvenementSysteme.cs" />
     <Compile Include="Outils\Validateur.cs" />
@@ -170,6 +172,7 @@
     <Compile Include="VuesModeles\AjoutItemCollection_VM.cs" />
     <Compile Include="VuesModeles\Annonce_VM.cs" />
     <Compile Include="VuesModeles\Collection_VM.cs" />
+    <Compile Include="VuesModeles\ContexteAdmin\AnnonceAdmin_VM.cs" />
     <Compile Include="VuesModeles\Conversation_VM.cs" />
     <Compile Include="VuesModeles\DeplacementItem_VM.cs" />
     <Compile Include="VuesModeles\ModalAjoutAnnonce_VM.cs" />

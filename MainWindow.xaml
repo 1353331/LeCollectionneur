@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LeCollectionneur"
         mc:Ignorable="d"
+        MinHeight="700" MinWidth="1000"
         Title="Le Collectionneur" Height="700" Width="1000">
     <Grid>
       

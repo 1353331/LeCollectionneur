@@ -34,13 +34,13 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="100"></RowDefinition>
-            <RowDefinition Height="500"></RowDefinition>
+            <RowDefinition Height="5*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="333.33"></ColumnDefinition>
-            <ColumnDefinition Width="333.33"></ColumnDefinition>
-            <ColumnDefinition Width="166.6"></ColumnDefinition>
-            <ColumnDefinition Width="166.6"></ColumnDefinition>
+            <ColumnDefinition Width="2*"></ColumnDefinition>
+            <ColumnDefinition Width="2.3*"></ColumnDefinition>
+            <ColumnDefinition Width="1.4*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         
         <!--GroupBox pour la recherche textuel-->
@@ -59,7 +59,7 @@
 
                 <!-- Recherche textuel-->
                 <TextBox Grid.ColumnSpan="2" VerticalAlignment="Center" Margin="0,0,8,0" Text="{Binding RechercheTextuelle}"></TextBox>
-                <Button Content="Rechercher" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Center" Command="{Binding cmdFiltrer_Annonce}"></Button>
+                <Button Content="Rechercher" Grid.Column="2" Grid.ColumnSpan="2" VerticalAlignment="Center" Command="{Binding cmdFiltrer_Annonce}" CommandParameter="{Binding ElementName=UCVueAnnonce}"></Button>
 
                 <!-- Checkbox pour filtre de recherche textuel-->
                 <CheckBox Grid.Row="1" VerticalAlignment="Center" IsChecked="{Binding Path=FiltrerParTitreAnnonce, Mode=TwoWay}">Titre</CheckBox>
@@ -101,6 +101,29 @@
 
         <!-- Boutons d'action pour annonce-->
         <StackPanel Grid.Column="3" VerticalAlignment="Center" Margin="0,0,15,0">
+            <Button x:Name="btnAfficherTout" Content="Afficher tout" Margin="5,5,5,0" Command="{Binding cmdAfficherTout_Annonce}" CommandParameter="{Binding ElementName=UCVueAnnonce}">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border Background="{TemplateBinding Background}" BorderBrush="#FF444444" BorderThickness="1">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter> 
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Salmon"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="Red"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
             <Button x:Name="btnAjoutAnnonce" Content="Ajouter une annonce" Margin="5,5,5,5" Command="{Binding cmdAjouterAnnonce_Annonce}" CommandParameter="{Binding ElementName=UCVueAnnonce}"></Button>
             <CheckBox Content="Mes annonces" Margin="5,0,5,5" HorizontalAlignment="Center" IsChecked="{Binding Path=FiltrerParMesAnnonces, Mode=TwoWay}" Command="{Binding cmdFiltrerMesAnnonces_Annonce}"></CheckBox>
         </StackPanel>
@@ -108,15 +131,15 @@
         <!-- Listes des annonces-->
         <DataGrid ItemsSource="{Binding LesAnnonces}" SelectedItem="{Binding AnnonceSelectionnee}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" IsReadOnly="True" Grid.Row="1" Grid.ColumnSpan="2"  Margin="7,10,0,0">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Path=Titre}" Header="Titre" Width="250"></DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Path=Annonceur.NomUtilisateur}" Header="Annonceur" Width="150"></DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Path=DatePublication, StringFormat=yyyy-MM-dd}" Header="Date" Width="100"></DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Path=Type}" Header="Type d'annonce" Width="152"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=Titre}" Header="Titre" Width="4*"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=Annonceur.NomUtilisateur}" Header="Annonceur" Width="2*"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=DatePublication, StringFormat=yyyy-MM-dd}" Header="Date" Width="1.4*"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=Type}" Header="Type d'annonce" Width="2*"></DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
 
         <!--GroupBox pour l'affichage d'une annonce-->
-        <GroupBox Header="Détails de l'annonce" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"  Margin="7,10,17,0">
+        <GroupBox Header="Détails de l'annonce" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"  Margin="7,10,0,0">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"></RowDefinition>
@@ -140,24 +163,25 @@
                 
                 <!--Type de l'annonce-->
                 <Label Content="Type d'annonce" Grid.Row="1" VerticalAlignment="Center"></Label>
-                <TextBox Name="txt_type" Text="{Binding Type}" Grid.Row="1" Grid.Column="1" Margin="0,3" IsReadOnly="True"></TextBox>
+                <TextBox MaxHeight="31.5" Height="31.5" Name="txt_type" Text="{Binding Type}" Grid.Row="1" Grid.Column="1" Margin="0,3" IsReadOnly="True"></TextBox>
 
                 <!--Date de l'annonce-->
                 <Label Content="Date" Grid.Row="2" VerticalAlignment="Center"></Label>
-                <TextBox Name="txt_datePublication" Text="{Binding DatePublication, StringFormat=yyyy-MM-dd}" Grid.Row="2" Grid.Column="1" Margin="0,3" IsReadOnly="True"></TextBox>
+                <TextBox MaxHeight="31.5" Height="31.5" Name="txt_datePublication" Text="{Binding DatePublication, StringFormat=yyyy-MM-dd}" Grid.Row="2" Grid.Column="1" Margin="0,3" IsReadOnly="True"></TextBox>
 
                 <!--Nom de l'annonceur-->
                 <Label Content="Annonceur" Grid.Row="3" VerticalAlignment="Center"></Label>
-                <TextBox Name="txt_Annonceur" Text="{Binding Annonceur.NomUtilisateur}" Grid.Row="3" Grid.Column="1" Margin="0,3" IsReadOnly="True"></TextBox>
+                <TextBox MaxHeight="31.5" Height="31.5" Name="txt_Annonceur" Text="{Binding Annonceur.NomUtilisateur}" Grid.Row="3" Grid.Column="1" Margin="0,3" IsReadOnly="True"></TextBox>
 
                 <!--Affichage des items de l'annonce-->
-                <Label Content="Items annoncés" Grid.Row="4" ></Label>
+                <Label Content="Items annoncés" Grid.Row="4" VerticalContentAlignment="Bottom"></Label>
                 <Button Name="btnMessageProposition" Grid.Row="4" Grid.Column="1" Style="{StaticResource btnMessageImageStyle}" Margin="60,0,60,0" Command="{Binding cmdEnvoyerMessage_Annonce}" CommandParameter="{Binding ElementName=UCVueAnnonce}"></Button>
                 <DataGrid ItemsSource="{Binding LesItems}" SelectedItem="{Binding ItemSelectionne}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" Grid.Row="5" Grid.ColumnSpan="2" IsReadOnly="True">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Path=Nom}" Header="Nom" Width="100"></DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Path=Condition}" Header="Condition" Width="100"></DataGridTextColumn>
-                        <DataGridTemplateColumn Header="Détails" Width="90">
+                        <DataGridTextColumn Binding="{Binding Path=Nom}" Header="Nom" Width="3*"></DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=Type}" Header="Type" Width="2*"></DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=Condition}" Header="Condition" Width="2*"></DataGridTextColumn>
+                        <DataGridTemplateColumn Header="Détails" Width="1.5*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button Name="btnDetails" Command="{Binding Path=DataContext.cmdDetails_Annonce, ElementName=UCVueAnnonce}" CommandParameter="{Binding ElementName=UCVueAnnonce}">Détails</Button>
@@ -168,15 +192,15 @@
                 </DataGrid>
                  
                 <!--Description de l'annonce-->
-                <Label Content="Description de l'annonce" Grid.Row="6" Grid.ColumnSpan="2"></Label>
+                <Label Content="Description de l'annonce" Grid.Row="6" Grid.ColumnSpan="2" VerticalContentAlignment="Bottom"></Label>
                 <TextBox Name="txt_description" Text="{Binding Description}" TextWrapping="Wrap" Grid.Row="7" Grid.ColumnSpan="2" IsReadOnly="True"></TextBox>
 
                 <!--Montant de l'annonce-->
                 <Label Content="Montant ($)" Grid.Row="8" VerticalAlignment="Center"></Label>
-                <TextBox Name="txt_Montant" Text="{Binding Montant}" Grid.Row="8" Grid.Column="2" Margin="0,3" IsReadOnly="True"></TextBox>
+                <TextBox MaxHeight="31.5" Height="31.5" Name="txt_Montant" Text="{Binding Montant}" Grid.Row="8" Grid.Column="2" Margin="0,3" IsReadOnly="True"></TextBox>
                 
                 <!--Bouton du bas de l'annonce, change en fonction de la checkbox "Mes annonces"-->
-                <Button Name="btnPropAnnonce" Content="{Binding Path=ProposerOuModifier}" Grid.Row="9" Grid.ColumnSpan="2" Margin="40,5" Command="{Binding cmdProposerOuModifier_Annonce}" CommandParameter="{Binding ElementName=UCVueAnnonce}"></Button>
+                <Button MaxHeight="27" Height="27" Name="btnPropAnnonce" Content="{Binding Path=ProposerOuModifier}" Grid.Row="9" Grid.ColumnSpan="2" Margin="40,5" Command="{Binding cmdProposerOuModifier_Annonce}" CommandParameter="{Binding ElementName=UCVueAnnonce}"></Button>
             </Grid>
         </GroupBox>
     </Grid>

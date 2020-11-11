@@ -6,6 +6,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LeCollectionneur.Vues"
         mc:Ignorable="d"
+        
+        ResizeMode="NoResize"
         Title="Modification de l'annonce" Height="660" Width="500">
     <Grid>
         <Grid.RowDefinitions>
@@ -37,21 +39,25 @@
         <GroupBox Grid.Row="3" Grid.ColumnSpan="3" Header="Offre" Margin="10,0,20,0" >
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="3*"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="3*"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="228.8"></ColumnDefinition>
+                    <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
+                <!--Bouton Retirer et Ajouter item-->
+                <Button Content="Retirer Item" Grid.Row="0" Width="228.8" Height="25" HorizontalAlignment="left" Margin="0,0,0,0" Command="{Binding cmdSupprimerItem_Annonce}" CommandParameter="{Binding ElementName=WindowModifierAnnonce}"></Button>
+                <Button Content="Ajouter Item" Grid.Row="0" Grid.Column="1" Width="228.8" Height="25" HorizontalAlignment="Right" Margin="0,0,0,0" Command="{Binding cmdAjouterItem_Annonce}" CommandParameter="{Binding ElementName=WindowModifierAnnonce}"></Button>
+
                 <!--Items-->
-                <DataGrid ItemsSource="{Binding LesItemsMod}" SelectedItem="{Binding ItemSelectionneMod}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" Grid.Row="0" Grid.ColumnSpan="2" IsReadOnly="True">
+                <DataGrid ItemsSource="{Binding LesItemsMod}" SelectedItem="{Binding ItemSelectionneMod}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" Grid.Row="1" Grid.ColumnSpan="2" IsReadOnly="True">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Path=Nom}" Header="Nom" Width="130"></DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Path=Condition}" Header="Condition" Width="125"></DataGridTextColumn>
-                        <DataGridTemplateColumn Header="Détails" Width="120">
+                        <DataGridTextColumn Binding="{Binding Path=Nom}" Header="Nom" Width="170"></DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=Condition}" Header="Condition" Width="155"></DataGridTextColumn>
+                        <DataGridTemplateColumn Header="Détails" Width="130">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button Name="btnDetails" Command="{Binding Path=DataContext.cmdDetails_Annonce, ElementName=WindowAjoutAnnonce}" CommandParameter="{Binding ElementName=WindowAjoutAnnonce}">Détails</Button>
@@ -60,10 +66,6 @@
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
-
-                <!--Bouton Retirer et Ajouter item-->
-                <Button Content="Retirer Item" Grid.Row="1" Width="200" Height="30" HorizontalAlignment="Right" Margin="0,0,10,0" Command="{Binding cmdSupprimerItem_Annonce}" CommandParameter="{Binding ElementName=WindowModifierAnnonce}"></Button>
-                <Button Content="Ajouter Item" Grid.Row="1" Grid.Column="1" Width="200" Height="30" HorizontalAlignment="Left" Margin="10,0,0,0" Command="{Binding cmdAjouterItem_Annonce}" CommandParameter="{Binding ElementName=WindowModifierAnnonce}"></Button>
 
                 <!--Montant d'argent-->
                 <Label Content="Montant en argent" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center"></Label>

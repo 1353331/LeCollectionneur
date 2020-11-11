@@ -30,16 +30,6 @@ namespace LeCollectionneur.Vues
             DataContext = new Annonce_VM();
         }
 
-        private void ListView_SelectItem(object sender, MouseButtonEventArgs e)
-        {
-
-        }
-
-        private void ListView_SelectAnnonce(object sender, MouseButtonEventArgs e)
-        {
-
-        }
-
         public void OuvrirModal()
         {
             ModalAjoutAnnonce viewProp = new ModalAjoutAnnonce();

@@ -20,7 +20,7 @@ namespace LeCollectionneur.Modeles
         public string Description { get; set; }
         public ObservableCollection<Item> ListeItems { get; set; }
         public double Montant { get; set; }
-		  public string EtatAnnonce { get; set; }
+		 public string EtatAnnonce { get; set; }
 		#endregion
 
 		#region Constructeur
