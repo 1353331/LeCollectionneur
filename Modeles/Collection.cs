@@ -34,10 +34,22 @@ namespace LeCollectionneur.Modeles
             ItemADO itemADO = new ItemADO();
             ItemsCollection=itemADO.Recuperer(Id);
         }
+        public Collection(int id)
+        {
+            Id = id;
+        }
         #endregion
 
         #region Méthodes
-
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+            Collection objAsCollection = obj as Collection;
+            if (objAsCollection == null)
+                return false;
+            return Id==objAsCollection.Id;
+        }
         #endregion
     }
 }

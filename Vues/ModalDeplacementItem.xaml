@@ -15,7 +15,14 @@
             </StackPanel>
             <Label>Choisissez la collection où l'item sera déplacé</Label>
         </StackPanel>
-        <ListView Name="lstCollections" SelectedItem="{Binding CollectionSelectionnee}"  ItemsSource="{Binding LstCollections}" Height="322" Width="275">
+        <DataGrid  ItemsSource="{Binding LstCollections}" SelectedItem="{Binding CollectionSelectionnee}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" IsReadOnly="True"   Margin="10,52,10,48" VerticalAlignment="Stretch">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Path=Nom}" Header="Nom" Width="2*"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=DateCreation, StringFormat=yyyy-MM-dd}" Header="Création" Width="2*"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=ItemsCollection.Count}" Header="Nb" Width="*"></DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <!--<ListView Name="lstCollections" SelectedItem="{Binding CollectionSelectionnee}"  ItemsSource="{Binding LstCollections}" Height="322" Width="275">
             <ListView.View>
                 <GridView >
                     <GridView.Columns>
@@ -28,8 +35,8 @@
 
             </ListView.View>
 
-        </ListView>
-        <Button Name="btnAppliquer"  Command="{Binding cmdDeplacerItem}" CommandParameter="{Binding ElementName=ModalDeplacerItem}" Content="Ajouter" Margin="45,376,187,13" />
+        </ListView>-->
+        <Button Name="btnAppliquer"  Command="{Binding cmdDeplacerItem}" CommandParameter="{Binding ElementName=ModalDeplacerItem}" Content="Confirmer" Margin="45,376,187,13" />
         <Button Name="btnAnnuler"  Command="{Binding cmdAnnuler}" CommandParameter="{Binding ElementName=ModalDeplacerItem}" Content="Annuler" Margin="182,376,50,13" />
 
     </Grid>

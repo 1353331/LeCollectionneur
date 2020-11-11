@@ -58,7 +58,7 @@ namespace LeCollectionneur.Modeles
         #region Update
         public void Modifier(Collection c)
         {
-            string req = $"update Collections set Nom = {c.Nom} where id = {c.Id}";
+            string req = $"update Collections set Nom = '{c.Nom}',DateCreation='{c.DateCreation.Year}-{c.DateCreation.Month}-{c.DateCreation.Day}' where id = {c.Id}";
             MaBD.Commande(req);
         }
         #endregion

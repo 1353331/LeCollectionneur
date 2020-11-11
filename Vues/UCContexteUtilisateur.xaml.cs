@@ -26,27 +26,31 @@ namespace LeCollectionneur.Vues
         {
             InitializeComponent();
 			presenteurContenu.Content = new UCCollection();
+			modifierBackgroundBoutons(btnCollections);
         }
 
 		private void btnCollections_Click(object sender, RoutedEventArgs e)
 		{
 			presenteurContenu.Content = new UCCollection();
-
+			modifierBackgroundBoutons(sender);
 		}
 
 		private void btnAnnonces_Click(object sender, RoutedEventArgs e)
 		{
 			presenteurContenu.Content = new UCAnnonce();
+			modifierBackgroundBoutons(sender);
 		}
 
 		private void btnPropositions_Click(object sender, RoutedEventArgs e)
 		{
 			presenteurContenu.Content = new UCPropositionsRecuesEnvoyees();
+			modifierBackgroundBoutons(sender);
 		}
 
 		private void btnConversations_Click(object sender, RoutedEventArgs e)
 		{
 			presenteurContenu.Content = new UCConversation();
+			modifierBackgroundBoutons(sender);
 		}
 
 		private void btnDeconnexion_Click(object sender, RoutedEventArgs e)
@@ -61,6 +65,32 @@ namespace LeCollectionneur.Vues
 		private void btnParametres_Click(object sender, RoutedEventArgs e)
 		{
 			presenteurContenu.Content = new UCParametre();
+			modifierBackgroundBoutons(sender);
+		}
+
+		private void modifierBackgroundBoutons(object sender)
+		{
+			Grid laGrid=(Grid)this.Content;
+			Grid deuxiemeGrid = (Grid)laGrid.Children[0];
+			foreach (Control control in deuxiemeGrid.Children )
+			{
+				if (control is Button)
+				{
+					Button bouton = control as Button;
+
+
+					if (bouton != sender)
+					{
+						bouton.IsEnabled = true;
+						bouton.ClearValue(BackgroundProperty);
+					}
+					else
+					{
+						bouton.IsEnabled = false;
+						bouton.Background = new SolidColorBrush(Colors.Beige);
+					}
+				}
+			}
 		}
 	}
 }

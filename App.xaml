@@ -5,6 +5,19 @@
              xmlns:local1="clr-namespace:LeCollectionneur.VuesModeles"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        
+
+        <Style TargetType="{x:Type TypeName=Button}">
+            <Setter Property="FontWeight" Value="DemiBold">
+
+            </Setter>
+            <Style.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="BorderThickness" Value="3"></Setter>
+                    <Setter Property="BorderBrush" Value="Black"></Setter>
+                    <Setter Property="CornerRadius" Value="3"></Setter>
+                </Style>
+            </Style.Resources>
+        </Style>
+
     </Application.Resources>
 </Application>

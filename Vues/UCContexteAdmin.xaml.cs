@@ -25,16 +25,20 @@ namespace LeCollectionneur.Vues
         public UCContexteAdmin()
         {
             InitializeComponent();
+            presenteurContenu.Content = new ContexteAdmin.UCUtilisateurs();
+            modifierBackgroundBoutons(btnUtilisateurs);
         }
 
         private void btnUtilisateurs_Click(object sender, RoutedEventArgs e)
         {
             presenteurContenu.Content = new ContexteAdmin.UCUtilisateurs();
+            modifierBackgroundBoutons(sender);
         }
 
         private void btnAnnonces_Click(object sender, RoutedEventArgs e)
         {
             presenteurContenu.Content = new ContexteAdmin.UCAnnonces();
+            modifierBackgroundBoutons(sender);
         }
 
         private void btnDeconnexion_Click(object sender, RoutedEventArgs e)
@@ -44,6 +48,30 @@ namespace LeCollectionneur.Vues
             // Restart de l'application permet de se login par MainWindow, ce qui permettra de se connecter en tant qu'admin si besoin.
             Process.Start(Application.ResourceAssembly.Location);
             Application.Current.Shutdown();
+        }
+        private void modifierBackgroundBoutons(object sender)
+        {
+            Grid laGrid = (Grid)this.Content;
+            Grid deuxiemeGrid = (Grid)laGrid.Children[0];
+            foreach (Control control in deuxiemeGrid.Children)
+            {
+                if (control is Button)
+                {
+                    Button bouton = control as Button;
+
+
+                    if (bouton != sender)
+                    {
+                        bouton.IsEnabled = true;
+                        bouton.ClearValue(BackgroundProperty);
+                    }
+                    else
+                    {
+                        bouton.IsEnabled = false;
+                        bouton.Background = new SolidColorBrush(Colors.Beige);
+                    }
+                }
+            }
         }
     }
 }

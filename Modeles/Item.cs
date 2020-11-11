@@ -64,7 +64,15 @@ namespace LeCollectionneur.Modeles
         #endregion
 
         #region Méthodes
-
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+            Item objAsItem = obj as Item;
+            if (objAsItem == null)
+                return false;
+            return Id==objAsItem.Id;
+        }
         #endregion
     }
 }
