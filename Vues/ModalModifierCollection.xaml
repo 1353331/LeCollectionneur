@@ -15,11 +15,11 @@
             </StackPanel>
             <StackPanel Margin="0,3" Orientation="Horizontal">
                 <Label>Date de création</Label>
-                <DatePicker SelectedDate="{Binding DateCreation,UpdateSourceTrigger=PropertyChanged}" Width="199"/>
+                <DatePicker Margin="24,0" SelectedDate="{Binding DateCreation,UpdateSourceTrigger=PropertyChanged}" Width="176"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="10,10,10,5">
-                <Button Name="btnAjouterCollection" Command="{Binding cmdModifierCollection}" CommandParameter="{Binding ElementName=WindowModifierCollection}" Content="Créer" Width="80" Margin="10,10,100,10"/>
-                <Button Name="btnAnnuler"  Command="{Binding cmdAnnuler}" CommandParameter="{Binding ElementName=WindowModifierCollection}"  Content="Annuler" Width="80" Margin="10,10,10,10"></Button>
+                <Button Name="btnAjouterCollection" Command="{Binding cmdModifierCollection}" CommandParameter="{Binding ElementName=WindowModifierCollection}" Content="Appliquer" Width="95" Margin="10,10,100,10"/>
+                <Button Name="btnAnnuler"  Command="{Binding cmdAnnuler}" CommandParameter="{Binding ElementName=WindowModifierCollection}"  Content="Annuler" Width="95" Margin="10,10,10,10"></Button>
             </StackPanel>
 
 

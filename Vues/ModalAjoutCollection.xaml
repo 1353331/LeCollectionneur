@@ -14,8 +14,8 @@
                 <TextBox Text="{Binding NomNeoCollection}" Name="txtNomCollection" Width="176" ></TextBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="10,10,10,5">
-                <Button Name="btnAjouterCollection" Command="{Binding cmdAjouterCollection}" CommandParameter="{Binding ElementName=WindowAjoutCollection}" Content="Créer" Width="80" Margin="10,10,100,10"/>
-                <Button Name="btnAnnuler"  Command="{Binding cmdAnnuler}" CommandParameter="{Binding ElementName=WindowAjoutCollection}"  Content="Annuler" Width="80" Margin="10,10,10,10"></Button>
+                <Button Name="btnAjouterCollection" Command="{Binding cmdAjouterCollection}" CommandParameter="{Binding ElementName=WindowAjoutCollection}" Content="Créer" Width="90" Margin="10,10,100,10"/>
+                <Button Name="btnAnnuler"  Command="{Binding cmdAnnuler}" CommandParameter="{Binding ElementName=WindowAjoutCollection}"  Content="Annuler" Width="90" Margin="10,10,10,10"></Button>
             </StackPanel>
                         
 

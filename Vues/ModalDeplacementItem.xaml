@@ -36,8 +36,8 @@
             </ListView.View>
 
         </ListView>-->
-        <Button Name="btnAppliquer"  Command="{Binding cmdDeplacerItem}" CommandParameter="{Binding ElementName=ModalDeplacerItem}" Content="Confirmer" Margin="45,376,187,13" />
-        <Button Name="btnAnnuler"  Command="{Binding cmdAnnuler}" CommandParameter="{Binding ElementName=ModalDeplacerItem}" Content="Annuler" Margin="182,376,50,13" />
+        <Button Name="btnAppliquer"  Command="{Binding cmdDeplacerItem}" CommandParameter="{Binding ElementName=ModalDeplacerItem}" Content="Confirmer" Margin="45,376,187,10" Height="Auto" />
+        <Button Name="btnAnnuler"  Command="{Binding cmdAnnuler}" CommandParameter="{Binding ElementName=ModalDeplacerItem}" Content="Annuler" Margin="182,376,50,10" Height="Auto" />
 
     </Grid>
 </Window>
