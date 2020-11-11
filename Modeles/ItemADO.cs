@@ -69,6 +69,13 @@ namespace LeCollectionneur.Modeles
 
             return new Item(TableItem.Rows[0], false);
         }
+        public int RecupererIdCollection(Item item)
+        {
+            string select = $"SELECT idCollection from Items WHERE id={item.Id}";
+            DataSet SetId = MaBD.Selection(select);
+            DataTable TableId = SetId.Tables[0];
+            return (int)TableId.Rows[0]["idCollection"];
+        }
         #endregion
 
         #region Update

@@ -169,7 +169,6 @@
     <Compile Include="Outils\Validateur.cs" />
     <Compile Include="VuesModeles\AjoutCollection_VM.cs" />
     <Compile Include="VuesModeles\AjoutItemAnnonce_VM.cs" />
-    <Compile Include="VuesModeles\AjoutItemCollection_VM.cs" />
     <Compile Include="VuesModeles\Annonce_VM.cs" />
     <Compile Include="VuesModeles\Collection_VM.cs" />
     <Compile Include="VuesModeles\ContexteAdmin\AnnonceAdmin_VM.cs" />
@@ -181,6 +180,8 @@
     <Compile Include="VuesModeles\ModalEnvoyerMessage_VM.cs" />
     <Compile Include="VuesModeles\ModalModifierAnnonce_VM.cs" />
     <Compile Include="VuesModeles\ModalNouvelleProposition_VM.cs" />
+    <Compile Include="VuesModeles\ModifierCollection_VM.cs" />
+    <Compile Include="VuesModeles\Parametre_VM.cs" />
     <Compile Include="VuesModeles\PropositionsRecuesEnvoyees_VM.cs" />
     <Compile Include="Vues\ajouterConversation.xaml.cs">
       <DependentUpon>ajouterConversation.xaml</DependentUpon>
@@ -193,6 +194,9 @@
     </Compile>
     <Compile Include="Vues\ModalModifierAnnonce.xaml.cs">
       <DependentUpon>ModalModifierAnnonce.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vues\ModalModifierCollection.xaml.cs">
+      <DependentUpon>ModalModifierCollection.xaml</DependentUpon>
     </Compile>
     <Compile Include="Vues\UCContexteAdmin.xaml.cs">
       <DependentUpon>UCContexteAdmin.xaml</DependentUpon>
@@ -220,9 +224,6 @@
     </Compile>
     <Compile Include="Vues\ModalAjoutItemAnnonce.xaml.cs">
       <DependentUpon>ModalAjoutItemAnnonce.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Vues\ModalAjoutItemCollection.xaml.cs">
-      <DependentUpon>ModalAjoutItemCollection.xaml</DependentUpon>
     </Compile>
     <Compile Include="Vues\ModalAjoutItemProposition.xaml.cs">
       <DependentUpon>ModalAjoutItemProposition.xaml</DependentUpon>
@@ -279,6 +280,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Vues\ModalModifierCollection.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Vues\UCContexteAdmin.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -312,10 +317,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Vues\ModalAjoutItemAnnonce.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Vues\ModalAjoutItemCollection.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

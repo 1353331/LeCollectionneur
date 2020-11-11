@@ -5,38 +5,40 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LeCollectionneur.Vues"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="700" d:DesignWidth="1000">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="45"/>
-            <RowDefinition Height="45"/>
-            <RowDefinition Height="45"/>
-            <RowDefinition Height="45"/>
-            <RowDefinition Height="45"/>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="0.2*"/>
+            <RowDefinition Height="0.2*"/>
+            <RowDefinition Height="0.2*"/>
+            <RowDefinition Height="0.2*"/>
+            <RowDefinition Height="0.2*"/>
+            <RowDefinition Height="0.3*"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="220"/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="50"/>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="8.5*"/>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="10*"/>
+            
+
         </Grid.ColumnDefinitions>
         <Label Content="Paramètres" FontSize="45" HorizontalAlignment="Center" Grid.ColumnSpan="4" FontWeight="Bold"/>
-        <Label Content="Nouveau nom d'utilisateur" Grid.Row="1"/>
-        <Label Content="Nouveau Courriel" Grid.Row="2"/>
-        <Label Content="Mot de passe actuel" Grid.Row="3"/>
-        <Label Content="Nouveau mot de passe" Grid.Row="4"/>
-        <Label Content="Confirmation du nouveau mot de passe" Grid.Row="5"/>
+        <Label Grid.Column="1" Content="Nouveau nom d'utilisateur" Grid.Row="1"/>
+        <Label Grid.Column="1" Content="Nouveau Courriel" Grid.Row="2"/>
+        <Label Grid.Column="1" Content="Nouveau mot de passe" Grid.Row="3"/>
+        <Label Grid.Column="1" Content="Confirmation du nouveau mot de passe" Grid.Row="4"/>
+        <Label Grid.Column="1" Content="Mot de passe actuel" Grid.Row="5"/>
 
-        <TextBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Height="25" Width="400" Name="tbNouvUser"/>
-        <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Height="25" Width="400" Name="tbNouvCourriel"/>
-        <TextBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Height="25" Width="400" Name="tbAncienMP"/>
-        <TextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Height="25" Width="400" Name="tbNouvMP"/>
-        <TextBox Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Height="25" Width="400" Name="tbCNovConfMP"/>
-        <Button Content="Annuler" Grid.Row="6" Grid.Column="1" Height="50" Width="70"/>
-        <Button Content="Accepter" Grid.Row="6" Grid.Column="2" Height="50" Width="70"/>
+        <TextBox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Height="25" Width="500" Name="tbNouvUser" Text="{Binding nouvNom}"/>
+        <TextBox Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Height="25" Width="500" Name="tbNouvCourriel" Text="{Binding nouvCourriel}"/>
+        <TextBox Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Height="25" Width="500" Name="tbNouvMP" Text="{Binding mpNouv}"/>
+        <TextBox Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" Height="25" Width="500" Name="tbCNovConfMP" Text="{Binding mpNouvConf}"/>
+        <TextBox Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2" Height="25" Width="500" Name="tbAncienMP" Text="{Binding mpActuel}"/>
+        <Button Content="Modifier le Compte" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="4" Height="50" Width="150" Command="{Binding cmdModifierCompte}"/>
         
     </Grid>
 </UserControl>

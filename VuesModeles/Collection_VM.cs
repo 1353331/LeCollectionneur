@@ -12,11 +12,19 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-
+ 
 namespace LeCollectionneur.VuesModeles
 {
+    
     class Collection_VM :INotifyPropertyChanged
-    {
+    {   
+        #region Constantes
+        private const string TITRE_MODIF = "Modification d'un item";
+        private const string TITRE_AJOUT = "Ajouter un item";
+        private const string CONTENU_BTN_AJOUT = "Ajouter";
+        private const string CONTENU_BTN_MODIF = "Appliquer les modifications";
+        #endregion
+
         #region Propriétés
         private CollectionADO gestionnaireCollections = new CollectionADO();
         private ItemADO gestionnaireItems = new ItemADO();
@@ -43,7 +51,8 @@ namespace LeCollectionneur.VuesModeles
                     ItemSelectionne = null;
                cmdSupprimerCollection=new Commande(cmdSupprimer_Collection,UneCollectionSelectionnee);
                cmdModifierCollection=new Commande(cmdModifier_Collection,UneCollectionSelectionnee);
-                cmdAjouterItem= new Commande(cmdAjouter_Item,UneCollectionSelectionnee);     
+                cmdToggleAjouterItem= new Commande(cmdToggleAjouter_Item,UneCollectionSelectionnee); 
+                cmdDeplacerItem= new Commande(cmdDeplacer_Item, ()=> { return MesCollections.Count > 1; });    
                 OnPropertyChanged("CollectionSelectionnee");
                
 
@@ -64,9 +73,12 @@ namespace LeCollectionneur.VuesModeles
                 if (_itemSelectionne is null)
                     ViderChamps();
                 else
+                {
                     RemplirChamps();
+                    ChangerContexte();
+                }
                 cmdSupprimerItem = new Commande(cmdSupprimer_Item,UnItemSelectionne);
-                 cmdDeplacerItem= new Commande(cmdDeplacer_Item, UnItemSelectionne);
+                 
                 cmdModifierItem = new Commande(cmdModifier_Item, UnItemSelectionne);
                 cmdAjouterImage = new Commande(cmdAjouter_Image, UnItemSelectionne);
                 NomFichier = null;
@@ -74,6 +86,28 @@ namespace LeCollectionneur.VuesModeles
                 OnPropertyChanged("ItemSelectionne");
             }
         }
+        private string _titreContexte;
+        public string TitreContexte
+        {
+            get { return _titreContexte; }
+            set
+            {
+                _titreContexte = value;
+                OnPropertyChanged("TitreContexte");
+            }
+        }
+
+        private string _texteBoutonContexte;
+        public string TexteBoutonContexte
+        {
+            get { return _texteBoutonContexte; }
+            set
+            {
+                _texteBoutonContexte = value;
+                OnPropertyChanged("TexteBoutonContexte");
+            }
+        }
+
         private string _nom;
         public string Nom 
         {
@@ -236,7 +270,14 @@ namespace LeCollectionneur.VuesModeles
         }
         private void cmdModifier_Collection(object param)
         {
+            Collection col =new Collection( CollectionSelectionnee.Id);
             // Modifier_Collection permet de modifier le nom de la collection dans un pop-up.
+            Window modale = new ModalModifierCollection(CollectionSelectionnee);
+
+            modale.ShowDialog();
+            initialisationEcran(false);
+            CollectionSelectionnee = ReselectionnerCollection(col);
+
         }
         private ICommand _cmdSupprimerCollection;
         public ICommand cmdSupprimerCollection
@@ -263,6 +304,38 @@ namespace LeCollectionneur.VuesModeles
             }
         }
         // Item
+        private ICommand _cmdOperationItem;
+        public ICommand CmdOperationItem
+        {
+            get { return _cmdOperationItem; }
+            set
+            {
+                _cmdOperationItem = value;
+                OnPropertyChanged("CmdOperationItem");
+            }
+        }
+        private ICommand _cmdToggleAjouterItem;
+        public ICommand cmdToggleAjouterItem
+        {
+            get
+            {
+                return _cmdToggleAjouterItem;
+            }
+            set
+            {
+                _cmdToggleAjouterItem = value;
+                OnPropertyChanged("cmdToggleAjouterItem");
+            }
+        }
+        private void cmdToggleAjouter_Item(object param)
+        {
+
+            
+            ItemSelectionne = null;
+            ChangerContexte(true);
+           
+        }
+
         private ICommand _cmdAjouterItem;
         public ICommand cmdAjouterItem
         {
@@ -278,20 +351,81 @@ namespace LeCollectionneur.VuesModeles
         }
         private void cmdAjouter_Item(object param)
         {
-            
-            //Ajouter_Item permet d'ajouter un item à cette collection.
-            int avantModale = CollectionSelectionnee.ItemsCollection.Count;
-            int idCollection = CollectionSelectionnee.Id;
-            Window modale = new ModalAjoutItemCollection(CollectionSelectionnee);
-            modale.ShowDialog();
-            initialisationEcran(false);
-            
-            CollectionSelectionnee = ReselectionnerCollection(true,idCollection);
-            if (avantModale<CollectionSelectionnee.ItemsCollection.Count)
-                ItemSelectionne = CollectionSelectionnee.ItemsCollection[CollectionSelectionnee.ItemsCollection.Count - 1]; 
-           
-        }
 
+            //Ajouter_Item permet d'ajouter un item à cette collection.
+            Item neoItem = new Item();
+            int avantTentative = CollectionSelectionnee.ItemsCollection.Count;
+            bool estInsere = false;
+           
+            try
+            {
+                if (!(Nom is null) && Nom.Trim().Length > 0 && !(Type is null) && Type.Length > 0 && !(Condition is null) && Condition.Length > 0)
+                {
+
+                    if (Nom.Trim().Length > 60)
+                    {
+                        throw new Exception("Le nom de l'item doit contenir un maximum de 60 caractères.");                       
+                    }
+                    Nom = Validateur.Echappement(Nom.Trim());
+                    neoItem = new Item();
+                    neoItem.Nom = Nom;
+                    neoItem.Type = Type;
+                    neoItem.Condition = Condition;
+                    if (!(Description is null) && Description.Trim().Length > 0)
+                    {
+                        Description = Validateur.Echappement(Description.Trim());
+                        neoItem.Description = Description;
+                    }
+
+
+                    if (!(Manufacturier is null) && Manufacturier.Trim().Length > 0)
+                    {
+                        if (!(Manufacturier.Trim().Length > 50))
+                        {
+                            Manufacturier = Validateur.Echappement(Manufacturier.Trim());
+                            neoItem.Manufacturier = Manufacturier;
+                        }
+                        else
+                        {
+                            throw new Exception("Le nom du producteur doit avoir un maximum de 50 caractères.");
+                        }
+                    }
+                    
+
+
+                    int id = gestionnaireItems.AjouterAvecRetourId(neoItem, CollectionSelectionnee);
+                    neoItem.Id = id;
+                    if (!(NomFichier is null)&&NomFichier.Length > 0)
+                    {
+                        Fichier.TeleverserFichierFTP(id, NomFichier);
+                        gestionnaireItems.AjouterCheminImage(id);
+                    }
+                    estInsere = true;
+                }
+                else
+                {
+                    throw new Exception("Veuillez au minimum choisir un nom, un type et une condition.");   
+                }
+            }
+            catch(Exception exception)
+            {
+                MessageBox.Show(exception.Message);
+            }
+           finally
+            {
+                if (estInsere)
+                {
+                    // Recharger l'écran
+                    Collection laCol  = CollectionSelectionnee;
+                    initialisationEcran(false);
+                    CollectionSelectionnee = ReselectionnerCollection(laCol); 
+                    ItemSelectionne =TrouverItem(CollectionSelectionnee,neoItem) ;
+                }
+                 
+            }
+
+
+        }
         private ICommand _cmdAjouterImage;
         public ICommand cmdAjouterImage
         {
@@ -333,7 +467,7 @@ namespace LeCollectionneur.VuesModeles
                 if (resultat==MessageBoxResult.Yes)
                 {   
                     int index=CollectionSelectionnee.ItemsCollection.IndexOf(ItemSelectionne);
-                    int idCollection = CollectionSelectionnee.Id;
+                    Collection laCol = CollectionSelectionnee;
                 
                     ItemSelectionne.Nom = Validateur.Echappement(Nom.Trim());
                     ItemSelectionne.DateSortie = DateSortie.GetValueOrDefault();
@@ -348,7 +482,7 @@ namespace LeCollectionneur.VuesModeles
                     }
                     gestionnaireItems.Modifier(ItemSelectionne);
                     initialisationEcran(false);
-                    CollectionSelectionnee=ReselectionnerCollection(true,idCollection);
+                    CollectionSelectionnee=ReselectionnerCollection(laCol);
                     ItemSelectionne = CollectionSelectionnee.ItemsCollection[index];
                 
                 
@@ -378,16 +512,19 @@ namespace LeCollectionneur.VuesModeles
         private void cmdDeplacer_Item(object param)
         {
             // Deplacer_Item permet de changer l'item de Collection
-            if (MesCollections.Count>1)
-            {
+            
                 Window modale = new ModalDeplacementItem(gestionnaireCollections.RecupererToutesSaufUne(UtilisateurADO.utilisateur.Id, CollectionSelectionnee.Id),ItemSelectionne);
                 modale.ShowDialog();
-                initialisationEcran(false);
-            }
-            else
-            {
-                MessageBox.Show("Vous devez avoir plus d'une collection pour déplacer un item.");
-            }
+                if (CollectionSelectionnee.ItemsCollection.Count!=gestionnaireCollections.RecupererUn(CollectionSelectionnee.Id).ItemsCollection.Count)
+                {
+                    Item itemDeplace = ItemSelectionne;
+                    initialisationEcran(false);
+                    CollectionSelectionnee = ReselectionnerCollection(new Collection(gestionnaireItems.RecupererIdCollection(itemDeplace)));
+                    ItemSelectionne = TrouverItem(CollectionSelectionnee, itemDeplace);
+                }
+                    
+            
+           
         }
         private ICommand _cmdSupprimerItem;
         public ICommand cmdSupprimerItem
@@ -411,7 +548,7 @@ namespace LeCollectionneur.VuesModeles
                 gestionnaireItems.Supprimer(ItemSelectionne.Id);
                 CollectionSelectionnee.ItemsCollection.Remove(ItemSelectionne);
                 ItemSelectionne = null;
-                CollectionSelectionnee = ReselectionnerCollection();
+                CollectionSelectionnee = ReselectionnerCollection(CollectionSelectionnee);
              }
             
 
@@ -424,9 +561,8 @@ namespace LeCollectionneur.VuesModeles
             cmdAjouterCollection = new Commande(cmdAjouter_Collection,()=> { return true; });
             cmdModifierCollection = new Commande(cmdModifier_Collection, UneCollectionSelectionnee);
             cmdSupprimerCollection = new Commande(cmdSupprimer_Collection, UneCollectionSelectionnee);
-            cmdAjouterItem = new Commande(cmdAjouter_Item, UneCollectionSelectionnee);
-            cmdModifierItem = new Commande(cmdModifier_Item,UnItemSelectionne);
-            cmdDeplacerItem = new Commande(cmdDeplacer_Item, UnItemSelectionne);
+            cmdToggleAjouterItem = new Commande(cmdToggleAjouter_Item, UneCollectionSelectionnee);
+            cmdDeplacerItem = new Commande(cmdDeplacer_Item, ()=>{return MesCollections.Count > 1; });
             cmdSupprimerItem = new Commande(cmdSupprimer_Item, UnItemSelectionne);
             cmdAjouterImage = new Commande(cmdAjouter_Image, UnItemSelectionne);
             initialisationEcran();
@@ -443,6 +579,7 @@ namespace LeCollectionneur.VuesModeles
             {
                 ConditionsPossibles = gestionnaireItems.ConditionsPossibles;
                 TypesPossibles = gestionnaireItems.TypesPossibles;
+                ChangerContexte();
             }
             
         }
@@ -458,23 +595,13 @@ namespace LeCollectionneur.VuesModeles
             return !(CollectionSelectionnee is null);
         }
 
-        public Collection ReselectionnerCollection(bool reinitialisationEcran=false, int? id=null)
+        public Item TrouverItem(Collection collectionAParcourir,Item itemRecherche)
         {
-            foreach (Collection c in MesCollections)
-            {
-                if (!reinitialisationEcran)
-                {
-                    if (c.Id == CollectionSelectionnee.Id)
-                        return c;
-                }
-                else
-                {
-                     if (c.Id == id)
-                         return c;
-                }
-                       
-            }
-            return null;
+           return collectionAParcourir.ItemsCollection[collectionAParcourir.ItemsCollection.IndexOf(itemRecherche)];
+        }
+        public Collection ReselectionnerCollection(Collection collectionRecherche)
+        {     
+            return MesCollections[MesCollections.IndexOf(collectionRecherche)];
         }
 
         private void ViderChamps()
@@ -513,6 +640,24 @@ namespace LeCollectionneur.VuesModeles
             }
                
             
+        }
+
+        private void ChangerContexte(bool estAjout=false)
+        {
+            if (!estAjout)
+            {
+                // Si c'est n'est pas un ajout, on affiche le contexte de mise à jour de l'item.
+                TitreContexte = TITRE_MODIF;
+                TexteBoutonContexte = CONTENU_BTN_MODIF;
+                CmdOperationItem = new Commande(cmdModifier_Item,UnItemSelectionne);
+            }
+            else
+            {
+                TitreContexte = TITRE_AJOUT;
+                TexteBoutonContexte = CONTENU_BTN_AJOUT;
+                CmdOperationItem = new Commande(cmdAjouter_Item, UneCollectionSelectionnee);
+                cmdAjouterImage = new Commande(cmdAjouter_Image, ()=> { return true; });
+            }
         }
         #endregion
     }

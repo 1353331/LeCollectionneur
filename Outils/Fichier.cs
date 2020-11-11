@@ -36,7 +36,7 @@ namespace LeCollectionneur.Outils
             Microsoft.Win32.OpenFileDialog explorateurFichier = new Microsoft.Win32.OpenFileDialog();
             // Options de la fenêtre
             explorateurFichier.Multiselect = false;
-            explorateurFichier.Filter = "All Image Files | *.*";
+            explorateurFichier.Filter = "All Image Files | *.png;*.jpg;*.bmp;*.gif";
             // Ouverture de la fenêtre.
             bool? resultat = explorateurFichier.ShowDialog();
             if (resultat.GetValueOrDefault()) // Default = false, alors si resultat est null, ce sera tout de même false.

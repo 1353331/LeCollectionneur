@@ -28,19 +28,26 @@ namespace LeCollectionneur.Vues
         private void ButtonInscription(object sender, RoutedEventArgs e)
         {
             Inscription inscription = new Inscription();
+            UtilisateurADO.connectionProf = false;
+            
             inscription.ShowDialog();
+            if (UtilisateurADO.utilisateur != null)
+                this.Close();
+
         }
 
         private void btnConnectionProf_Click(object sender, RoutedEventArgs e)
         {
             UtilisateurADO temp = new UtilisateurADO();
-            temp.Connection("collectionneur1","collectionneur");
+            temp.connectionParId(1);
+            UtilisateurADO.connectionProf = true;
             this.Close();
         }
 
         private void btnConnection_Click(object sender, RoutedEventArgs e)
         {
             UtilisateurADO temp = new UtilisateurADO();
+            UtilisateurADO.connectionProf = false;
             if (temp.Connection(User.Text, MDP.Text))
                 this.Close();
             else
@@ -57,8 +64,9 @@ namespace LeCollectionneur.Vues
 
 		private void btnConnectionProf2_Click(object sender, RoutedEventArgs e)
 		{
-         UtilisateurADO temp = new UtilisateurADO();
-         temp.Connection("collectionneur2", "collectionneur");
+            UtilisateurADO temp = new UtilisateurADO();
+            temp.connectionParId(2);
+            UtilisateurADO.connectionProf = true;
          this.Close();
       }
 	}

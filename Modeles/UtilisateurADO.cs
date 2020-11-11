@@ -18,6 +18,7 @@ namespace LeCollectionneur.Modeles
         public static Utilisateur utilisateur;
         public static ObservableCollection<Collection> collection;
         public static bool admin;
+        public static bool connectionProf;
         #endregion
 
         #region Constructeur
@@ -26,6 +27,14 @@ namespace LeCollectionneur.Modeles
         #endregion
 
         #region Method
+        public bool connectionParId(int id)
+        {
+            utilisateur = RechercherUtilisateurById(id);
+            chargerColletion();
+            admin = utilisateur.NomUtilisateur == "admin";
+
+            return true;
+        }
         public static List<Utilisateur> getAllUtilisateur()
         {
             var listUser = new List<Utilisateur>();
@@ -136,9 +145,8 @@ namespace LeCollectionneur.Modeles
             Connection(User,MP);
             return true;
         }
-
         //Method qui retourne true si le nom utilisateur est déja utilisé
-        private bool CheckSiUserEstPrit(string User)
+        public bool CheckSiUserEstPrit(string User)
         {
             //Va chercher le compte utlisant le User
             DataSet compte = GetUserDataSet(User);
@@ -149,7 +157,7 @@ namespace LeCollectionneur.Modeles
             return true;
         }
         //Valide le courriel
-        private bool ValideCourriel(string Courriel)
+        public bool ValideCourriel(string Courriel)
         {
             try
             {

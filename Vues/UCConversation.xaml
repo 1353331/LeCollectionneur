@@ -5,33 +5,90 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LeCollectionneur.Vues"
              mc:Ignorable="d" 
-             d:DesignHeight="405" d:DesignWidth="1000">
+             d:DesignHeight="700" d:DesignWidth="1000">
+    <UserControl.Resources>
+        <DataTemplate x:Key="MessagesDataTemplate">
+            <Border Name="MessageBorder" MinHeight="40" MinWidth="280" BorderThickness="1" Background="#EFEBE9" 
+                    Margin="10,0,60,10" BorderBrush="#BCAAA4" CornerRadius="4" SnapsToDevicePixels="True"
+                    HorizontalAlignment="Left">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition Height="15"/>
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid x:Name="ImageMessageGrid" Margin="6,6,6,5">
+                        <Grid.OpacityMask>
+                            <VisualBrush Visual="{Binding ElementName=ClipBorder}"/>
+                        </Grid.OpacityMask>
+                        <Border x:Name="ClipBorder" CornerRadius="3" Background="White"/>
+                       
+                    </Grid>
+                    <TextBlock x:Name="MessageTxtBlock" Grid.Row="1" Margin="7,5,7,0" TextWrapping="Wrap" 
+                               VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
+                               Text="{Binding Contenu}"/>
+                    <TextBlock Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Stretch"
+                               FontSize="10" Opacity="0.8"
+                               Text="{Binding Date, StringFormat={}{0:HH':'mm':'ss dd-MM-yyyy}}"/>
+                </Grid>
+            </Border>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding envoyuseractif}" Value="True">
+                    <Setter TargetName="MessageBorder" Property="HorizontalAlignment" Value="Right"/>
+                    <Setter TargetName="MessageBorder" Property="Margin" Value="60,0,10,10"/>
+                    <Setter TargetName="MessageBorder" Property="Background" Value="#BBDEFB"/>
+                    <Setter TargetName="MessageBorder" Property="BorderBrush" Value="#64B5F6"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Picture}" Value="{x:Null}">
+                    <Setter TargetName="ImageMessageGrid" Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Contenu}" Value="{x:Null}">
+                    <Setter TargetName="MessageTxtBlock" Property="Visibility" Value="Collapsed"/>
+                    <Setter TargetName="MessageBorder" Property="MaxWidth" Value="320"/>
+                </DataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding Contenu}" Value="{x:Null}"/>
+                        <Condition Binding="{Binding envoyuseractif}" Value="True"/>
+                    </MultiDataTrigger.Conditions>
+                    <MultiDataTrigger.Setters>
+                        <Setter TargetName="MessageBorder" Property="Margin" Value="0,0,10,10"/>
+                        <Setter TargetName="MessageBorder" Property="HorizontalAlignment" Value="Right"/>
+                    </MultiDataTrigger.Setters>
+                </MultiDataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="290"/>
-            <RowDefinition/>
-           
+            <RowDefinition Height="3*"/>
+
+            <RowDefinition Height="24*"/>
+            <RowDefinition Height="24*"/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="8*"/>
+            <RowDefinition Height="6*"/>
+
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300"/>
-            <ColumnDefinition Width="50"/>
-            <ColumnDefinition Width="450"/>
+            <ColumnDefinition Width="1.2*"/>
+            <ColumnDefinition Width="2*"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        
 
-        <ListView Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Name="lstCollections" SelectedItem="{Binding ConversationSelectionne}"  ItemsSource="{Binding MesConversation}" >
+
+        <ListView Grid.Row="1" Grid.RowSpan="2" Name="lstCollections" SelectedItem="{Binding ConversationSelectionne}"  ItemsSource="{Binding MesConversation}" >
             <ListView.View>
                 <GridView >
                     <GridView.Columns>
                         <GridViewColumn Header="Utilisateur" DisplayMemberBinding="{Binding NomUserAutre}"  />
                         <GridViewColumn Header="Dernier Message" DisplayMemberBinding="{Binding lastMessage}"/>
-                        <GridViewColumn Header="Date DernierMessage" DisplayMemberBinding="{Binding date}"/>
-                        <GridViewColumn DisplayMemberBinding="{Binding o}">
-                            <Button Content="+" Height="25" Width="50" Name="btnAjouterConversation" Command="{Binding cmdAjouterConversation}"/>
-                        </GridViewColumn>
+                        <GridViewColumn Header="Date DernierMessage" DisplayMemberBinding="{Binding date,StringFormat='{}{0:MM/dd/yyyy}',FallbackValue=''}"/>
+
+
                     </GridView.Columns>
 
                 </GridView>
@@ -39,19 +96,30 @@
             </ListView.View>
 
         </ListView>
-        <TextBox Grid.Row="1" Grid.Column="2" Name="txbMessage" Text="{Binding messageContenu}"/>
-        <Button  Command="{Binding cmdEnvoyerMessage}" Content="Envoyer" Grid.Column="3" Grid.Row="3" Height="50" Width="100" Name="btnEnvoyer" />
+        <Button Content="Ajouter une Conversation" Grid.Row="4" Grid.RowSpan="2" Height="25" Width="200" Name="btnAjouterConversation" Command="{Binding cmdAjouterConversation}" Margin="16,13,17,47"/>
+        <TextBox AcceptsReturn="True" IsReadOnly="{Binding AUneSelection}" Grid.RowSpan="2"  Grid.Row="4" Width="420" Height="55" Grid.Column="1" Name="txbMessage" Text="{Binding messageContenu}" Margin="23,15,22,15"/>
+        <Button IsEnabled="{Binding AUneSelection}" Command="{Binding cmdEnvoyerMessage}" Content="Envoyer" Grid.Column="3" Grid.Row="4" Height="30" Width="100" Name="btnEnvoyer" Margin="66,17,66,18" />
+        <Button IsEnabled="{Binding AUneSelection}" Content="Envoyer Objet" Grid.Row="5" Grid.Column="3" Height="30" Width="100"/>
+
+        
         
         <!--<TextBox Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" IsReadOnly="True"/>-->
-        <ListView Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" Name="lstConversation" ItemsSource="{Binding conversations}">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Utilisateur" DisplayMemberBinding="{Binding Contenu}"/>
-                    <GridViewColumn Header="Date" DisplayMemberBinding="{Binding Date}"/>
-                    <GridViewColumn Header="Message" DisplayMemberBinding="{Binding user}"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <ItemsControl Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2"
+                      ItemsSource="{Binding listMessage}"
+                      ItemTemplate="{DynamicResource MessagesDataTemplate}"
+                      ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <ItemsControl.Template>
+                <ControlTemplate TargetType="ItemsControl">
+                    <ScrollViewer>
+                        <ItemsPresenter/>
+                    </ScrollViewer>
+                </ControlTemplate>
+            </ItemsControl.Template>
+        </ItemsControl>
+        <Label Content="Liste des Conversation" Grid.Row="0" FontWeight="Bold"/>
+        <Label Content="Conversation" Grid.Column="1"  FontWeight="Bold"/>
+        <Label Content="Envoyer Message" Grid.Row="3" Grid.Column="2"  FontWeight="Bold"/>
+        <Label Content="Contenu Message" Grid.Row="3" Grid.Column="1"  FontWeight="Bold"/>
     </Grid>
 </UserControl>
  

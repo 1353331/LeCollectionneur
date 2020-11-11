@@ -30,8 +30,11 @@ namespace LeCollectionneur.Vues
             UtilisateurADO user = new UtilisateurADO();
             if (user.CreerCompte(tbNomUtilisateur.Text, tbMP.Text, tbMPC.Text, tbCourriel.Text))
                 this.Close();
+            
             else
                 MessageBox.Show("Erreur un champ est Invalide");
+            
+            
 
         }
 

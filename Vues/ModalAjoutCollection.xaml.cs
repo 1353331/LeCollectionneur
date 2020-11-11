@@ -24,13 +24,10 @@ namespace LeCollectionneur.Vues
     /// </summary>
     public partial class ModalAjoutCollection : Window, IFenetreFermeable
     {
-        CollectionADO gestionnaireCollections = new CollectionADO();
-        public Utilisateur UtilisateurConnecte { get; set; }
+       
         public ModalAjoutCollection()
         {
             InitializeComponent();
-            // L'utilisateur est passé en paramètre, on peut lui ajouter une collection.
-            
             this.ResizeMode = ResizeMode.NoResize;
             DataContext = new AjoutCollection_VM();
             
