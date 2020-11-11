@@ -25,13 +25,14 @@ namespace LeCollectionneur.Modeles
         public ObservableCollection<Annonce> Recuperer()
         {
             ObservableCollection<Annonce> ListeAnnonces = new ObservableCollection<Annonce>();
-            string sel = @"
+            string sel = $@"
             SELECT a.*, ta.Nom AS typeAnnonce, ea.Nom as etatAnnonce 
             FROM annonces a
             INNER JOIN EtatsAnnonce ea
             ON a.IdEtatAnnonce = ea.Id
             LEFT JOIN typesannonce ta 
             ON a.idTypeAnnonce = ta.Id
+            WHERE idEtatAnnonce = (Select id From etatsannonce Where Nom = '{EtatsAnnonce.Active}')
             ";
             DataSet SetAnnonce = MaBD.Selection(sel);
             DataTable TableAnnonce = SetAnnonce.Tables[0];

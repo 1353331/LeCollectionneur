@@ -9,11 +9,11 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="100"/>
-            <RowDefinition Height="0.2*"/>
-            <RowDefinition Height="0.2*"/>
-            <RowDefinition Height="0.2*"/>
-            <RowDefinition Height="0.2*"/>
-            <RowDefinition Height="0.2*"/>
+            <RowDefinition Height="0.3*"/>
+            <RowDefinition Height="0.3*"/>
+            <RowDefinition Height="0.3*"/>
+            <RowDefinition Height="0.3*"/>
+            <RowDefinition Height="0.3*"/>
             <RowDefinition Height="0.3*"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
@@ -23,22 +23,35 @@
             <ColumnDefinition Width="8.5*"/>
             <ColumnDefinition Width="10*"/>
             <ColumnDefinition Width="10*"/>
-            
-
         </Grid.ColumnDefinitions>
+        
         <Label Content="Paramètres" FontSize="45" HorizontalAlignment="Center" Grid.ColumnSpan="4" FontWeight="Bold"/>
-        <Label Grid.Column="1" Content="Nouveau nom d'utilisateur" Grid.Row="1"/>
-        <Label Grid.Column="1" Content="Nouveau Courriel" Grid.Row="2"/>
-        <Label Grid.Column="1" Content="Nouveau mot de passe" Grid.Row="3"/>
-        <Label Grid.Column="1" Content="Confirmation du nouveau mot de passe" Grid.Row="4"/>
-        <Label Grid.Column="1" Content="Mot de passe actuel" Grid.Row="5"/>
 
-        <TextBox Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Height="25" Width="500" Name="tbNouvUser" Text="{Binding nouvNom}"/>
-        <TextBox Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" Height="25" Width="500" Name="tbNouvCourriel" Text="{Binding nouvCourriel}"/>
-        <TextBox Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Height="25" Width="500" Name="tbNouvMP" Text="{Binding mpNouv}"/>
-        <TextBox Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" Height="25" Width="500" Name="tbCNovConfMP" Text="{Binding mpNouvConf}"/>
-        <TextBox Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2" Height="25" Width="500" Name="tbAncienMP" Text="{Binding mpActuel}"/>
-        <Button Content="Modifier le Compte" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="4" Height="50" Width="150" Command="{Binding cmdModifierCompte}"/>
+        <StackPanel Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2">
+            <Label Content="Nouveau nom d'utilisateur" Margin="0"/>
+            <TextBox Height="25" Name="tbNouvUser" Text="{Binding nouvNom}"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2">
+            <Label  Content="Nouveau Courriel" />
+            <TextBox Height="25" Name="tbNouvCourriel" Text="{Binding nouvCourriel}"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2">
+            <Label Content="Nouveau mot de passe"/>
+            <TextBox Height="25" Name="tbNouvMP" Text="{Binding mpNouv}"/>
+        </StackPanel>
+        <StackPanel  Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="2">
+            <Label Content="Confirmation du nouveau mot de passe"/>
+            <TextBox Height="25" Name="tbCNovConfMP" Text="{Binding mpNouvConf}"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2">
+            <Label  Content="Mot de passe actuel"/>
+            <TextBox Height="25" Name="tbAncienMP" Text="{Binding mpActuel}"/>
+        </StackPanel>
+        
+        <Button Content="Modifier le Compte" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="4" Height="50" Width="200" Command="{Binding cmdModifierCompte}"/>
         
     </Grid>
 </UserControl>

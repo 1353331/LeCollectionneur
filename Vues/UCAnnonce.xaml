@@ -6,7 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:LeCollectionneur.Vues"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="1000">
+             d:DesignHeight="900" d:DesignWidth="1500">
     
     <!-- Pour utiliser l'image de message comme un bouton et éviter que l'image disparaisse lors d'un MouseOver -->
     <UserControl.Resources>
@@ -33,7 +33,7 @@
     
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="100"></RowDefinition>
+            <RowDefinition Height="110"></RowDefinition>
             <RowDefinition Height="5*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -44,7 +44,7 @@
         </Grid.ColumnDefinitions>
         
         <!--GroupBox pour la recherche textuel-->
-        <GroupBox Header="Recherche" Grid.Row="0" Grid.Column="0" Margin="7,0,0,0">
+        <GroupBox Header="Recherche" Grid.Row="0" Grid.Column="0" Margin="7,5,5,0">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
@@ -69,7 +69,7 @@
         </GroupBox>
         
         <!--GroupBox pour la recherche par filtres-->
-        <GroupBox Header="Filtres de recherche" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2">
+        <GroupBox Header="Filtres de recherche" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Margin="5,5,5,0">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
@@ -159,7 +159,7 @@
                 </Grid.ColumnDefinitions>
                 
                 <!--titre de l'annonce-->
-                <Label Name="lbl_nom" Content="{Binding Titre}" FontSize="20" Grid.ColumnSpan="2" VerticalAlignment="Center"></Label>
+                <Label Name="lbl_nom" Content="{Binding Titre}" HorizontalAlignment="Center" FontSize="20" Grid.ColumnSpan="2" VerticalAlignment="Center"></Label>
                 
                 <!--Type de l'annonce-->
                 <Label Content="Type d'annonce" Grid.Row="1" VerticalAlignment="Center"></Label>
@@ -176,12 +176,12 @@
                 <!--Affichage des items de l'annonce-->
                 <Label Content="Items annoncés" Grid.Row="4" VerticalContentAlignment="Bottom"></Label>
                 <Button Name="btnMessageProposition" Grid.Row="4" Grid.Column="1" Style="{StaticResource btnMessageImageStyle}" Margin="60,0,60,0" Command="{Binding cmdEnvoyerMessage_Annonce}" CommandParameter="{Binding ElementName=UCVueAnnonce}"></Button>
-                <DataGrid ItemsSource="{Binding LesItems}" SelectedItem="{Binding ItemSelectionne}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" Grid.Row="5" Grid.ColumnSpan="2" IsReadOnly="True">
+                <DataGrid ItemsSource="{Binding LesItems}" SelectedItem="{Binding ItemSelectionne}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" Grid.Row="5" Grid.ColumnSpan="2" IsReadOnly="True" SelectionChanged="DataGrid_SelectionChanged">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Path=Nom}" Header="Nom" Width="3*"></DataGridTextColumn>
                         <DataGridTextColumn Binding="{Binding Path=Type}" Header="Type" Width="2*"></DataGridTextColumn>
                         <DataGridTextColumn Binding="{Binding Path=Condition}" Header="Condition" Width="2*"></DataGridTextColumn>
-                        <DataGridTemplateColumn Header="Détails" Width="1.5*">
+                        <DataGridTemplateColumn Header="Détails" Width="2*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button Name="btnDetails" Command="{Binding Path=DataContext.cmdDetails_Annonce, ElementName=UCVueAnnonce}" CommandParameter="{Binding ElementName=UCVueAnnonce}">Détails</Button>
@@ -200,7 +200,7 @@
                 <TextBox MaxHeight="31.5" Height="31.5" Name="txt_Montant" Text="{Binding Montant}" Grid.Row="8" Grid.Column="2" Margin="0,3" IsReadOnly="True"></TextBox>
                 
                 <!--Bouton du bas de l'annonce, change en fonction de la checkbox "Mes annonces"-->
-                <Button MaxHeight="27" Height="27" Name="btnPropAnnonce" Content="{Binding Path=ProposerOuModifier}" Grid.Row="9" Grid.ColumnSpan="2" Margin="40,5" Command="{Binding cmdProposerOuModifier_Annonce}" CommandParameter="{Binding ElementName=UCVueAnnonce}"></Button>
+                <Button MaxHeight="35" Height="35" Name="btnPropAnnonce" Content="{Binding Path=ProposerOuModifier}" Grid.Row="9" Grid.ColumnSpan="2" Margin="40,5" Command="{Binding cmdProposerOuModifier_Annonce}" CommandParameter="{Binding ElementName=UCVueAnnonce}"></Button>
             </Grid>
         </GroupBox>
     </Grid>

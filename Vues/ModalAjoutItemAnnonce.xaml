@@ -6,12 +6,13 @@
         xmlns:local="clr-namespace:LeCollectionneur.Vues"
         xmlns:local2="clr-namespace:LeCollectionneur.Outils"
         mc:Ignorable="d"
-        Title="ModalAjoutItemAnnonce" Height="450" Width="800">
+        ResizeMode="NoResize"
+        Title="ModalAjoutItemAnnonce" Height="500" Width="1000">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="2*"></ColumnDefinition>
-            <ColumnDefinition Width="2*"></ColumnDefinition>
+            <ColumnDefinition Width="3*"></ColumnDefinition>
+            <ColumnDefinition Width="2.5*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"></RowDefinition>
@@ -28,20 +29,6 @@
             </ListView.View>
 
         </ListView>
-        <!--<ListView Grid.Column="1" SelectedItem="{Binding ItemSelectionne}" SelectionMode="Extended"  ItemsSource="{Binding ItemsCollectionSelectionnee}"  Grid.RowSpan="3" Margin="10">
-            <ListView.View>
-                <GridView>
-                    <GridView.Columns>
-                        <GridViewColumn Header="Nom" DisplayMemberBinding="{Binding Nom}" Width="Auto" />
-                        <GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}"  Width="Auto"  />
-                        <GridViewColumn Header="Condition" DisplayMemberBinding="{Binding Condition}"  Width="Auto"  />
-                    </GridView.Columns>
-
-                </GridView>
-
-            </ListView.View>
-
-        </ListView>-->
 
         <local2:CustomDataGrid Grid.Column="1" SelectionMode="Extended" SelectedItem="{Binding ItemSelectionne}"  ItemsSource="{Binding ItemsCollectionSelectionnee}" SelectedItemsList="{Binding ItemsSelectionnes, Mode=TwoWay}"  Grid.RowSpan="3" Margin="10" SelectionUnit="FullRow" IsReadOnly="True" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False">
             <local2:CustomDataGrid.Columns>
@@ -71,16 +58,16 @@
                 <Image Name="imgItem" Source="/images/noimage.png" Grid.Column="0" Grid.RowSpan="3" Stretch="Fill" Margin="10,10,5,10" />
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="5,5,5,0">
                     <Label>Nom:</Label>
-                    <TextBox Text="{Binding ItemSelectionne.Nom}" Name="txtNomItem"  Height="23" Width="141" Margin="0,4" IsEnabled="False"></TextBox>
+                    <TextBox Text="{Binding ItemSelectionne.Nom}" Name="txtNomItem"  Height="23" Width="141" Margin="0,4" IsReadOnly="True"></TextBox>
                 </StackPanel>
                 <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="2,5,5,0">
                     <Label>Condition:</Label>
-                    <TextBox Text="{Binding ItemSelectionne.Condition}" Name="tbxConditionItem" Height="23" Width="118" Margin="0,4" IsEnabled="False">
+                    <TextBox Text="{Binding ItemSelectionne.Condition}" Name="tbxConditionItem" Height="23" Width="118" Margin="0,4" IsReadOnly="True">
                     </TextBox>
                 </StackPanel>
                 <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="5,5,5,0">
                     <Label>Type:</Label>
-                    <TextBox Text="{Binding ItemSelectionne.Type}" Name="tbxItemType" Height="23" Width="143" Margin="0,4" IsEnabled="False">
+                    <TextBox Text="{Binding ItemSelectionne.Type}" Name="tbxItemType" Height="23" Width="143" Margin="0,4" IsReadOnly="True">
                     </TextBox>
                 </StackPanel>
                 <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="5,5,5,0">
@@ -90,13 +77,13 @@
                 </StackPanel>
                 <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="5,5,5,0">
                     <Label>Manufacturier:</Label>
-                    <TextBox Text="{Binding ItemSelectionne.Manufacturier}" Name="txtManufacturierItem"  Height="23" Width="184" Margin="0,4" IsEnabled="False">
+                    <TextBox Text="{Binding ItemSelectionne.Manufacturier}" Name="txtManufacturierItem"  Height="23" Width="184" Margin="0,4" IsReadOnly="True">
                     </TextBox>
                 </StackPanel>
 
                 <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Orientation="Horizontal" Margin="5,5,5,0">
                     <Label>Description:</Label>
-                    <TextBox Text="{Binding ItemSelectionne.Description}" Name="txtDescriptionItem"  Margin="10" TextWrapping="Wrap" AcceptsReturn="True" Width="193" IsEnabled="False"/>
+                    <TextBox Text="{Binding ItemSelectionne.Description}" Name="txtDescriptionItem"  Margin="10" TextWrapping="Wrap" AcceptsReturn="True" Width="193" IsReadOnly="True"/>
                 </StackPanel>
             </Grid>
         </GroupBox>

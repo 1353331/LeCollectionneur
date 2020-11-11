@@ -33,7 +33,6 @@ namespace LeCollectionneur.VuesModeles
             InitNouvelleAnnonce();
 
             //Abonnement à l'évènement Ajout d'un item à une annonce
-            //EvenementSysteme.Abonnement<EnvoyerItemMessage>(ajouterItemMessage);
             EvenementSysteme.Abonnement<EnvoyerItemsMessage>(ajouterItemsMessage);
         }
         #endregion
@@ -328,7 +327,7 @@ namespace LeCollectionneur.VuesModeles
 
         public void cmdFermer(object sender, CancelEventArgs e)
         {
-           EvenementSysteme.Desabonnement<EnvoyerItemMessage>(ajouterItemMessage);
+           EvenementSysteme.Desabonnement<EnvoyerItemsMessage>(ajouterItemsMessage);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -97,11 +97,23 @@
 
         </ListView>
         <Button Content="Ajouter une Conversation" Grid.Row="4" Grid.RowSpan="2" Height="25" Width="200" Name="btnAjouterConversation" Command="{Binding cmdAjouterConversation}" Margin="16,13,17,47"/>
-        <TextBox AcceptsReturn="True" IsReadOnly="{Binding AUneSelection}" Grid.RowSpan="2"  Grid.Row="4" Width="420" Height="55" Grid.Column="1" Name="txbMessage" Text="{Binding messageContenu}" Margin="23,15,22,15"/>
-        <Button IsEnabled="{Binding AUneSelection}" Command="{Binding cmdEnvoyerMessage}" Content="Envoyer" Grid.Column="3" Grid.Row="4" Height="30" Width="100" Name="btnEnvoyer" Margin="66,17,66,18" />
-        <Button IsEnabled="{Binding AUneSelection}" Content="Envoyer Objet" Grid.Row="5" Grid.Column="3" Height="30" Width="100"/>
 
-        
+        <GroupBox Grid.Row="3" Grid.Column="1" Header="Contenu message" FontWeight="Bold" Grid.RowSpan="3">
+            <Grid>
+                <TextBox AcceptsReturn="True" IsReadOnly="{Binding AUneSelection}" Name="txbMessage" Text="{Binding messageContenu}" Margin="23,15,22,15"/>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Grid.Row="3" Grid.Column="2" Header="Envoyer message" FontWeight="Bold" Grid.RowSpan="3">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Button IsEnabled="{Binding AUneSelection}" Command="{Binding cmdEnvoyerMessage}" Content="Envoyer" Name="btnEnvoyer" Grid.Row="0" Height="30" Width="130" />
+                <Button IsEnabled="{Binding AUneSelection}" Content="Envoyer Objet" Height="30" Grid.Row="1" Width="130"/>
+            </Grid>
+        </GroupBox>
         
         <!--<TextBox Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" IsReadOnly="True"/>-->
         <ItemsControl Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2"
@@ -118,8 +130,6 @@
         </ItemsControl>
         <Label Content="Liste des Conversation" Grid.Row="0" FontWeight="Bold"/>
         <Label Content="Conversation" Grid.Column="1"  FontWeight="Bold"/>
-        <Label Content="Envoyer Message" Grid.Row="3" Grid.Column="2"  FontWeight="Bold"/>
-        <Label Content="Contenu Message" Grid.Row="3" Grid.Column="1"  FontWeight="Bold"/>
     </Grid>
 </UserControl>
  

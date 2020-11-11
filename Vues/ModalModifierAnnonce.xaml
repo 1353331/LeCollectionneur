@@ -69,7 +69,7 @@
 
                 <!--Montant d'argent-->
                 <Label Content="Montant en argent" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Center"></Label>
-                <TextBox x:Name="txtMontant" Grid.Row="2" Grid.Column="1" Margin="0,15" Text="{Binding Montant}" PreviewTextInput="tbxMontant_PreviewTextInput"></TextBox>
+                <TextBox x:Name="txtMontant" Grid.Row="2" Grid.Column="1" Margin="0,10" Text="{Binding Montant}" PreviewTextInput="tbxMontant_PreviewTextInput"></TextBox>
             </Grid>
         </GroupBox>
 

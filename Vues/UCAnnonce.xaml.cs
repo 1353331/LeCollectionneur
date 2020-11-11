@@ -68,5 +68,10 @@ namespace LeCollectionneur.Vues
            modalMessage.Owner = Window.GetWindow(this);
            modalMessage.ShowDialog();
         }
-   }
+
+        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+    }
 }
