@@ -44,6 +44,11 @@ namespace LeCollectionneur.Vues
 			presenteurContenu.Content = new UCPropositionsRecuesEnvoyees();
 		}
 
+		private void btnTransactions_Click(object sender, RoutedEventArgs e)
+		{
+			presenteurContenu.Content = new UCTransactions();
+		}
+
 		private void btnConversations_Click(object sender, RoutedEventArgs e)
 		{
 			presenteurContenu.Content = new UCConversation();
@@ -62,5 +67,7 @@ namespace LeCollectionneur.Vues
 		{
 			presenteurContenu.Content = new UCParametre();
 		}
+
+		
 	}
 }

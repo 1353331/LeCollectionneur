@@ -54,35 +54,23 @@ namespace LeCollectionneur.VuesModeles
 
 		public ICommand cmdDetails_Item { get; set; }
 
-		public ICommand cmdChangementContexteRecuesEnvoyees { get; set; }
+		public ICommand cmdPropositionsRecues { get; set; }
+		public ICommand cmdPropositionsEnvoyees { get; set; }
 
-		public ICommand cmdEnvoyerMessageProposition { get; set; }
-		public ICommand cmdEnvoyerMessageAnnonce { get; set; }
+		public ICommand cmdEnvoyerMessage { get; set; }
 
 		#region Propriétés
 		PropositionADO propADO = new PropositionADO();
 
-		private ObservableCollection<Proposition> _propositionsRecues;
+		private ObservableCollection<Proposition> _propositionsAffichees;
 
-		public ObservableCollection<Proposition> PropositionsRecues
+		public ObservableCollection<Proposition> PropositionsAffichees
 		{
-			get { return _propositionsRecues; }
-			set
-			{
-				_propositionsRecues = value;
-				OnPropertyChanged("PropositionsRecues");
-			}
-		}
-
-		private ObservableCollection<Proposition> _propositionsEnvoyees;
-
-		public ObservableCollection<Proposition> PropositionsEnvoyees
-		{
-			get { return _propositionsEnvoyees; }
-			set
-			{
-				_propositionsEnvoyees = value;
-				OnPropertyChanged("PropositionsEnvoyees");
+			get { return _propositionsAffichees; }
+			set 
+			{ 
+				_propositionsAffichees = value;
+				OnPropertyChanged("PropositionsAffichees");
 			}
 		}
 
@@ -95,22 +83,109 @@ namespace LeCollectionneur.VuesModeles
 			{
 				_propositionSelectionnee = value;
 				changementVisibiliteCommandes();
+				if (PropositionSelectionnee != null)
+				{
+					if (RecuesSelectionnees)
+					{
+						ItemsGauche = PropositionSelectionnee.AnnonceLiee.ListeItems;
+						MontantGauche = PropositionSelectionnee.AnnonceLiee.Montant;
+
+						ItemsDroite = PropositionSelectionnee.ItemsProposes;
+						MontantDroite = PropositionSelectionnee.Montant;
+					}
+					else
+					{
+						ItemsGauche = PropositionSelectionnee.ItemsProposes;
+						MontantGauche = PropositionSelectionnee.Montant;
+
+						ItemsDroite = PropositionSelectionnee.AnnonceLiee.ListeItems;
+						MontantDroite = PropositionSelectionnee.AnnonceLiee.Montant;
+					}
+				}
+
 				OnPropertyChanged("PropositionSelectionnee");
 			}
 		}
+
+		private ObservableCollection<Item> _itemsGauche;
+
+		public ObservableCollection<Item> ItemsGauche
+		{
+			get { return _itemsGauche; }
+			set 
+			{ 
+				_itemsGauche = value;
+				OnPropertyChanged("ItemsGauche");
+			}
+		}
+
+		private ObservableCollection<Item> _itemsDroite;
+
+		public ObservableCollection<Item> ItemsDroite
+		{
+			get { return _itemsDroite; }
+			set
+			{
+				_itemsDroite = value;
+				OnPropertyChanged("ItemsDroite");
+			}
+		}
+
+		private double _montantGauche;
+
+		public double MontantGauche
+		{
+			get { return _montantGauche; }
+			set 
+			{ 
+				_montantGauche = value;
+				OnPropertyChanged("MontantGauche");
+			}
+		}
+
+		private double _montantDroite;
+
+		public double MontantDroite
+		{
+			get { return _montantDroite; }
+			set
+			{
+				_montantDroite = value;
+				OnPropertyChanged("MontantDroite");
+			}
+		}
+
+
+		private bool _recuesSelectionnees;
+
+		private bool RecuesSelectionnees
+		{
+			get { return _recuesSelectionnees; }
+			set 
+			{ 
+				_recuesSelectionnees = value;
+				EnvoyeesSelectionnees = !value;
+			}
+		}
+
+		private bool EnvoyeesSelectionnees { get; set; }
+
+
 		#endregion
 
 		public PropositionsRecuesEnvoyees_VM()
 		{
-			PropositionsEnvoyees = propADO.RecupererPropositionsEnvoyees(UtilisateurADO.utilisateur.Id);
-			PropositionsRecues = propADO.RecupererPropositionsRecues(UtilisateurADO.utilisateur.Id);
+			_recuesSelectionnees = true;
 
+			PropositionsAffichees = propADO.RecupererPropositionsRecues(UtilisateurADO.utilisateur.Id);
 			changementVisibiliteCommandes();
-			cmdChangementContexteRecuesEnvoyees = new Commande(cmdChangement);
+			cmdPropositionsRecues = new Commande(cmdRecues);
+			cmdPropositionsEnvoyees = new Commande(cmdEnvoyees);
 			cmdDetails_Item = new Commande(cmdDetailsItem);
-			cmdEnvoyerMessageProposition = new Commande(cmdEnvMessageProposition);
-			cmdEnvoyerMessageAnnonce = new Commande(cmdEnvMessageAnnonce);
+			cmdEnvoyerMessage = new Commande(cmdEnvMessage);
 		}
+
+		
 
 		#region Implémentation des commandes
 		private void cmdAccepter(object param)
@@ -121,7 +196,7 @@ namespace LeCollectionneur.VuesModeles
 				Transaction nouvelleTransaction = new Transaction(PropositionSelectionnee);
 				nouvelleTransaction.EffectuerTransaction();
 
-				PropositionsRecues = propADO.RecupererPropositionsRecues(UtilisateurADO.utilisateur.Id);
+				PropositionsAffichees = propADO.RecupererPropositionsRecues(UtilisateurADO.utilisateur.Id);
 			}
 		}
 
@@ -132,7 +207,7 @@ namespace LeCollectionneur.VuesModeles
 				PropositionSelectionnee.EtatProposition = EtatsProposition.Refusee;
 				propADO.Modifier(PropositionSelectionnee);
 
-				PropositionsRecues = propADO.RecupererPropositionsRecues(UtilisateurADO.utilisateur.Id);
+				PropositionsAffichees = propADO.RecupererPropositionsRecues(UtilisateurADO.utilisateur.Id);
 			}
 		}
 
@@ -143,13 +218,20 @@ namespace LeCollectionneur.VuesModeles
 				PropositionSelectionnee.EtatProposition = EtatsProposition.Annulee;
 				propADO.Modifier(PropositionSelectionnee);
 
-				PropositionsEnvoyees = propADO.RecupererPropositionsEnvoyees(UtilisateurADO.utilisateur.Id);
+				PropositionsAffichees = propADO.RecupererPropositionsEnvoyees(UtilisateurADO.utilisateur.Id);
 			}
 		}
 
-		private void cmdChangement(object param)
+		private void cmdEnvoyees(object param)
 		{
-			PropositionSelectionnee = null;
+			RecuesSelectionnees = false;
+			PropositionsAffichees = propADO.RecupererPropositionsEnvoyees(UtilisateurADO.utilisateur.Id);
+		}
+
+		private void cmdRecues(object param)
+		{
+			RecuesSelectionnees = true;
+			PropositionsAffichees = propADO.RecupererPropositionsRecues(UtilisateurADO.utilisateur.Id);
 		}
 
 		private void cmdDetailsItem(object param)
@@ -161,21 +243,19 @@ namespace LeCollectionneur.VuesModeles
 			interfaceV.OuvrirModal(itemDetails);
 		}
 
-		private void cmdEnvMessageProposition(object param)
+		private void cmdEnvMessage(object param)
 		{
 			if (UnePropositionSelectionnee())
 			{
 				IOuvreModalAvecParametre<Utilisateur> fenetre = param as IOuvreModalAvecParametre<Utilisateur>;
-				fenetre.OuvrirModal(PropositionSelectionnee.Proposeur);
-			}
-		}
-
-		private void cmdEnvMessageAnnonce(object param)
-		{
-			if (UnePropositionSelectionnee())
-			{
-				IOuvreModalAvecParametre<Utilisateur> fenetre = param as IOuvreModalAvecParametre<Utilisateur>;
-				fenetre.OuvrirModal(PropositionSelectionnee.AnnonceLiee.Annonceur);
+				if (RecuesSelectionnees)
+				{
+					fenetre.OuvrirModal(PropositionSelectionnee.Proposeur);
+				}
+				else
+				{
+					fenetre.OuvrirModal(PropositionSelectionnee.AnnonceLiee.Annonceur);
+				}
 			}
 		}
 		#endregion
@@ -185,16 +265,16 @@ namespace LeCollectionneur.VuesModeles
 			return !(PropositionSelectionnee is null);
 		}
 
-		private bool BoutonAnnulerPropositionActif()
+		private bool BoutonsActifs()
 		{
 			return (UnePropositionSelectionnee() && PropositionSelectionnee.EtatProposition == EtatsProposition.EnAttente);
 		}
 
 		private void changementVisibiliteCommandes()
 		{
-			cmdAccepterProposition = new Commande(cmdAccepter, UnePropositionSelectionnee);
-			cmdRefuserProposition = new Commande(cmdRefuser, UnePropositionSelectionnee);
-			cmdAnnulerProposition = new Commande(cmdAnnuler, BoutonAnnulerPropositionActif);
+			cmdAccepterProposition = new Commande(cmdAccepter, BoutonsActifs);
+			cmdRefuserProposition = new Commande(cmdRefuser, BoutonsActifs);
+			cmdAnnulerProposition = new Commande(cmdAnnuler, BoutonsActifs);
 		}
 
 		#region NotifyPropertyChanged

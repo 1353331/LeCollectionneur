@@ -1,15 +1,12 @@
-﻿<UserControl x:Class="LeCollectionneur.Vues.UCPropositionsRecuesEnvoyees"
+﻿<UserControl x:Class="LeCollectionneur.Vues.UCTransactions"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:LeCollectionneur.Vues"
-             xmlns:converters="clr-namespace:LeCollectionneur.Outils"
-             mc:Ignorable="d"
-             x:Name="UCPropositions"
-             d:DesignHeight="450" d:DesignWidth="800"
-             >
-
+             xmlns:local="clr-namespace:LeCollectionneur.Vues" xmlns:converters="clr-namespace:LeCollectionneur.Outils"
+             Name="UCTransaction"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
     <!-- Pour utiliser l'image de message comme un bouton et éviter que l'image disparaisse lors d'un MouseOver -->
     <UserControl.Resources>
         <ImageBrush x:Key="btnMessageImage" ImageSource="/Images/Icones/message.png" Stretch="Uniform" />
@@ -37,28 +34,20 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="7*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1.2*"></ColumnDefinition>
             <ColumnDefinition Width="3*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-           <!-- RadioButton propositions -->
-        <StackPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center">
-            <RadioButton Name="radPropositionsRecues" Content="Reçues" IsChecked="True" Checked="radPropositionsRecues_Checked" Command="{Binding cmdPropositionsRecues}"></RadioButton>
-            <RadioButton Name="radPropositionsEnvoyees" Content="Envoyées" Checked="radPropositionsEnvoyees_Checked" Command="{Binding cmdPropositionsEnvoyees}"></RadioButton>
-        </StackPanel>
-
         <!-- Listes Reçues/Envoyées -->
         <DockPanel LastChildFill="True" Grid.Row="1">
-            <TextBlock Text="Mes Propositions" FontWeight="DemiBold" DockPanel.Dock="Top" TextAlignment="Center" />
+            <TextBlock Text="Mes Transactions" FontWeight="DemiBold" DockPanel.Dock="Top" TextAlignment="Center" />
 
-            <DataGrid Name="dgPropositions" ItemsSource="{Binding PropositionsAffichees}" SelectedItem="{Binding PropositionSelectionnee}" HorizontalScrollBarVisibility="Auto" AutoGenerateColumns="False" IsReadOnly="True" Margin="7,10,0,0">
+            <DataGrid Name="dgPropositions" ItemsSource="{Binding TransactionsAffichees}" SelectedItem="{Binding TransactionSelectionnee}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" IsReadOnly="True" Margin="7,10,0,0">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Path=AnnonceLiee.Titre}" Header="Annonce Concernée" Width="2*"></DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding Path=EtatProposition}" Header="État" Width="*"></DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding Path=DateProposition, StringFormat={}\{0:yyyy-MM-dd\}}" Header="Date" Width="*" SortDirection="Descending"></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Path=PropositionTrx.AnnonceLiee.Titre}" Header="Annonce Concernée" Width="2*"></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Path=Date, StringFormat={}\{0:yyyy-MM-dd\}}" Header="Date" Width="*"></DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>
@@ -67,8 +56,6 @@
             <!-- Grille interne des détails -->
             <Grid Margin="5">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="10*"></RowDefinition>
-                    <RowDefinition Height="*"></RowDefinition>
                     <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -76,12 +63,11 @@
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
 
-                <GroupBox Name="gbGauche" Grid.Row="0" Grid.Column="0" Header="Annonce" Margin="5" BorderBrush="Black" FontWeight="DemiBold">
+                <GroupBox Name="gbGauche" Grid.Row="0" Grid.Column="0" Header="{Binding TitreGauche}" Margin="5" BorderBrush="Black" FontWeight="DemiBold">
                     <!-- Grid interne de Proposition -->
                     <Grid Margin="5">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="4*"></RowDefinition>
-                            <RowDefinition Height="*"></RowDefinition>
                             <RowDefinition Height="*"></RowDefinition>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
@@ -100,7 +86,7 @@
                                                 <Button.CommandParameter>
                                                     <MultiBinding Converter="{converters:ConvertisseurParametre}">
                                                         <Binding></Binding>
-                                                        <Binding Path="" ElementName="UCPropositions"></Binding>
+                                                        <Binding Path="" ElementName="UCTransaction"></Binding>
                                                     </MultiBinding>
                                                 </Button.CommandParameter>
                                             </Button>
@@ -115,12 +101,11 @@
                     </Grid>
                 </GroupBox>
 
-                <GroupBox Name="gbDroite" Grid.Row="0" Grid.Column="1" Header="Proposition" Margin="5" BorderBrush="Black" FontWeight="DemiBold">
+                <GroupBox Name="gbDroite" Grid.Row="0" Grid.Column="1" Header="{Binding TitreDroite}" Margin="5" BorderBrush="Black" FontWeight="DemiBold">
                     <!-- Grid interne d'Offre -->
                     <Grid Margin="5">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="4*"></RowDefinition>
-                            <RowDefinition Height="*"></RowDefinition>
                             <RowDefinition Height="*"></RowDefinition>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
@@ -139,7 +124,7 @@
                                                 <Button.CommandParameter>
                                                     <MultiBinding Converter="{converters:ConvertisseurParametre}">
                                                         <Binding></Binding>
-                                                        <Binding Path="" ElementName="UCPropositions"></Binding>
+                                                        <Binding Path="" ElementName="UCTransactions"></Binding>
                                                     </MultiBinding>
                                                 </Button.CommandParameter>
                                             </Button>
@@ -152,44 +137,12 @@
                         <Label Name="lblMontantDroite" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Montant proposé: "></Label>
                         <TextBox Name="tbxMontantOffre" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsEnabled="False" Text="{Binding MontantDroite}" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center"></TextBox>
 
-                        <Button Name="btnMessageOffre" Grid.Row="2" Grid.Column="1" Style="{StaticResource btnMessageImageStyle}" Margin="60,0,0,0" Visibility="Visible" Command="{Binding cmdEnvoyerMessage}"
-                            CommandParameter="{Binding ElementName=UCPropositions}" MaxHeight="50" MaxWidth="80"></Button>
                     </Grid>
                 </GroupBox>
-
-                <!-- Propositions reçues -->
-                <Button Name="btnRefuserProposition" Grid.RowSpan="2" Grid.Row="1" Grid.Column="0"  HorizontalAlignment="Stretch" Margin="100,10,100,10" Visibility="Visible" Content="Refuser" Command="{Binding cmdRefuserProposition}" MaxWidth="80" MaxHeight="50">
-                    <!-- Sert à arrondir les coins du bouton -->
-                    <Button.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="3"/>
-                        </Style>
-                    </Button.Resources>
-                </Button>
-                <Button Name="btnAccepterProposition" Grid.RowSpan="2" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="100,10,100,10" Visibility="Visible" Content="Accepter" Command="{Binding cmdAccepterProposition}" MaxWidth="80" MaxHeight="50">
-                    <!-- Sert à arrondir les coins du bouton -->
-                    <Button.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="3"/>
-                        </Style>
-                    </Button.Resources>
-                </Button>
-
-                <!-- Propositions envoyées -->
-                <Label Name="lblEtatProposition" Grid.Row="1" Grid.Column="0"  HorizontalAlignment="Right" Visibility="Hidden" VerticalAlignment="Center">État de la proposition: </Label>
-                <TextBox Text="{Binding PropositionSelectionnee.EtatProposition}" Name="txbEtatProposition" Grid.Row="1" Grid.Column="1"  HorizontalAlignment="Left" Visibility="Hidden" VerticalAlignment="Center" IsEnabled="False"></TextBox>
-                <Button Name="btnAnnulerProposition" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,5,0,0" Visibility="Hidden" Content="Annuler proposition" Command="{Binding cmdAnnulerProposition}">
-                    <!-- Sert à arrondir les coins du bouton -->
-                    <Button.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="3"/>
-                        </Style>
-                    </Button.Resources>
-                </Button>
             </Grid>
         </GroupBox>
 
 
-        
+
     </Grid>
 </UserControl>

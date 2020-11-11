@@ -171,15 +171,19 @@ namespace LeCollectionneur.Modeles
                }
 
                string requete = $@"
-				   UPDATE Annonces
-				   SET
-				   IdEtatAnnonce = (SELECT Id FROM EtatsAnnonce WHERE Nom = '{EtatsAnnonce.Annulee}')
-				   WHERE IdEtatAnnonce = (SELECT Id FROM EtatsAnnonce WHERE Nom = '{EtatsAnnonce.Active}')
-				   AND Id IN (
-								   SELECT IdAnnonce
-								   FROM ItemAnnonce
-								   WHERE IdItem IN ({idItems})
-						      );
+				      UPDATE Annonces
+				      SET
+				      IdEtatAnnonce = (SELECT Id FROM EtatsAnnonce WHERE Nom = '{EtatsAnnonce.Annulee}')
+				      WHERE IdEtatAnnonce = (SELECT Id FROM EtatsAnnonce WHERE Nom = '{EtatsAnnonce.Active}')
+				      AND Id IN (
+								      SELECT IdAnnonce
+								      FROM ItemAnnonce
+								      WHERE IdItem IN ({idItems})
+						         );
+				      ";
+
+               /* Enlever la suppression des items des annonces pour l'instant
+             
                DELETE FROM ItemAnnonce
                WHERE IdItem IN ({idItems})
                AND IdAnnonce IN (
@@ -187,11 +191,10 @@ namespace LeCollectionneur.Modeles
                                     FROM Annonces
                                     WHERE IdEtatAnnonce = (SELECT Id FROM EtatsAnnonce WHERE Nom = '{EtatsAnnonce.Annulee}')
                                 )
-				   ";
-
+                */
                MaBD.Commande(requete);
             }
-      }
+        }
 
         public void Ajouter(Annonce a)
         {
