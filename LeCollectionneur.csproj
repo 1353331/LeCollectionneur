@@ -178,6 +178,7 @@
     <Compile Include="VuesModeles\ModalEnvoyerMessage_VM.cs" />
     <Compile Include="VuesModeles\ModalModifierAnnonce_VM.cs" />
     <Compile Include="VuesModeles\ModalNouvelleProposition_VM.cs" />
+    <Compile Include="VuesModeles\Parametre_VM.cs" />
     <Compile Include="VuesModeles\PropositionsRecuesEnvoyees_VM.cs" />
     <Compile Include="Vues\ajouterConversation.xaml.cs">
       <DependentUpon>ajouterConversation.xaml</DependentUpon>

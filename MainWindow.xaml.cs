@@ -23,21 +23,26 @@ namespace LeCollectionneur
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		
-		public MainWindow()
+        public MainWindow()
 		{
 			InitializeComponent();
 			BdBase MaBD = new BdBase();
 			Window login = new Login();
+			
 			login.ShowDialog();
 			if (UtilisateurADO.utilisateur != null)
 				if (!UtilisateurADO.admin)
+				{
+					
+					this.Title = "Collectionneur - " + UtilisateurADO.utilisateur.NomUtilisateur;
 					presenteurContenu.Content = new UCContexteUtilisateur();
+				}
 				else
 					presenteurContenu.Content = new UCContexteAdmin();
 			else
 				this.Close();
 		}
+		
 
 		
 	}
