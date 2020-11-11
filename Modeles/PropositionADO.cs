@@ -110,7 +110,8 @@ namespace LeCollectionneur.Modeles
 				FROM Propositions p
 				LEFT JOIN EtatsProposition ep
 				ON p.IdEtatProposition = ep.Id
-				WHERE p.idUtilisateur = {idUtilisateur};
+				WHERE p.idUtilisateur = {idUtilisateur}
+				ORDER BY dateProposition DESC; 
 			";
 			ObservableCollection<Proposition> ocPropositions = new ObservableCollection<Proposition>();
 			DataSet setProposition = MaBd.Selection(requete);
@@ -135,7 +136,8 @@ namespace LeCollectionneur.Modeles
 				ON p.IdEtatProposition = ep.Id
 				LEFT JOIN Annonces a
 				ON p.idAnnonce = a.Id
-				WHERE a.idUtilisateur = {idUtilisateur};
+				WHERE a.idUtilisateur = {idUtilisateur}
+				ORDER BY dateProposition DESC;
 			";
 			ObservableCollection<Proposition> ocPropositions = new ObservableCollection<Proposition>();
 			DataSet setProposition = MaBd.Selection(requete);
@@ -194,6 +196,10 @@ namespace LeCollectionneur.Modeles
 								FROM ItemProposition
 								WHERE IdItem IN ({idItems})
 						   );
+				
+				";
+				/* Enlever la suppression des items des propositions pour l'instant
+				
 				DELETE FROM ItemProposition
             WHERE IdItem IN ({idItems})
             AND IdProposition IN (
@@ -201,8 +207,7 @@ namespace LeCollectionneur.Modeles
                                 FROM Propositions
                                 WHERE IdEtatProposition = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.Annulee}')
                              )
-				";
-
+				*/
 				MaBd.Commande(requete);
 			}
 		}

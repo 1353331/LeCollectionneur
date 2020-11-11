@@ -47,6 +47,12 @@ namespace LeCollectionneur.Vues
 			modifierBackgroundBoutons(sender);
 		}
 
+		private void btnTransactions_Click(object sender, RoutedEventArgs e)
+		{
+			presenteurContenu.Content = new UCTransactions();
+			modifierBackgroundBoutons(sender);
+		}
+
 		private void btnConversations_Click(object sender, RoutedEventArgs e)
 		{
 			presenteurContenu.Content = new UCConversation();
@@ -92,5 +98,7 @@ namespace LeCollectionneur.Vues
 				}
 			}
 		}
+
+		
 	}
 }

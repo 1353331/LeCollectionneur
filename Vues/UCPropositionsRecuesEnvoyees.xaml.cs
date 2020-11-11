@@ -36,15 +36,17 @@ namespace LeCollectionneur.Vues
 			if (btnRefuserProposition != null)
 			{
 				btnRefuserProposition.Visibility = Visibility.Visible;
-				btnAccepterProposition.Visibility = Visibility.Visible;
-				btnMessageProposition.Visibility = Visibility.Visible;
-				dgRecues.Visibility = Visibility.Visible;
+				btnAccepterProposition.Visibility = Visibility.Visible;;
 
 				lblEtatProposition.Visibility = Visibility.Hidden;
 				txbEtatProposition.Visibility = Visibility.Hidden;
-				btnMessageOffre.Visibility = Visibility.Hidden;
 				btnAnnulerProposition.Visibility = Visibility.Hidden;
-				dgEnvoyees.Visibility = Visibility.Hidden;
+
+				gbGauche.Header = "Mon Annonce";
+				lblMontantGauche.Content = "Montant demandé: ";
+
+				gbDroite.Header = "Proposition";
+				lblMontantDroite.Content = "Montant proposé: ";
 			}
 		}
 
@@ -52,14 +54,16 @@ namespace LeCollectionneur.Vues
 		{
 			btnRefuserProposition.Visibility = Visibility.Hidden;
 			btnAccepterProposition.Visibility = Visibility.Hidden;
-			btnMessageProposition.Visibility = Visibility.Hidden;
-			dgRecues.Visibility = Visibility.Hidden;
 
 			lblEtatProposition.Visibility = Visibility.Visible;
 			txbEtatProposition.Visibility = Visibility.Visible;
-			btnMessageOffre.Visibility = Visibility.Visible;
 			btnAnnulerProposition.Visibility = Visibility.Visible;
-			dgEnvoyees.Visibility = Visibility.Visible;
+
+			gbGauche.Header = "Ma Proposition";
+			lblMontantGauche.Content = "Montant proposé: ";
+
+			gbDroite.Header = "Annonce";
+			lblMontantDroite.Content = "Montant demandé: ";
 		}
 
 		public void OuvrirModal(Item itemSelectionne)
