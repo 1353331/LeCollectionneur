@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LeCollectionneur.Vues"
         mc:Ignorable="d"
-        Title="Nouvelle proposition" Height="450" Width="800"
+        Title="Nouvelle proposition" Height="500" Width="1000"
         xmlns:converters="clr-namespace:LeCollectionneur.Outils">
         <!-- Ligne en haut de celle-ci à ajouter pour avoir accès aux outils -->
     <Window.Resources>
@@ -141,7 +141,7 @@
         </GroupBox>
 
         <!-- Propositions reçues -->
-        <Button Name="btnAnnulerProposition" Grid.RowSpan="2" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Margin="0,10,30,10" Visibility="Visible" Content="Annuler" Width="70" Command="{Binding cmdAnnuler_Proposition}" CommandParameter="{Binding ElementName=WindowNouvelleProposition}">
+        <Button Name="btnAnnulerProposition" Grid.RowSpan="2" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" Margin="0,10,30,10" Visibility="Visible" Content="Annuler" MaxWidth="120" Command="{Binding cmdAnnuler_Proposition}" CommandParameter="{Binding ElementName=WindowNouvelleProposition}">
             <!-- Sert à arrondir les coins du bouton -->
             <Button.Resources>
                 <Style TargetType="Border">
@@ -149,7 +149,7 @@
                 </Style>
             </Button.Resources>
         </Button>
-        <Button Name="btnProposer" Grid.RowSpan="2" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="30,10,0,10" Visibility="Visible" Content="Proposer" Width="70" Command="{Binding cmdProposer_Proposition}" CommandParameter="{Binding ElementName=WindowNouvelleProposition}">
+        <Button Name="btnProposer" Grid.RowSpan="2" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" Margin="30,10,0,10" Visibility="Visible" Content="Proposer" MaxWidth="120" Command="{Binding cmdProposer_Proposition}" CommandParameter="{Binding ElementName=WindowNouvelleProposition}">
             <!-- Sert à arrondir les coins du bouton -->
             <Button.Resources>
                 <Style TargetType="Border">

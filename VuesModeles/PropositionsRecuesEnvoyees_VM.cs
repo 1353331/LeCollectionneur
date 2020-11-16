@@ -102,6 +102,13 @@ namespace LeCollectionneur.VuesModeles
 						MontantDroite = PropositionSelectionnee.AnnonceLiee.Montant;
 					}
 				}
+				else
+				{
+					ItemsGauche = new ObservableCollection<Item>();
+					ItemsDroite = new ObservableCollection<Item>();
+					MontantDroite = 0;
+					MontantGauche = 0;
+				}
 
 				OnPropertyChanged("PropositionSelectionnee");
 			}
@@ -225,12 +232,14 @@ namespace LeCollectionneur.VuesModeles
 		private void cmdEnvoyees(object param)
 		{
 			RecuesSelectionnees = false;
+			PropositionSelectionnee = null;
 			PropositionsAffichees = propADO.RecupererPropositionsEnvoyees(UtilisateurADO.utilisateur.Id);
 		}
 
 		private void cmdRecues(object param)
 		{
 			RecuesSelectionnees = true;
+			PropositionSelectionnee = null;
 			PropositionsAffichees = propADO.RecupererPropositionsRecues(UtilisateurADO.utilisateur.Id);
 		}
 

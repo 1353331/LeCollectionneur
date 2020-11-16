@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using LeCollectionneur.Modeles;
 using LeCollectionneur.VuesModeles;
 
 namespace LeCollectionneur.Vues
@@ -20,10 +21,10 @@ namespace LeCollectionneur.Vues
 	/// </summary>
 	public partial class ModalAjoutItemProposition : Window
 	{
-		public ModalAjoutItemProposition()
+		public ModalAjoutItemProposition(IEnumerable<Item> itemsAjoutes)
 		{
 			InitializeComponent();
-			DataContext = new ModalAjoutItem_VM();
+			DataContext = new ModalAjoutItem_VM(itemsAjoutes);
 		}
 	}
 }

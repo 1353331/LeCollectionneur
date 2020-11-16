@@ -124,7 +124,7 @@
                                                 <Button.CommandParameter>
                                                     <MultiBinding Converter="{converters:ConvertisseurParametre}">
                                                         <Binding></Binding>
-                                                        <Binding Path="" ElementName="UCTransactions"></Binding>
+                                                        <Binding Path="" ElementName="UCTransaction"></Binding>
                                                     </MultiBinding>
                                                 </Button.CommandParameter>
                                             </Button>

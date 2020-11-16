@@ -15,9 +15,11 @@ namespace LeCollectionneur.VuesModeles
 {
 	public class ModalAjoutItem_VM : INotifyPropertyChanged
 	{
-		private Item _itemSelectionne;
+		public List<Item> ItemsAjoutes { get; set; }
 
-		public Item ItemSelectionne
+		private ItemAjout _itemSelectionne;
+
+		public ItemAjout ItemSelectionne
 		{
 			get { return _itemSelectionne; }
 			set 
@@ -38,13 +40,24 @@ namespace LeCollectionneur.VuesModeles
 			set 
 			{ 
 				_collectionSelectionnee = value;
-				ItemsCollectionSelectionnee = _collectionSelectionnee.ItemsCollection;
+				ItemsCollectionSelectionnee = ItemAjout.ModifierItemsEnItemsAjout(CollectionSelectionnee.ItemsCollection);
+				foreach (Item item in ItemsAjoutes)
+				{
+					foreach (ItemAjout itemColl in ItemsCollectionSelectionnee)
+					{
+						if (item.Id == itemColl.Id)
+						{
+							itemColl.EstAjoute = true;
+							break;
+						}
+					}
+				}
 			}
 		}
 
-		private ObservableCollection<Item> _itemsCollectionSelectionnee;
+		private ObservableCollection<ItemAjout> _itemsCollectionSelectionnee;
 
-		public ObservableCollection<Item> ItemsCollectionSelectionnee
+		public ObservableCollection<ItemAjout> ItemsCollectionSelectionnee
 		{
 			get { return _itemsCollectionSelectionnee; }
 			set 
@@ -67,23 +80,26 @@ namespace LeCollectionneur.VuesModeles
 		}
 
 
-		public ModalAjoutItem_VM()
+		public ModalAjoutItem_VM(IEnumerable<Item> items)
 		{
 			cmdAjouter_Item = new Commande(cmdAjouter, boutonAjouterActif);
 			lstCollections = new CollectionADO().Recuperer(UtilisateurADO.utilisateur.Id);
+			ItemsAjoutes = new List<Item>(items);
 		}
 
 		private void cmdAjouter(object param)
 		{
-			//Envoie l'évènement d'ajout d'item avec l'item sélectionné pour qu'il soit reçu par ModalNouvelleProposition_VM
+			//Envoie l'évènement d'ajout d'item avec l'item sélectionné pour qu'il soit reçu par la fenêtre à laquelle celle-ci appartient
 			EvenementSysteme.Publier<EnvoyerItemMessage>(new EnvoyerItemMessage() { Item = ItemSelectionne });
-
+			ItemSelectionne.EstAjoute = true;
+			ItemsAjoutes.Add(ItemSelectionne);
 			ItemSelectionne = null;
+			CollectionSelectionnee = CollectionSelectionnee;
 		}
 
 		private bool boutonAjouterActif()
 		{
-			return !(ItemSelectionne is null);
+			return !(ItemSelectionne is null) && !ItemSelectionne.EstAjoute;
 		}
 
 		#region OnPropertyChanged

@@ -161,8 +161,8 @@ namespace LeCollectionneur.VuesModeles
 
 		private void cmdAjouterItem(object param)
 		{
-			IOuvreModal fenetre = param as IOuvreModal;
-			fenetre.OuvrirModal();
+			IOuvreModalAvecParametre<IEnumerable<Item>> fenetre = param as IOuvreModalAvecParametre<IEnumerable<Item>>;
+			fenetre.OuvrirModal(ItemsProposition);
 		}
 
 		private void cmdSupprimerItem(object param)

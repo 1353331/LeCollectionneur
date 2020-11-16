@@ -2,6 +2,7 @@
 using LeCollectionneur.Outils;
 using LeCollectionneur.Outils.Messages;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
@@ -10,9 +11,10 @@ namespace LeCollectionneur.VuesModeles
 {
     class AjoutItemAnnonce_VM : INotifyPropertyChanged
     {
-        //Variables pour l'item sélectionné
-        private Item _itemSelectionne;
-        public Item ItemSelectionne
+      public List<Item> ItemsAjoutes { get; set; }
+      //Variables pour l'item sélectionné
+      private ItemAjout _itemSelectionne;
+        public ItemAjout ItemSelectionne
         {
             get { return _itemSelectionne; }
             set
@@ -50,13 +52,24 @@ namespace LeCollectionneur.VuesModeles
             {
                 ItemsSelectionnes = null;
                 _collectionSelectionnee = value;
-                ItemsCollectionSelectionnee = _collectionSelectionnee.ItemsCollection;
+                ItemsCollectionSelectionnee = ItemAjout.ModifierItemsEnItemsAjout(_collectionSelectionnee.ItemsCollection);
+               foreach (Item item in ItemsAjoutes)
+               {
+                  foreach (ItemAjout itemColl in ItemsCollectionSelectionnee)
+                  {
+                     if (item.Id == itemColl.Id)
+                     {
+                        itemColl.EstAjoute = true;
+                        break;
+                     }
+                  }
+               }
             }
         }
 
         //Variable pour l'item collection sélectionné
-        private ObservableCollection<Item> _itemsCollectionSelectionnee;
-        public ObservableCollection<Item> ItemsCollectionSelectionnee
+        private ObservableCollection<ItemAjout> _itemsCollectionSelectionnee;
+        public ObservableCollection<ItemAjout> ItemsCollectionSelectionnee
         {
             get { return _itemsCollectionSelectionnee; }
             set
@@ -80,11 +93,11 @@ namespace LeCollectionneur.VuesModeles
         }
 
         //Constructeur
-        public AjoutItemAnnonce_VM()
+        public AjoutItemAnnonce_VM(IEnumerable<Item> items)
         {
             cmdAjouter_Item = new Commande(cmdAjouter, UnItemSelectionne);
-
             lstCollections = new CollectionADO().Recuperer(UtilisateurADO.utilisateur.Id);
+            ItemsAjoutes = new List<Item>(items);
         }
 
         //Méthode pour savoir si un item est sélectionné ou non
@@ -108,7 +121,14 @@ namespace LeCollectionneur.VuesModeles
             //EvenementSysteme.Publier<EnvoyerItemMessage>(new EnvoyerItemMessage() { Item = ItemSelectionne });
             EnvoyerItemsMessage EIM = new EnvoyerItemsMessage();
             EvenementSysteme.Publier<EnvoyerItemsMessage>(new EnvoyerItemsMessage() { Items = EIM.ConvertirIListEnObservColl(ItemsSelectionnes) });
-        }
+			   foreach (ItemAjout item in ItemsSelectionnes)
+			   {
+               item.EstAjoute = true;
+               ItemsAjoutes.Add(item);
+			   }
+            ItemsSelectionnes = null;
+            CollectionSelectionnee = CollectionSelectionnee;
+      }
 
         #region OnPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;

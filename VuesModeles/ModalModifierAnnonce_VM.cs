@@ -230,8 +230,8 @@ namespace LeCollectionneur.VuesModeles
         private void cmdAjouterItem(object param)
         {
             //On ouvre la fenêtre d'ajout d'items
-            IOuvreModal fenetre = param as IOuvreModal;
-            fenetre.OuvrirModal();
+            IOuvreModalAvecParametre<IEnumerable<Item>> fenetre = param as IOuvreModalAvecParametre<IEnumerable<Item>>;
+            fenetre.OuvrirModal(LesItemsMod);
 
             //On met à jour la commande d'ajout d'annonce pour vérifier si elle est exécutable
             cmdModifier_Annonce = new Commande(cmdModifier, champsRemplis);
