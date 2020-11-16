@@ -5,13 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LeCollectionneur.Vues"
         mc:Ignorable="d"
-        Title="Détails" Height="450" Width="400">
+        ResizeMode="NoResize"
+        Title="Détails" Height="600" Width="500">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1.5*"></ColumnDefinition>
-            <ColumnDefinition Width="1.5*"/>
-            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="2*"></ColumnDefinition>
+            <ColumnDefinition Width="1.5*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
@@ -24,28 +25,40 @@
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
 
-        <Image Name="imgItem" Source="/images/noimage.png" Grid.Column="0" Grid.RowSpan="3" Stretch="Fill" Margin="10,10,5,10" Grid.ColumnSpan="2" />
+        <Image Name="imgItem" Source="{Binding ImageItem}" Grid.Column="1" Grid.RowSpan="3" Grid.ColumnSpan="2" Stretch="UniformToFill"  Margin="5,10,5,10" />
 
-        <Label VerticalAlignment="Center" Grid.Column="2">Nom:</Label>
-        <TextBox Text="{Binding ItemDetails.Nom}" VerticalAlignment="Center" Name="txtNomItem" Grid.Column="3" Width="auto" Margin="5" IsEnabled="False"></TextBox>
+        <StackPanel Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="4">
+            <Label VerticalAlignment="Center" >Nom:</Label>
+            <TextBox Text="{Binding ItemDetails.Nom}" VerticalAlignment="Center" Name="txtNomItem" Width="auto" Margin="5" IsReadOnly="True"></TextBox>
+        </StackPanel>
 
-        <Label VerticalAlignment="Center" Grid.Column="2" Grid.Row="1">Condition:</Label>
-        <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding ItemDetails.Condition}" VerticalAlignment="Center" Name="tbxConditionItem" Height="auto" Margin="5" IsEnabled="False">
-        </TextBox>
+        <StackPanel Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2">
+            <Label VerticalAlignment="Center" >Condition:</Label>
+            <TextBox Text="{Binding ItemDetails.Condition}" VerticalAlignment="Center" Name="tbxConditionItem" Height="auto" Margin="5" IsReadOnly="True">
+            </TextBox>
+        </StackPanel>
+        
+        <StackPanel Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2">
+            <Label VerticalAlignment="Center" >Type:</Label>
+            <TextBox Text="{Binding ItemDetails.Type}" VerticalAlignment="Center" Name="tbxItemType" Height="auto" Margin="5" IsReadOnly="True">
+            </TextBox>
+        </StackPanel>
 
-            <Label VerticalAlignment="Center" Grid.Row="2" Grid.Column="2">Type:</Label>
-        <TextBox Text="{Binding ItemDetails.Type}" VerticalAlignment="Center" Name="tbxItemType" Height="auto" Grid.Column="3" Grid.Row="2" Margin="5" IsEnabled="False">
-        </TextBox>
+        <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2">
+            <Label VerticalAlignment="Center" >Date de sortie:</Label>
+            <DatePicker SelectedDate="{Binding ItemDetails.DateSortie,Mode=TwoWay,TargetNullValue='Inconnue'}" VerticalAlignment="Center" Name="dateSortieItem"  Height="23" Margin="5" IsEnabled="False">
+            </DatePicker>
+        </StackPanel>
 
-        <Label VerticalAlignment="Center" Grid.Row="3" Grid.Column="0">Date de sortie:</Label>
-        <DatePicker Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" SelectedDate="{Binding ItemDetails.DateSortie,Mode=TwoWay,TargetNullValue='Inconnue'}" VerticalAlignment="Center" Name="dateSortieItem"  Height="23" Margin="5" IsEnabled="False">
-        </DatePicker>
+        <StackPanel Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2">
+            <Label VerticalAlignment="Center" >Producteur:</Label>
+            <TextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" Text="{Binding ItemDetails.Manufacturier}" Name="txtManufacturierItem"  Height="23" Margin="5" IsReadOnly="True">
+            </TextBox>
+        </StackPanel>
 
-        <Label VerticalAlignment="Center" Grid.Row="4" Grid.Column="0">Producteur:</Label>
-        <TextBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" Text="{Binding ItemDetails.Manufacturier}" Name="txtManufacturierItem"  Height="23" Margin="5" IsEnabled="False">
-        </TextBox>
-
-        <Label Grid.Row="5" Grid.Column="0" VerticalAlignment="Top">Description:</Label>
-        <TextBox Grid.Row="5" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="2" Text="{Binding ItemDetails.Description}" Name="txtDescriptionItem"  Margin="5" TextWrapping="Wrap" AcceptsReturn="True" IsEnabled="False"/>
+        <StackPanel Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="4" Grid.RowSpan="2">
+            <Label  VerticalAlignment="Top">Description:</Label>
+            <TextBox Text="{Binding ItemDetails.Description}" Name="txtDescriptionItem" Height="110" Margin="5" TextWrapping="Wrap" AcceptsReturn="True" IsReadOnly="True"/>
+        </StackPanel>
     </Grid>
 </Window>

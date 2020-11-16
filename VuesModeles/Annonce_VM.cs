@@ -441,6 +441,7 @@ namespace LeCollectionneur.VuesModeles
         #region Méthodes de filtres
         private void initFiltre()
         {
+
             LesTypesAnnonce = new ObservableCollection<string>();
             LesTypesItems = new ObservableCollection<string>();
 
@@ -450,7 +451,7 @@ namespace LeCollectionneur.VuesModeles
             LesTypesItems = annonceADO.RecupererTypesItem();
             LesTypesItems.Add(FILTRE_NULL);
 
-            DateDebutFiltre = new DateTime(0001, 01, 01);
+            DateDebutFiltre = Annonce.PlusAncienneDate;
             DateFinFiltre = DateTime.Now;
 
             FiltrerParTitreAnnonce = true;
@@ -524,7 +525,7 @@ namespace LeCollectionneur.VuesModeles
             RechercheTextuelle = "";
             TypeItemFiltre = null;
             TypeAnnonceFiltre = null;
-            DateDebutFiltre = new DateTime(0001, 01, 01);
+            DateDebutFiltre = Annonce.PlusAncienneDate;
             DateFinFiltre = DateTime.Now;
             FiltrerParMesAnnonces = false;
 

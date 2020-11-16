@@ -11,6 +11,8 @@ namespace LeCollectionneur.Modeles
 {
     public class Annonce
     {
+        public static DateTime PlusAncienneDate = DateTime.Now.Date;
+
         #region Propriétés
         public int Id { get; set; }
         public Utilisateur Annonceur { get; set; }
@@ -20,7 +22,7 @@ namespace LeCollectionneur.Modeles
         public string Description { get; set; }
         public ObservableCollection<Item> ListeItems { get; set; }
         public double Montant { get; set; }
-		 public string EtatAnnonce { get; set; }
+		public string EtatAnnonce { get; set; }
 		#endregion
 
 		#region Constructeur
@@ -47,6 +49,11 @@ namespace LeCollectionneur.Modeles
             ListeItems = annonceADO.RecupererListeItems(Id);
             Montant = (double)dr["montant"];
             EtatAnnonce = (string)dr["etatAnnonce"];
+
+            if(DatePublication < PlusAncienneDate)
+            {
+                PlusAncienneDate = DatePublication;
+            }
         }
         #endregion
 

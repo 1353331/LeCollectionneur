@@ -11,6 +11,7 @@ namespace LeCollectionneur.VuesModeles
 {
     class AjoutItemAnnonce_VM : INotifyPropertyChanged
     {
+
       public List<Item> ItemsAjoutes { get; set; }
       //Variables pour l'item sélectionné
       private ItemAjout _itemSelectionne;
@@ -27,6 +28,10 @@ namespace LeCollectionneur.VuesModeles
             }
         }
 
+        const string AJOUTER_ITEMS = "Ajouter item(s)";
+        const string AJOUTER_COLL = "Ajouter collection";
+
+
         //Les items sélectionnés dans la liste des items de la nouvelle annonce
         private IList _itemsSelectionnes;
         public IList ItemsSelectionnes
@@ -35,8 +40,20 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _itemsSelectionnes = value;
-                cmdAjouter_Item = new Commande(cmdAjouter, UnItemSelectionne);
+                cmdAjouter_Item = new Commande(cmdAjouterItems, UnItemSelectionne);
+                ContentAjouter = AJOUTER_ITEMS;
                 OnPropertyChanged("ItemsSelectionnes");
+            }
+        }
+
+        private string _contentAjouter;
+        public string ContentAjouter
+        {
+            get { return _contentAjouter; }
+            set
+            {
+                _contentAjouter = value;
+                OnPropertyChanged("ContentAjouter");
             }
         }
 
@@ -52,6 +69,7 @@ namespace LeCollectionneur.VuesModeles
             {
                 ItemsSelectionnes = null;
                 _collectionSelectionnee = value;
+				
                 ItemsCollectionSelectionnee = ItemAjout.ModifierItemsEnItemsAjout(_collectionSelectionnee.ItemsCollection);
                foreach (Item item in ItemsAjoutes)
                {
@@ -64,6 +82,10 @@ namespace LeCollectionneur.VuesModeles
                      }
                   }
                }
+			   
+                cmdAjouter_Item = new Commande(cmdAjouterColl, UneCollSelectionnee);
+                ContentAjouter = AJOUTER_COLL;
+                OnPropertyChanged("CollectionSelectionnee");
             }
         }
 
@@ -75,7 +97,7 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _itemsCollectionSelectionnee = value;
-                cmdAjouter_Item = new Commande(cmdAjouter, UnItemSelectionne);
+                cmdAjouter_Item = new Commande(cmdAjouterItems, UnItemSelectionne);
                 OnPropertyChanged("ItemsCollectionSelectionnee");
             }
         }
@@ -95,7 +117,8 @@ namespace LeCollectionneur.VuesModeles
         //Constructeur
         public AjoutItemAnnonce_VM(IEnumerable<Item> items)
         {
-            cmdAjouter_Item = new Commande(cmdAjouter, UnItemSelectionne);
+            ContentAjouter = AJOUTER_ITEMS;
+            cmdAjouter_Item = new Commande(cmdAjouterItems, UnItemSelectionne);
             lstCollections = new CollectionADO().Recuperer(UtilisateurADO.utilisateur.Id);
             ItemsAjoutes = new List<Item>(items);
         }
@@ -114,8 +137,17 @@ namespace LeCollectionneur.VuesModeles
             return true;
         }
 
+        public bool UneCollSelectionnee()
+        {
+            if (CollectionSelectionnee is null)
+            {
+                return false;
+            }
+            return true;
+        }
+
         //Méthode pour l'ajout d'un item
-        private void cmdAjouter(object param)
+        private void cmdAjouterItems(object param)
         {
             //Envoie l'évènement d'ajout d'item avec l'item sélectionné pour qu'il soit reçu par ModalNouvelleAnnonce_VM
             //EvenementSysteme.Publier<EnvoyerItemMessage>(new EnvoyerItemMessage() { Item = ItemSelectionne });
@@ -129,6 +161,11 @@ namespace LeCollectionneur.VuesModeles
             ItemsSelectionnes = null;
             CollectionSelectionnee = CollectionSelectionnee;
       }
+
+        private void cmdAjouterColl(object param)
+        {
+            EvenementSysteme.Publier<EnvoyerItemsMessage>(new EnvoyerItemsMessage() { Items = CollectionSelectionnee.ItemsCollection });
+        }
 
         #region OnPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;

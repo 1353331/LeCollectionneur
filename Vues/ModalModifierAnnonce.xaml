@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         
         ResizeMode="NoResize"
-        Title="Modification de l'annonce" Height="660" Width="500">
+        Title="Modification de l'annonce" Height="660" Width="520">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"></RowDefinition>
@@ -25,18 +25,18 @@
 
         <!--Titre-->
         <Label Content="Titre" HorizontalAlignment="left" VerticalAlignment="bottom" Margin="10,0,0,0"></Label>
-        <TextBox x:Name="txtTitre" Grid.Column="1" Margin="0,20,20,0" Grid.ColumnSpan="2" Text="{Binding Titre}"></TextBox>
+        <TextBox x:Name="txtTitre" Grid.Column="1" Margin="0,20,0,0" Grid.ColumnSpan="2" Text="{Binding Titre}"></TextBox>
 
         <!--Type annonce-->
         <Label Content="Type d'annonce" Grid.Row="1"  HorizontalAlignment="left" VerticalAlignment="Center" Margin="10,0,0,0"></Label>
-        <ComboBox Name="cmbType" Grid.Row="1" Grid.Column="1" Margin="0,20,20,20" Grid.ColumnSpan="2" ItemsSource="{Binding Path=LesTypesAnnonce}" SelectedItem="{Binding Path=Type}" />
+        <ComboBox Name="cmbType" Grid.Row="1" Grid.Column="1" Margin="0,20,0,20" Grid.ColumnSpan="2" ItemsSource="{Binding Path=LesTypesAnnonce}" SelectedItem="{Binding Path=Type}" />
 
         <!--Description-->
         <Label Content="Description" Grid.Row="2"  HorizontalAlignment="left" VerticalAlignment="Top" Margin="10,0,0,0"></Label>
-        <TextBox x:Name="txtDescription" Grid.Column="1" Grid.Row="2" Margin="0,0,20,20" Grid.ColumnSpan="2" TextWrapping="Wrap" Text="{Binding Description}"></TextBox>
+        <TextBox x:Name="txtDescription" Grid.Column="1" Grid.Row="2" Margin="0,0,0,20" Grid.ColumnSpan="2" TextWrapping="Wrap" Text="{Binding Description}"></TextBox>
 
         <!--Offre-->
-        <GroupBox Grid.Row="3" Grid.ColumnSpan="3" Header="Offre" Margin="10,0,20,0" >
+        <GroupBox Grid.Row="3" Grid.ColumnSpan="3" Header="Offre" Margin="10,0,0,0" >
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"></RowDefinition>

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 using LeCollectionneur.Modeles;
 
 namespace LeCollectionneur.VuesModeles
@@ -22,10 +23,35 @@ namespace LeCollectionneur.VuesModeles
 			}
 		}
 
-
 		public ModalDetailsItem_VM(Item item)
 		{
 			ItemDetails = item;
+
+			if(item.BmImage is null)
+            {
+				ImageItem = new BitmapImage();
+				ImageItem.BeginInit();
+				ImageItem.UriSource = new Uri("pack://application:,,,/LeCollectionneur;component/images/noimage.png", UriKind.Absolute);
+				ImageItem.EndInit();
+			}
+			else
+            {
+				ImageItem = item.BmImage;
+            }
+		}
+
+		private BitmapImage _imageItem;
+		public BitmapImage ImageItem
+		{
+			get
+			{
+				return _imageItem;
+			}
+			set
+			{
+				_imageItem = value;
+				OnPropertyChanged("ImageItem");
+			}
 		}
 
 		#region OnPropertyChanged
