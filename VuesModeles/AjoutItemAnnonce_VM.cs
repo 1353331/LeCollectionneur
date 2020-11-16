@@ -10,20 +10,8 @@ namespace LeCollectionneur.VuesModeles
 {
     class AjoutItemAnnonce_VM : INotifyPropertyChanged
     {
-        //Variables pour l'item sélectionné
-        private Item _itemSelectionne;
-        public Item ItemSelectionne
-        {
-            get { return _itemSelectionne; }
-            set
-            {
-                _itemSelectionne = value;
-                OnPropertyChanged("ItemSelectionne");
-
-                //Puisqu'il y a un item de sélectionné, alors on veut pouvoir exécuter la commande d'ajout d'un item
-                //cmdAjouter_Item = new Commande(cmdAjouter, UnItemSelectionne);
-            }
-        }
+        const string AJOUTER_ITEMS = "Ajouter item(s)";
+        const string AJOUTER_COLL = "Ajouter collection";
 
         //Les items sélectionnés dans la liste des items de la nouvelle annonce
         private IList _itemsSelectionnes;
@@ -33,8 +21,20 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _itemsSelectionnes = value;
-                cmdAjouter_Item = new Commande(cmdAjouter, UnItemSelectionne);
+                cmdAjouter_Item = new Commande(cmdAjouterItems, UnItemSelectionne);
+                ContentAjouter = AJOUTER_ITEMS;
                 OnPropertyChanged("ItemsSelectionnes");
+            }
+        }
+
+        private string _contentAjouter;
+        public string ContentAjouter
+        {
+            get { return _contentAjouter; }
+            set
+            {
+                _contentAjouter = value;
+                OnPropertyChanged("ContentAjouter");
             }
         }
 
@@ -51,6 +51,9 @@ namespace LeCollectionneur.VuesModeles
                 ItemsSelectionnes = null;
                 _collectionSelectionnee = value;
                 ItemsCollectionSelectionnee = _collectionSelectionnee.ItemsCollection;
+                cmdAjouter_Item = new Commande(cmdAjouterColl, UneCollSelectionnee);
+                ContentAjouter = AJOUTER_COLL;
+                OnPropertyChanged("CollectionSelectionnee");
             }
         }
 
@@ -62,7 +65,7 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _itemsCollectionSelectionnee = value;
-                cmdAjouter_Item = new Commande(cmdAjouter, UnItemSelectionne);
+                cmdAjouter_Item = new Commande(cmdAjouterItems, UnItemSelectionne);
                 OnPropertyChanged("ItemsCollectionSelectionnee");
             }
         }
@@ -82,8 +85,8 @@ namespace LeCollectionneur.VuesModeles
         //Constructeur
         public AjoutItemAnnonce_VM()
         {
-            cmdAjouter_Item = new Commande(cmdAjouter, UnItemSelectionne);
-
+            ContentAjouter = AJOUTER_ITEMS;
+            cmdAjouter_Item = new Commande(cmdAjouterItems, UnItemSelectionne);
             lstCollections = new CollectionADO().Recuperer(UtilisateurADO.utilisateur.Id);
         }
 
@@ -101,13 +104,27 @@ namespace LeCollectionneur.VuesModeles
             return true;
         }
 
+        public bool UneCollSelectionnee()
+        {
+            if (CollectionSelectionnee is null)
+            {
+                return false;
+            }
+            return true;
+        }
+
         //Méthode pour l'ajout d'un item
-        private void cmdAjouter(object param)
+        private void cmdAjouterItems(object param)
         {
             //Envoie l'évènement d'ajout d'item avec l'item sélectionné pour qu'il soit reçu par ModalNouvelleAnnonce_VM
             //EvenementSysteme.Publier<EnvoyerItemMessage>(new EnvoyerItemMessage() { Item = ItemSelectionne });
             EnvoyerItemsMessage EIM = new EnvoyerItemsMessage();
             EvenementSysteme.Publier<EnvoyerItemsMessage>(new EnvoyerItemsMessage() { Items = EIM.ConvertirIListEnObservColl(ItemsSelectionnes) });
+        }
+
+        private void cmdAjouterColl(object param)
+        {
+            EvenementSysteme.Publier<EnvoyerItemsMessage>(new EnvoyerItemsMessage() { Items = CollectionSelectionnee.ItemsCollection });
         }
 
         #region OnPropertyChanged
