@@ -153,6 +153,7 @@
     <Compile Include="Modeles\ConversationADO.cs" />
     <Compile Include="Modeles\Item.cs" />
     <Compile Include="Modeles\ItemADO.cs" />
+    <Compile Include="Modeles\ItemAjout.cs" />
     <Compile Include="Modeles\Message.cs" />
     <Compile Include="Modeles\PropositionADO.cs" />
     <Compile Include="Modeles\Transaction.cs" />

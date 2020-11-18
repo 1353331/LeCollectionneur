@@ -21,7 +21,7 @@ namespace LeCollectionneur.Vues
     /// <summary>
     /// Logique d'interaction pour ModalModifierAnnonce.xaml
     /// </summary>
-    public partial class ModalModifierAnnonce : Window, IFenetreFermeable, IOuvreModal, IOuvreModalAvecParametre<Item>
+    public partial class ModalModifierAnnonce : Window, IFenetreFermeable, IOuvreModalAvecParametre<IEnumerable<Item>>, IOuvreModalAvecParametre<Item>
     {
         private static readonly Regex _regexMontant = new Regex("[^0-9.]+");
         private static bool texteMontantCorrect(string texte)
@@ -53,14 +53,14 @@ namespace LeCollectionneur.Vues
             e.Handled = !texteMontantCorrect(e.Text);
         }
 
-        public void OuvrirModal()
-        {
-            ModalAjoutItemAnnonce viewProp = new ModalAjoutItemAnnonce();
-            viewProp.Owner = Window.GetWindow(this);
-            viewProp.ShowDialog();
-        }
+      public void OuvrirModal(IEnumerable<Item> itemsAjoutes)
+      {
+         ModalAjoutItemAnnonce viewProp = new ModalAjoutItemAnnonce(itemsAjoutes);
+         viewProp.Owner = Window.GetWindow(this);
+         viewProp.ShowDialog();
+      }
 
-        public void OuvrirModal(Item item)
+      public void OuvrirModal(Item item)
         {
             ModalDetailsItem viewProp = new ModalDetailsItem(item);
             viewProp.Owner = Window.GetWindow(this);

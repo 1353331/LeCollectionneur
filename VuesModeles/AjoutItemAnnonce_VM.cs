@@ -2,6 +2,7 @@
 using LeCollectionneur.Outils;
 using LeCollectionneur.Outils.Messages;
 using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
@@ -10,6 +11,23 @@ namespace LeCollectionneur.VuesModeles
 {
     class AjoutItemAnnonce_VM : INotifyPropertyChanged
     {
+
+        public List<Item> ItemsAjoutes { get; set; }
+        //Variables pour l'item sélectionné
+        private ItemAjout _itemSelectionne;
+        public ItemAjout ItemSelectionne
+        {
+            get { return _itemSelectionne; }
+            set
+            {
+                _itemSelectionne = value;
+                OnPropertyChanged("ItemSelectionne");
+
+                //Puisqu'il y a un item de sélectionné, alors on veut pouvoir exécuter la commande d'ajout d'un item
+                //cmdAjouter_Item = new Commande(cmdAjouter, UnItemSelectionne);
+            }
+        }
+
         const string AJOUTER_ITEMS = "Ajouter item(s)";
         const string AJOUTER_COLL = "Ajouter collection";
 
@@ -50,16 +68,29 @@ namespace LeCollectionneur.VuesModeles
             {
                 ItemsSelectionnes = null;
                 _collectionSelectionnee = value;
-                ItemsCollectionSelectionnee = _collectionSelectionnee.ItemsCollection;
-                cmdAjouter_Item = new Commande(cmdAjouterColl, UneCollSelectionnee);
+				
+               ItemsCollectionSelectionnee = ItemAjout.ModifierItemsEnItemsAjout(_collectionSelectionnee.ItemsCollection);
+               foreach (Item item in ItemsAjoutes)
+               {
+                  foreach (ItemAjout itemColl in ItemsCollectionSelectionnee)
+                  {
+                     if (item.Id == itemColl.Id)
+                     {
+                        itemColl.EstAjoute = true;
+                        break;
+                     }
+                  }
+               }
+               ItemsSelectionnes = ItemsCollectionSelectionnee;
+                cmdAjouter_Item = new Commande(cmdAjouterItems, UneCollSelectionnee);
                 ContentAjouter = AJOUTER_COLL;
                 OnPropertyChanged("CollectionSelectionnee");
             }
         }
 
         //Variable pour l'item collection sélectionné
-        private ObservableCollection<Item> _itemsCollectionSelectionnee;
-        public ObservableCollection<Item> ItemsCollectionSelectionnee
+        private ObservableCollection<ItemAjout> _itemsCollectionSelectionnee;
+        public ObservableCollection<ItemAjout> ItemsCollectionSelectionnee
         {
             get { return _itemsCollectionSelectionnee; }
             set
@@ -83,11 +114,12 @@ namespace LeCollectionneur.VuesModeles
         }
 
         //Constructeur
-        public AjoutItemAnnonce_VM()
+        public AjoutItemAnnonce_VM(IEnumerable<Item> items)
         {
             ContentAjouter = AJOUTER_ITEMS;
             cmdAjouter_Item = new Commande(cmdAjouterItems, UnItemSelectionne);
             lstCollections = new CollectionADO().Recuperer(UtilisateurADO.utilisateur.Id);
+            ItemsAjoutes = new List<Item>(items);
         }
 
         //Méthode pour savoir si un item est sélectionné ou non
@@ -120,12 +152,14 @@ namespace LeCollectionneur.VuesModeles
             //EvenementSysteme.Publier<EnvoyerItemMessage>(new EnvoyerItemMessage() { Item = ItemSelectionne });
             EnvoyerItemsMessage EIM = new EnvoyerItemsMessage();
             EvenementSysteme.Publier<EnvoyerItemsMessage>(new EnvoyerItemsMessage() { Items = EIM.ConvertirIListEnObservColl(ItemsSelectionnes) });
-        }
-
-        private void cmdAjouterColl(object param)
-        {
-            EvenementSysteme.Publier<EnvoyerItemsMessage>(new EnvoyerItemsMessage() { Items = CollectionSelectionnee.ItemsCollection });
-        }
+			   foreach (ItemAjout item in ItemsSelectionnes)
+			   {
+               item.EstAjoute = true;
+               ItemsAjoutes.Add(item);
+			   }
+            ItemsSelectionnes = null;
+            CollectionSelectionnee = CollectionSelectionnee;
+      }
 
         #region OnPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;

@@ -1,4 +1,5 @@
-﻿using LeCollectionneur.VuesModeles;
+﻿using LeCollectionneur.Modeles;
+using LeCollectionneur.VuesModeles;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,10 +23,10 @@ namespace LeCollectionneur.Vues
     /// </summary>
     public partial class ModalAjoutItemAnnonce : Window
     {
-        public ModalAjoutItemAnnonce()
+        public ModalAjoutItemAnnonce(IEnumerable<Item> itemsAjoutes)
         {
             InitializeComponent();
-            DataContext = new AjoutItemAnnonce_VM();
+            DataContext = new AjoutItemAnnonce_VM(itemsAjoutes);
         }
     }
 }
