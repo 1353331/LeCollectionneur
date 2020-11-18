@@ -49,7 +49,7 @@ namespace LeCollectionneur.VuesModeles
                 _collectionSelectionnee = value;
                 if (_collectionSelectionnee is null)
                     ItemSelectionne = null;
-               cmdSupprimerCollection=new Commande(cmdSupprimer_Collection,UneCollectionSelectionnee);
+               cmdSupprimerCollection=new Commande(cmdSupprimer_Collection,CollectionEstSupprimable);
                cmdModifierCollection=new Commande(cmdModifier_Collection,UneCollectionSelectionnee);
                 cmdToggleAjouterItem= new Commande(cmdToggleAjouter_Item,UneCollectionSelectionnee); 
                 cmdDeplacerItem= new Commande(cmdDeplacer_Item, ()=> { return MesCollections.Count > 1; });    
@@ -77,7 +77,7 @@ namespace LeCollectionneur.VuesModeles
                     RemplirChamps();
                     ChangerContexte();
                 }
-                cmdSupprimerItem = new Commande(cmdSupprimer_Item,UnItemSelectionne);
+                cmdSupprimerItem = new Commande(cmdSupprimer_Item,ItemEstSupprimable);
                  
                 cmdModifierItem = new Commande(cmdModifier_Item, UnItemSelectionne);
                 cmdAjouterImage = new Commande(cmdAjouter_Image, UnItemSelectionne);
@@ -560,10 +560,10 @@ namespace LeCollectionneur.VuesModeles
         {
             cmdAjouterCollection = new Commande(cmdAjouter_Collection,()=> { return true; });
             cmdModifierCollection = new Commande(cmdModifier_Collection, UneCollectionSelectionnee);
-            cmdSupprimerCollection = new Commande(cmdSupprimer_Collection, UneCollectionSelectionnee);
+            cmdSupprimerCollection = new Commande(cmdSupprimer_Collection, CollectionEstSupprimable);
             cmdToggleAjouterItem = new Commande(cmdToggleAjouter_Item, UneCollectionSelectionnee);
             cmdDeplacerItem = new Commande(cmdDeplacer_Item, ()=>{return MesCollections.Count > 1; });
-            cmdSupprimerItem = new Commande(cmdSupprimer_Item, UnItemSelectionne);
+            cmdSupprimerItem = new Commande(cmdSupprimer_Item, ItemEstSupprimable);
             cmdAjouterImage = new Commande(cmdAjouter_Image, UnItemSelectionne);
             initialisationEcran();
         }
@@ -593,6 +593,38 @@ namespace LeCollectionneur.VuesModeles
         public bool UneCollectionSelectionnee()
         {
             return !(CollectionSelectionnee is null);
+        }
+
+        public bool ItemEstSupprimable()
+        {
+            if (ItemSelectionne is null)
+            {
+                return false;
+            }
+            return (!gestionnaireItems.EstDansAnnonce(ItemSelectionne) && !gestionnaireItems.EstDansProposition(ItemSelectionne));    
+        }
+        public bool ItemParamEstSupprimable(Item item)
+        {
+            if (item is null)
+            {
+                return false;
+            }
+            return (!gestionnaireItems.EstDansAnnonce(item) && !gestionnaireItems.EstDansProposition(item));
+        }
+        public bool CollectionEstSupprimable()
+        {
+            if (CollectionSelectionnee is null)
+            {
+                return false;
+            }
+            foreach (Item item in CollectionSelectionnee.ItemsCollection)
+            {
+                if (!ItemParamEstSupprimable(item))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         public Item TrouverItem(Collection collectionAParcourir,Item itemRecherche)

@@ -6,29 +6,16 @@
              xmlns:local="clr-namespace:LeCollectionneur.Vues"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="1000">
-    <!-- Pour utiliser l'image de message comme un bouton et éviter que l'image disparaisse lors d'un MouseOver -->
-    <!--<UserControl.Resources>
-        <ImageBrush x:Key="btnMessageImage" ImageSource="/Images/Icones/message.png" Stretch="Uniform" />
-
-        <Style x:Key="btnMessageImageStyle" TargetType="{x:Type Button}">
-            <Setter Property="Background" Value="{StaticResource btnMessageImage}" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Border Background="{TemplateBinding Background}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{StaticResource btnMessageImage}" />
-                    
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-    </UserControl.Resources>-->
+    <!-- Ajout des images au ressources pour les utiliser dans les boutons.-->
+    <UserControl.Resources>
+        <Image x:Key="imgConversations" Source="/Images/Icones/message.png"></Image>
+        <Image x:Key="imgParametres" Source="/Images/Icones/parametres.png"></Image>
+        <Image x:Key="imgDeconnexion" Source="/Images/Icones/deconnexion.png"></Image>
+        <Image x:Key="imgTransaction" Source="/Images/Icones/transaction.png"></Image>
+        <Image x:Key="imgAnnonce" Source="/Images/Icones/annonce.png"></Image>
+        <Image x:Key="imgProposition" Source="/Images/Icones/proposition.png"></Image>
+        <Image x:Key="imgCollection" Source="/Images/Icones/collections.png"></Image>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="45"></RowDefinition>
@@ -45,13 +32,13 @@
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
-            <Button Name="btnCollections" Grid.Column="0" Click="btnCollections_Click" Content="Collections"></Button>
-            <Button Name="btnAnnonces" Grid.Column="1" Click="btnAnnonces_Click" Content="Annonces"></Button>
-            <Button Name="btnPropositions" Grid.Column="2" Click="btnPropositions_Click" Content="Propositions"></Button>
-            <Button Name="btnTransactions" Grid.Column="3" Click="btnTransactions_Click" Content="Transactions"></Button>
-            <Button Name="btnConversations" Grid.Column="4" Click="btnConversations_Click" Content="Conversations"></Button>
-            <Button Name="btnParametres" Grid.Column="5" Click="btnParametres_Click" Content="Paramètres"></Button>
-            <Button Name="btnDeconnexion" Grid.Column="6" Click="btnDeconnexion_Click" Content="Déconnexion"></Button>
+            <Button Name="btnCollections" Grid.Column="0" Click="btnCollections_Click" Content="{StaticResource imgCollection}" ToolTip="Collections"></Button>
+            <Button Name="btnAnnonces" Grid.Column="1" Click="btnAnnonces_Click" Content="{StaticResource imgAnnonce}" ToolTip="Annonces"></Button>
+            <Button Name="btnPropositions" Grid.Column="2" Click="btnPropositions_Click" Content="{StaticResource imgProposition}" ToolTip="Propositions"></Button>
+            <Button Name="btnTransactions" Grid.Column="3" Click="btnTransactions_Click" Content="{StaticResource imgTransaction}" ToolTip="Transactions"></Button>
+            <Button Name="btnConversations" Grid.Column="4" Click="btnConversations_Click" Content="{StaticResource imgConversations}" ToolTip="Conversations" ></Button>
+            <Button Name="btnParametres" Grid.Column="5" Click="btnParametres_Click" Content="{StaticResource imgParametres}" ToolTip="Paramètres du compte"></Button>
+            <Button Name="btnDeconnexion" Grid.Column="6" Click="btnDeconnexion_Click" Content="{StaticResource imgDeconnexion}" ToolTip="Déconnexion"></Button>
 
         </Grid>
 

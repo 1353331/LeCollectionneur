@@ -419,6 +419,22 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\Icones\deconnexion.png" />
+    <Resource Include="images\Icones\parametres.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\Icones\transaction.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\Icones\annonce.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\Icones\proposition.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\Icones\collections.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets" Condition="Exists('packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

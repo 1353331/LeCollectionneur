@@ -177,6 +177,32 @@ namespace LeCollectionneur.Modeles
             return lstTypes;
         }
         #endregion
-        
+
+        #region Méthodes
+
+        public bool EstDansAnnonce(Item item)
+        {
+            string requete = $"SELECT * FROM Itemannonce WHERE idItem = {item.Id}";
+            DataSet resultat=MaBD.Selection(requete);
+            if (resultat.Tables[0].Rows.Count > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+
+        public bool EstDansProposition(Item item)
+        {
+            string requete = $"SELECT * FROM ItemProposition WHERE idItem = {item.Id}";
+            DataSet resultat = MaBD.Selection(requete);
+            if (resultat.Tables[0].Rows.Count>0)
+            {
+                return true;
+            }
+            return false;
+        }
+        #endregion
+
     }
 }
