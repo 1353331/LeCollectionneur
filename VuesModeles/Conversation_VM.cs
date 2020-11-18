@@ -12,15 +12,51 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using LeCollectionneur.VuesModeles;
 using System.Threading;
+using LeCollectionneur.Vues;
 
 namespace LeCollectionneur.VuesModeles
 {
     class Conversation_VM : INotifyPropertyChanged
     {
+
+
+
         #region Propriétés
         int id;
         Thread thread;
         private bool stopThread = false;
+        public Boolean _cv ;
+        public Boolean cv
+        {
+            get { return _cv; }
+            set
+            {
+                _cv = value;
+                OnPropertyChanged("cv");
+            }
+        }
+
+        public static Modeles.Conversation conversationStatic { get; set; }
+
+        private int _idItem;
+        private int idItem
+        {
+            get { return _idItem; }
+            set
+            {
+                try
+                {
+
+                    _idItem = value;
+                }
+                catch
+                {
+                    
+                    _idItem = Convert.ToInt32(value);
+                }
+                OnPropertyChanged("idItem");
+            }
+        }
         private Utilisateur utlisateurASelection;
         private Utilisateur _utilisateur;
         public Utilisateur utilisateur
@@ -43,13 +79,14 @@ namespace LeCollectionneur.VuesModeles
                 OnPropertyChanged("messageContenu");
             }
         }
-        private Conversation _conversation;
-        public Conversation conversation
+        private Modeles.Conversation _conversation;
+        public Modeles.Conversation conversation
         {
             get { return _conversation; }
             set
             {
                 _conversation = value;
+                
                 OnPropertyChanged("conversation");
             }
         }
@@ -64,9 +101,9 @@ namespace LeCollectionneur.VuesModeles
             }
         }
 
-       
-        private ObservableCollection<Conversation> _mesConversation;
-        public ObservableCollection<Conversation> MesConversation
+
+        private ObservableCollection<Modeles.Conversation> _mesConversation;
+        public ObservableCollection<Modeles.Conversation> MesConversation
         {
             get { return _mesConversation; }
 
@@ -76,30 +113,32 @@ namespace LeCollectionneur.VuesModeles
                 OnPropertyChanged("MesConversation");
             }
         }
-        private Conversation _conversationSelectionne;
-        public Conversation ConversationSelectionne
+        private Modeles.Conversation _conversationSelectionne;
+        public Modeles.Conversation ConversationSelectionne
         {
-           
+
             get { return _conversationSelectionne; }
 
             set
             {
                 stopThread = true;
-                
+                cv = true;
                 _conversationSelectionne = value;
+                
                 if (_conversationSelectionne == null)
                     return;
-                
 
-                Conversation temp = _conversationSelectionne;
-                ConversationADO.Convo =temp;
+
+                Modeles.Conversation temp = _conversationSelectionne;
+                ConversationADO.Convo = temp;
                 id = _conversationSelectionne.Id;
-               
+
                 utilisateur = _conversationSelectionne.UserAutre;
                 utlisateurASelection = utilisateur;
                 listMessage = ConversationADO.chercherMessage(_conversationSelectionne.UserAutre.Id);
 
                 stopThread = false;
+                conversationStatic = _conversationSelectionne;
                 OnPropertyChanged("ConversationSelectionne");
             }
         }
@@ -107,7 +146,7 @@ namespace LeCollectionneur.VuesModeles
         public ObservableCollection<Message> listMessage
         {
             get { return _listMessage; }
-            set 
+            set
             {
                 _listMessage = value;
                 OnPropertyChanged("listMessage");
@@ -134,7 +173,7 @@ namespace LeCollectionneur.VuesModeles
             {
                 return _cmdEnvoyerMessage;
             }
-         
+
             set
             {
                 stopThread = true;
@@ -143,18 +182,64 @@ namespace LeCollectionneur.VuesModeles
                 OnPropertyChanged("cmdEnvoyerMessage");
             }
         }
+        private ICommand _cmdEnvoyerItem;
+        public ICommand cmdEnvoyerItem
+        {
+            get
+            {
+                return _cmdEnvoyerItem;
+            }
 
+            set
+            {
+                stopThread = true;
+                _cmdEnvoyerItem = value;
+                stopThread = false;
+                OnPropertyChanged("cmdEnvoyerMessage");
+            }
+        }
+        private ICommand _cmdAfficher;
+        public ICommand cmdAfficher
+        {
+            get
+            {
+                return _cmdAfficher;
+            }
+
+            set
+            {
+                stopThread = true;
+                _cmdAfficher = value;
+                stopThread = false;
+                OnPropertyChanged("cmdAfficher");
+            }
+        }
+        private void cmdAfficher_Afficher(object param)
+        {
+            MessageBox.Show("e");
+        }
+        private void cmdEnvoyerMessage_Item(object param)
+        {
+            stopThread = true;
+
+            //Ouvrir Fenetre 
+            ModalEnvoyerItemConversation temp = new ModalEnvoyerItemConversation();
+            temp.ShowDialog();
+
+            stopThread = false;
+            OnPropertyChanged("cmdEnvoyerMessage_Message");
+        }
         private void cmdEnvoyerMessage_Message(object param)
         {
             stopThread = true;
 
-            if (messageContenu == "" || messageContenu==null || ConversationSelectionne ==null)
+            if (messageContenu == "" || messageContenu == null || ConversationSelectionne == null)
             {
-               
+
                 return;
             }
             ConversationSelectionne.lastMessage = messageContenu;
-            conversationADO.EnvoyerMessage(messageContenu,id);
+            conversationADO.EnvoyerMessage(messageContenu, id);
             messageContenu = "";
             listMessage = ConversationADO.chercherMessage(_conversationSelectionne.UserAutre.Id);
             stopThread = false;
@@ -179,9 +264,9 @@ namespace LeCollectionneur.VuesModeles
         {
             stopThread = true;
 
-             LeCollectionneur.Vues.ajouterConversation ajouterConversation = new LeCollectionneur.Vues.ajouterConversation();
+            LeCollectionneur.Vues.ajouterConversation ajouterConversation = new LeCollectionneur.Vues.ajouterConversation();
             ajouterConversation.ShowDialog();
-
+            
             GetConversations();
             stopThread = false;
             OnPropertyChanged("MesConversation");
@@ -191,11 +276,15 @@ namespace LeCollectionneur.VuesModeles
         #region Constructeur
         public Conversation_VM()
         {
+            cmdAfficher = new Commande(cmdAfficher_Afficher);
+            
             cmdEnvoyerMessage = new Commande(cmdEnvoyerMessage_Message);
             cmdAjouterConversation = new Commande(cmdAjouter_Conversation);
+            cmdEnvoyerItem = new Commande(cmdEnvoyerMessage_Item);
             GetConversations();
             thread = new Thread(RefreshMessage);
             thread.Name = "Fillon Principal";
+            stopThread = false;
             thread.Start();
         }
         ~Conversation_VM()
@@ -210,53 +299,60 @@ namespace LeCollectionneur.VuesModeles
 
         private void RefreshMessage()
         {
-            while(!stopThread)
+            while (true)
             {
-                if(_conversationSelectionne !=null)
+                if (_conversationSelectionne != null && !stopThread)
                 {
+
                     listMessage = ConversationADO.chercherMessage(_conversationSelectionne.UserAutre.Id);
                     OnPropertyChanged("listMessage");
+
                 }
 
-            
+
                 Thread.Sleep(2000);
             }
         }
         public void EnvoyerMessage(Message message)
         {
+
             stopThread = true;
-            conversationADO.EnvoyerMessage(message.Contenu,id);
+            conversationADO.EnvoyerMessage(message.Contenu, id);
             stopThread = false;
         }
         private void GetConversations()
         {
             stopThread = true;
-            MesConversation = new ObservableCollection<Conversation>();
-            
+            MesConversation = new ObservableCollection<Modeles.Conversation>();
+
             ConversationADO conversationADO = new ConversationADO();
 
             var temp = conversationADO.RecupererConversationUtilisateur();
-            foreach(var d in temp)
+            foreach (var d in temp)
             {
                 try
                 {
-                    d.lastMessage = conversationADO.GetMessages(d.Id)[conversationADO.GetMessages(d.Id).Count()-1].Contenu;
+                    d.lastMessage = conversationADO.GetMessages(d.Id)[conversationADO.GetMessages(d.Id).Count() - 1].Contenu;
                     d.date = conversationADO.GetMessages(d.Id)[conversationADO.GetMessages(d.Id).Count() - 1].Date;
 
                     MesConversation.Add(d);
                 }
                 catch
                 {
-                   
+
                     d.lastMessage = "";
                     d.date = null;
-                    
+
                     MesConversation.Add(d);
                 }
             }
             stopThread = false;
             OnPropertyChanged("MesConversation");
 
+        }
+        private bool UneConversationSelectionne()
+        {
+            return !(ConversationSelectionne is null);
         }
         #endregion
     }

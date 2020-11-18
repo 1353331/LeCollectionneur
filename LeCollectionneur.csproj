@@ -178,6 +178,7 @@
     <Compile Include="Outils\Validateur.cs" />
     <Compile Include="VuesModeles\AjoutCollection_VM.cs" />
     <Compile Include="VuesModeles\AjoutItemAnnonce_VM.cs" />
+    <Compile Include="VuesModeles\AjoutItemDansConversation.cs" />
     <Compile Include="VuesModeles\Annonce_VM.cs" />
     <Compile Include="VuesModeles\Collection_VM.cs" />
     <Compile Include="VuesModeles\ContexteAdmin\AnnonceAdmin_VM.cs" />
@@ -198,6 +199,9 @@
     </Compile>
     <Compile Include="Vues\Conversation.xaml.cs">
       <DependentUpon>Conversation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vues\ModalEnvoyerItemConversation.xaml.cs">
+      <DependentUpon>ModalEnvoyerItemConversation.xaml</DependentUpon>
     </Compile>
     <Compile Include="Vues\ModalEnvoyerMessage.xaml.cs">
       <DependentUpon>ModalEnvoyerMessage.xaml</DependentUpon>
@@ -282,6 +286,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Vues\Conversation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Vues\ModalEnvoyerItemConversation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -419,6 +427,22 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\Icones\deconnexion.png" />
+    <Resource Include="images\Icones\parametres.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\Icones\transaction.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\Icones\annonce.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\Icones\proposition.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\Icones\collections.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets" Condition="Exists('packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets')" />
