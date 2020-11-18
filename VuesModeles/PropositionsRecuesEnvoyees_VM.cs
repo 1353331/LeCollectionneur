@@ -202,6 +202,7 @@ namespace LeCollectionneur.VuesModeles
 				//On modifie la propriété sélectionnée en BD, puis on reload les propositions reçues
 				Transaction nouvelleTransaction = new Transaction(PropositionSelectionnee);
 				nouvelleTransaction.EffectuerTransaction();
+				MessageBox.Show($"La transaction a été effectuée. Vous pouvez retrouver vos nouveaux items dans la nouvelle collection \"{PropositionSelectionnee.AnnonceLiee.Type}: {PropositionSelectionnee.AnnonceLiee.Titre}\"", "Échange réussie", MessageBoxButton.OK, MessageBoxImage.Information);
 
 				PropositionsAffichees = propADO.RecupererPropositionsRecues(UtilisateurADO.utilisateur.Id);
 			}

@@ -12,9 +12,9 @@ namespace LeCollectionneur.VuesModeles
     class AjoutItemAnnonce_VM : INotifyPropertyChanged
     {
 
-      public List<Item> ItemsAjoutes { get; set; }
-      //Variables pour l'item sélectionné
-      private ItemAjout _itemSelectionne;
+        public List<Item> ItemsAjoutes { get; set; }
+        //Variables pour l'item sélectionné
+        private ItemAjout _itemSelectionne;
         public ItemAjout ItemSelectionne
         {
             get { return _itemSelectionne; }
@@ -30,7 +30,6 @@ namespace LeCollectionneur.VuesModeles
 
         const string AJOUTER_ITEMS = "Ajouter item(s)";
         const string AJOUTER_COLL = "Ajouter collection";
-
 
         //Les items sélectionnés dans la liste des items de la nouvelle annonce
         private IList _itemsSelectionnes;
@@ -70,7 +69,7 @@ namespace LeCollectionneur.VuesModeles
                 ItemsSelectionnes = null;
                 _collectionSelectionnee = value;
 				
-                ItemsCollectionSelectionnee = ItemAjout.ModifierItemsEnItemsAjout(_collectionSelectionnee.ItemsCollection);
+               ItemsCollectionSelectionnee = ItemAjout.ModifierItemsEnItemsAjout(_collectionSelectionnee.ItemsCollection);
                foreach (Item item in ItemsAjoutes)
                {
                   foreach (ItemAjout itemColl in ItemsCollectionSelectionnee)
@@ -82,8 +81,8 @@ namespace LeCollectionneur.VuesModeles
                      }
                   }
                }
-			   
-                cmdAjouter_Item = new Commande(cmdAjouterColl, UneCollSelectionnee);
+               ItemsSelectionnes = ItemsCollectionSelectionnee;
+                cmdAjouter_Item = new Commande(cmdAjouterItems, UneCollSelectionnee);
                 ContentAjouter = AJOUTER_COLL;
                 OnPropertyChanged("CollectionSelectionnee");
             }
@@ -161,11 +160,6 @@ namespace LeCollectionneur.VuesModeles
             ItemsSelectionnes = null;
             CollectionSelectionnee = CollectionSelectionnee;
       }
-
-        private void cmdAjouterColl(object param)
-        {
-            EvenementSysteme.Publier<EnvoyerItemsMessage>(new EnvoyerItemsMessage() { Items = CollectionSelectionnee.ItemsCollection });
-        }
 
         #region OnPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;

@@ -51,7 +51,7 @@ namespace LeCollectionneur.Vues
 
 		public void OuvrirModal(IEnumerable<Item> itemsAjoutes)
 		{
-			ModalAjoutItemProposition viewProp = new ModalAjoutItemProposition(itemsAjoutes);
+			ModalAjoutItemAnnonce viewProp = new ModalAjoutItemAnnonce(itemsAjoutes);
 			viewProp.Owner = Window.GetWindow(this);
 			viewProp.ShowDialog();
 		}

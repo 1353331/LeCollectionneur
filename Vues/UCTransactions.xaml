@@ -41,7 +41,7 @@
         </Grid.ColumnDefinitions>
 
         <!-- Listes Reçues/Envoyées -->
-        <DockPanel LastChildFill="True" Grid.Row="1">
+        <DockPanel LastChildFill="True" Grid.Row="1" Margin="5,10,5,10">
             <TextBlock Text="Mes Transactions" FontWeight="DemiBold" DockPanel.Dock="Top" TextAlignment="Center" />
 
             <DataGrid Name="dgPropositions" ItemsSource="{Binding TransactionsAffichees}" SelectedItem="{Binding TransactionSelectionnee}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" IsReadOnly="True" Margin="7,10,0,0">
@@ -52,7 +52,7 @@
             </DataGrid>
         </DockPanel>
         <!-- Section détails -->
-        <GroupBox Header="Détails" Grid.Row="1" Margin="10,0,10,10" Grid.Column="1" BorderBrush="Black" FontWeight="Bold">
+        <GroupBox Header="Détails" Grid.Row="1" Margin="10,10,10,10" Grid.Column="1" BorderBrush="Black" FontWeight="Bold">
             <!-- Grille interne des détails -->
             <Grid Margin="5">
                 <Grid.RowDefinitions>
