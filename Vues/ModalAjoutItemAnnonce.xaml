@@ -30,11 +30,21 @@
 
         </ListView>
 
-        <local2:CustomDataGrid Grid.Column="1" SelectionMode="Extended" SelectedItem="{Binding ItemSelectionne}"  ItemsSource="{Binding ItemsCollectionSelectionnee}" SelectedItemsList="{Binding ItemsSelectionnes, Mode=TwoWay}"  Grid.RowSpan="3" Margin="10" SelectionUnit="FullRow" IsReadOnly="True" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False">
+        <local2:CustomDataGrid Grid.Column="1" SelectionMode="Extended" SelectedItem="{Binding ItemSelectionne}"  ItemsSource="{Binding ItemsCollectionSelectionnee}" SelectedItemsList="{Binding ItemsSelectionnes, Mode=TwoWay}"  Grid.RowSpan="3" Margin="10" SelectionUnit="FullRow" IsReadOnly="True" HorizontalScrollBarVisibility="Visible" AutoGenerateColumns="False">
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding EstAjoute}" Value="true">
+                            <Setter Property="Background" Value="DarkGray"></Setter>
+                            <Setter Property="Foreground" Value="Black"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
             <local2:CustomDataGrid.Columns>
-                <DataGridTextColumn Header="Nom" Binding="{Binding Nom}" Width="Auto" />
-                <DataGridTextColumn Header="Type" Binding="{Binding Type}"  Width="Auto"  />
-                <DataGridTextColumn Header="Condition" Binding="{Binding Condition}"  Width="Auto"  />
+                <DataGridTextColumn Header="Nom" Binding="{Binding Nom}" Width="1.5*" />
+                <DataGridTextColumn Header="Type" Binding="{Binding Type}"  Width="*"  />
+                <DataGridTextColumn Header="Condition" Binding="{Binding Condition}"  Width="*"  />
             </local2:CustomDataGrid.Columns>
         </local2:CustomDataGrid>
 

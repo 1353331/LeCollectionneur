@@ -111,7 +111,7 @@ namespace LeCollectionneur.VuesModeles
 			TitreEncadreProposition = $"Proposition sur {annonce.Titre}";
 
 			//Abonnement à l'évènement Ajout d'un item à une proposition
-			EvenementSysteme.Abonnement<EnvoyerItemMessage>(ajouterItemMessage);
+			EvenementSysteme.Abonnement<EnvoyerItemsMessage>(ajouterItemsMessage);
 		}
 
 		#region Implémentation Commandes
@@ -161,8 +161,8 @@ namespace LeCollectionneur.VuesModeles
 
 		private void cmdAjouterItem(object param)
 		{
-			IOuvreModal fenetre = param as IOuvreModal;
-			fenetre.OuvrirModal();
+			IOuvreModalAvecParametre<IEnumerable<Item>> fenetre = param as IOuvreModalAvecParametre<IEnumerable<Item>>;
+			fenetre.OuvrirModal(ItemsProposition);
 		}
 
 		private void cmdSupprimerItem(object param)
@@ -187,7 +187,7 @@ namespace LeCollectionneur.VuesModeles
 
 		public void cmdFermer(object sender, CancelEventArgs e)
 		{
-			EvenementSysteme.Desabonnement<EnvoyerItemMessage>(ajouterItemMessage);
+			EvenementSysteme.Desabonnement<EnvoyerItemsMessage>(ajouterItemsMessage);
 		}
 
 		#endregion
@@ -210,19 +210,35 @@ namespace LeCollectionneur.VuesModeles
 			return false;
 		}
 
-		private void ajouterItemMessage(EnvoyerItemMessage msg)
+		private void ajouterItemsMessage(EnvoyerItemsMessage msg)
 		{
-			if (!itemEstDansProposition(msg.Item))
+			ObservableCollection<Item> itemsProp = ItemsProposition;
+			List<string> itemsAjoutes = new List<string>();
+			List<string> itemsDejaPresents = new List<string>();
+			foreach (Item i in msg.Items)
 			{
-				ObservableCollection<Item> itemsProp = ItemsProposition;
-				itemsProp.Add(msg.Item);
-				ItemsProposition = itemsProp;
-				MessageBox.Show($"Vous avez ajouté l'item {msg.Item.Nom}", "Ajout réussi", MessageBoxButton.OK, MessageBoxImage.Information);
+				//Si l'item n'est pas déjà présent dans la liste d'item, alors on l'ajoute à la liste, sinon on affiche le message d'erreur
+				if (!itemEstDansProposition(i))
+				{
+					itemsProp.Add(i);
+					itemsAjoutes.Add(i.Nom);
+				}
+				else
+				{
+					itemsDejaPresents.Add(i.Nom);
+				}
 			}
-			else
+
+			if (itemsDejaPresents.Any())
 			{
-				MessageBox.Show($"Cet objet existe déjà dans la proposition.", "Attention", MessageBoxButton.OK, MessageBoxImage.Warning);
+				MessageBox.Show($"Les items \"{String.Join(", ", itemsDejaPresents)}\" existent déjà dans la proposition.", "Attention", MessageBoxButton.OK, MessageBoxImage.Warning);
 			}
+			if (itemsAjoutes.Any())
+			{
+				MessageBox.Show($"Vous avez ajouté les items \"{String.Join(", ", itemsAjoutes)}\"", "Ajout réussi", MessageBoxButton.OK, MessageBoxImage.Information);
+			}
+			
+			ItemsProposition = itemsProp;
 		}
 
 		public event PropertyChangedEventHandler PropertyChanged;

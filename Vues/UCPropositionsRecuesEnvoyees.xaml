@@ -45,9 +45,9 @@
         </Grid.ColumnDefinitions>
 
            <!-- RadioButton propositions -->
-        <StackPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center">
-            <RadioButton Name="radPropositionsRecues" Content="Reçues" IsChecked="True" Checked="radPropositionsRecues_Checked" Command="{Binding cmdPropositionsRecues}"></RadioButton>
-            <RadioButton Name="radPropositionsEnvoyees" Content="Envoyées" Checked="radPropositionsEnvoyees_Checked" Command="{Binding cmdPropositionsEnvoyees}"></RadioButton>
+        <StackPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10">
+            <RadioButton Padding="5" Name="radPropositionsRecues" Content="Reçues" IsChecked="True" Checked="radPropositionsRecues_Checked" Command="{Binding cmdPropositionsRecues}"></RadioButton>
+            <RadioButton Padding="5" Name="radPropositionsEnvoyees" Content="Envoyées" Checked="radPropositionsEnvoyees_Checked" Command="{Binding cmdPropositionsEnvoyees}"></RadioButton>
         </StackPanel>
 
         <!-- Listes Reçues/Envoyées -->
