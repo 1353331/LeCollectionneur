@@ -3,6 +3,7 @@ using LeCollectionneur.Outils;
 using LeCollectionneur.Vues;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,20 +22,26 @@ namespace LeCollectionneur
 	/// <summary>
 	/// Logique d'interaction pour MainWindow.xaml
 	/// </summary>
-	public partial class MainWindow : Window
+	public partial class MainWindow : Window , INotifyPropertyChanged
 	{
-        public MainWindow()
+		private string _nomUtilisateur;
+		public string NomUtilisateur
+		{
+			get { return _nomUtilisateur; }
+			set { _nomUtilisateur = value; OnPropertyChanged("NomUtilisateur"); }
+		}
+		public MainWindow()
 		{
 			InitializeComponent();
 			BdBase MaBD = new BdBase();
 			Window login = new Login();
-			
-			login.ShowDialog();
+			DataContext = this;
+		login.ShowDialog();
 			if (UtilisateurADO.utilisateur != null)
 				if (!UtilisateurADO.admin)
 				{
 					
-					this.Title = "Collectionneur - " + UtilisateurADO.utilisateur.NomUtilisateur;
+					NomUtilisateur = $"Le Collectionneur - { UtilisateurADO.utilisateur.NomUtilisateur}";
 					presenteurContenu.Content = new UCContexteUtilisateur();
 				}
 				else
@@ -42,8 +49,17 @@ namespace LeCollectionneur
 			else
 				this.Close();
 		}
-		
 
-		
+
+
+		#region PropertyChanged
+		public event PropertyChangedEventHandler PropertyChanged;
+		private void OnPropertyChanged(string nomPropriete)
+		{
+			if (PropertyChanged != null)
+				PropertyChanged(this, new PropertyChangedEventArgs(nomPropriete));
+		}
+		#endregion
+
 	}
 }
