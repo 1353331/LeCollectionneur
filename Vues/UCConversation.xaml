@@ -31,7 +31,7 @@
                                Text="{Binding Contenu}"/>
                     <TextBlock Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Stretch"
                                FontSize="10" Opacity="0.8"
-                               Text="{Binding Date, StringFormat={}{0:HH':'mm':'ss dd-MM-yyyy}}"/>
+                               Text="{Binding Date, StringFormat={}{0:yyyy-MM-dd HH':'mm':'ss}}"/>
                     <Button Content="Voir Item"  HorizontalAlignment="Right" VerticalAlignment="Stretch" Visibility="Hidden" Name="btnVoir" Click="btnVoir_Click" Tag="{Binding Contenu}" Height="30" Width="130"></Button>
                     
                 </Grid>
@@ -98,7 +98,7 @@
                     <GridView.Columns>
                         <GridViewColumn Header="Utilisateur" DisplayMemberBinding="{Binding NomUserAutre}"  />
                         <GridViewColumn Header="Dernier Message" DisplayMemberBinding="{Binding lastMessage}"/>
-                        <GridViewColumn Header="Date DernierMessage" DisplayMemberBinding="{Binding date,StringFormat='{}{0:MM/dd/yyyy}',FallbackValue=''}"/>
+                        <GridViewColumn Header="Date DernierMessage" DisplayMemberBinding="{Binding date,StringFormat='{}{0:yyyy-MM-dd}',FallbackValue=''}"/>
 
 
                     </GridView.Columns>
