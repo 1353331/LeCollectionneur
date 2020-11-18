@@ -18,7 +18,13 @@ namespace LeCollectionneur.Modeles
             set { }
         }
         //Variable pour savoir si l'utilisateur est Utilisateur1 en Bd
-
+        public static void EnvoyerMessageStatic(Message message,Conversation convo)
+        {
+            //"INSERT INTO `messages` (`Date`, `Message`, `IdConversation`, `IdUtilisateur`) VALUES ( '" + message.Date.ToString("yyyy-MM-dd hh:mm:ss")+"', '"+message.Contenu+"', '"+Convo.Id+"', '"+message.idUtilisateur+"');";
+            string req = "INSERT INTO `messages` (`Date`,`Message`,`idConversation`,`item`,`image`,`emoji`,`idUtilisateur`) " +
+                "VALUES('"+DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss") + "' , '"+message.Contenu+"',"+convo.Id+","+true+","+false+","+false+","+UtilisateurADO.utilisateur.Id+");";
+            BD.Commande(req);
+        }
         public ConversationADO()
         {
             
@@ -131,7 +137,7 @@ namespace LeCollectionneur.Modeles
         public void EnvoyerMessage(string Contenu)
         {
             Message message = new Message(Contenu, UtilisateurADO.utilisateur);
-            string req = "INSERT INTO `messages` (`Date`, `Message`, `IdConversation`, `IdUtilisateur`) VALUES ( '"+message.Date.ToString("yyyy-MM-dd hh:mm:ss")+"', '"+message.Contenu+"', '"+Convo.Id+"', '"+message.idUtilisateur+"');";
+            string req = "INSERT INTO `messages` (`Date`, `Message`, `IdConversation`, `IdUtilisateur`) VALUES ( '" + message.Date.ToString("yyyy-MM-dd hh:mm:ss")+"', '"+message.Contenu+"', '"+Convo.Id+"', '"+message.idUtilisateur+"');";
             BD.Commande(req);
             GetMessages();
         }

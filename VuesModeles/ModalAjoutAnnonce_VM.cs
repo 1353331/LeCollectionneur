@@ -221,8 +221,8 @@ namespace LeCollectionneur.VuesModeles
         private void cmdAjouterItem(object param)
         {
             //On ouvre la fenêtre d'ajout d'items
-            IOuvreModal fenetre = param as IOuvreModal;
-            fenetre.OuvrirModal();
+            IOuvreModalAvecParametre<IEnumerable<Item>> fenetre = param as IOuvreModalAvecParametre<IEnumerable<Item>>;
+            fenetre.OuvrirModal(LesItems);
 
             //On met à jour la commande d'ajout d'annonce pour vérifier si elle est exécutable
             cmdAjouter_Annonce = new Commande(cmdAjouter, champsRemplis);
@@ -239,39 +239,31 @@ namespace LeCollectionneur.VuesModeles
             return false;
         }
 
-        //Méthode d'ajout d'item dans la liste d'item de la nouvelle annonce
-        private void ajouterItemMessage(EnvoyerItemMessage msg)
-        {
-            //Si l'item n'est pas déjà présent dans la liste d'item, alors on l'ajoute à la liste, sinon on affiche le message d'erreur
-            if (!itemEstDansProposition(msg.Item))
-            {
-                LesItems.Add(msg.Item);
-                MessageBox.Show($"Vous avez ajouté l'item {msg.Item.Nom}", "Ajout réussi", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-            else
-            {
-                MessageBox.Show($"Cet objet existe déjà dans l'annonce.", "Attention", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
-
-            //On met à jour la commande d'ajout d'annonce pour vérifier si elle est exécutable
-            cmdAjouter_Annonce = new Commande(cmdAjouter, champsRemplis);
-            cmdSupprimerItem_Annonce = new Commande(cmdSupprimerItem, presenceItem);
-        }
-
         private void ajouterItemsMessage(EnvoyerItemsMessage msg)
         {
+            List<string> itemsAjoutes = new List<string>();
+            List<string> itemsDejaPresents = new List<string>();
             foreach (Item i in msg.Items)
             {
                 //Si l'item n'est pas déjà présent dans la liste d'item, alors on l'ajoute à la liste, sinon on affiche le message d'erreur
                 if (!itemEstDansProposition(i))
                 {
                     LesItems.Add(i);
-                    MessageBox.Show($"Vous avez ajouté l'item {i.Nom}", "Ajout réussi", MessageBoxButton.OK, MessageBoxImage.Information);
+                    itemsAjoutes.Add(i.Nom);
                 }
                 else
                 {
-                    MessageBox.Show($"L'objet {i.Nom} existe déjà dans l'annonce.", "Attention", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    itemsDejaPresents.Add(i.Nom);
                 }
+            }
+
+            if (itemsDejaPresents.Any())
+            {
+               MessageBox.Show($"Les items \"{String.Join(", ", itemsDejaPresents)}\" existent déjà dans l'annonce.", "Attention", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+            if (itemsAjoutes.Any())
+            {
+               MessageBox.Show($"Vous avez ajouté les items \"{String.Join(", ", itemsAjoutes)}\"", "Ajout réussi", MessageBoxButton.OK, MessageBoxImage.Information);
             }
 
             //On met à jour la commande d'ajout d'annonce pour vérifier si elle est exécutable

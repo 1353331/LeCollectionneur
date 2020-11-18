@@ -37,7 +37,13 @@ namespace LeCollectionneur.Vues
             
         }
 
-       
-       
+        private void btnVoir_Click(object sender, RoutedEventArgs e)
+        {
+            var myValue = ((Button)sender).Tag;
+            ItemADO item = new ItemADO();
+            Item temp=item.RecupererUn( Convert.ToInt32(myValue));
+            var t = new ModalDetailsItem(temp);
+            t.Show();
+        }
     }
 }

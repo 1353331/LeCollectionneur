@@ -11,20 +11,19 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using LeCollectionneur.Modeles;
 using LeCollectionneur.VuesModeles;
-
 namespace LeCollectionneur.Vues
 {
-	/// <summary>
-	/// Logique d'interaction pour ModalAjoutItemProposition.xaml
-	/// </summary>
-	public partial class ModalAjoutItemProposition : Window
-	{
-		public ModalAjoutItemProposition(IEnumerable<Item> itemsAjoutes)
-		{
-			InitializeComponent();
-			DataContext = new ModalAjoutItem_VM(itemsAjoutes);
-		}
-	}
+    /// <summary>
+    /// Logique d'interaction pour ModalEnvoyerItemConversation.xaml
+    /// </summary>
+    public partial class ModalEnvoyerItemConversation : Window
+    {
+        public ModalEnvoyerItemConversation()
+        {
+            InitializeComponent();
+            
+            DataContext = new AjoutItemDansConversation();
+        }
+    }
 }
