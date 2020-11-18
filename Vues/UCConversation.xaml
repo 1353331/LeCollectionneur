@@ -25,21 +25,33 @@
                         <Border x:Name="ClipBorder" CornerRadius="3" Background="White"/>
                        
                     </Grid>
+                    
                     <TextBlock x:Name="MessageTxtBlock" Grid.Row="1" Margin="7,5,7,0" TextWrapping="Wrap" 
                                VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
                                Text="{Binding Contenu}"/>
                     <TextBlock Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Stretch"
                                FontSize="10" Opacity="0.8"
                                Text="{Binding Date, StringFormat={}{0:HH':'mm':'ss dd-MM-yyyy}}"/>
+                    <Button Content="Voir Item"  HorizontalAlignment="Right" VerticalAlignment="Stretch" Visibility="Hidden" Name="btnVoir" Click="btnVoir_Click" Tag="{Binding Contenu}" Height="30" Width="130"></Button>
+                    
                 </Grid>
             </Border>
             <DataTemplate.Triggers>
+
+                
                 <DataTrigger Binding="{Binding envoyuseractif}" Value="True">
+                    
                     <Setter TargetName="MessageBorder" Property="HorizontalAlignment" Value="Right"/>
                     <Setter TargetName="MessageBorder" Property="Margin" Value="60,0,10,10"/>
                     <Setter TargetName="MessageBorder" Property="Background" Value="#BBDEFB"/>
                     <Setter TargetName="MessageBorder" Property="BorderBrush" Value="#64B5F6"/>
                 </DataTrigger>
+                <DataTrigger Binding="{Binding item}" Value="True">
+                    <Setter TargetName="MessageBorder" Property="BorderBrush" Value="#64B510"/>
+                    <Setter TargetName="MessageTxtBlock" Property="Text" Value=""/>
+                    <Setter  TargetName="btnVoir" Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+                
                 <DataTrigger Binding="{Binding Picture}" Value="{x:Null}">
                     <Setter TargetName="ImageMessageGrid" Property="Visibility" Value="Collapsed"/>
                 </DataTrigger>
@@ -100,7 +112,7 @@
 
         <GroupBox Grid.Row="3" Grid.Column="1" Header="Contenu message" FontWeight="Bold" Grid.RowSpan="3">
             <Grid>
-                <TextBox AcceptsReturn="True" IsReadOnly="{Binding AUneSelection}" Name="txbMessage" Text="{Binding messageContenu}" Margin="23,15,22,15"/>
+                <TextBox IsEnabled="{Binding cv}" AcceptsReturn="True" IsReadOnly="{Binding AUneSelection}" Name="txbMessage" Text="{Binding messageContenu}" Margin="23,15,22,15"/>
             </Grid>
         </GroupBox>
 
@@ -110,11 +122,11 @@
                     <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
-                <Button IsEnabled="{Binding AUneSelection}" Command="{Binding cmdEnvoyerMessage}" Content="Envoyer" Name="btnEnvoyer" Grid.Row="0" Height="30" Width="130" />
-                <Button IsEnabled="{Binding AUneSelection}" Content="Envoyer Objet" Height="30" Grid.Row="1" Width="130"/>
+                <Button IsEnabled="{Binding cv}" Command="{Binding cmdEnvoyerMessage}" Content="Envoyer" Name="btnEnvoyer" Grid.Row="0" Height="30" Width="130" />
+                <Button IsEnabled="{Binding cv}" Command="{Binding cmdEnvoyerItem}" Content="Envoyer Objet" Height="30" Grid.Row="1" Width="130"/>
             </Grid>
         </GroupBox>
-        
+                
         <!--<TextBox Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" IsReadOnly="True"/>-->
         <ItemsControl Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2"
                       ItemsSource="{Binding listMessage}"

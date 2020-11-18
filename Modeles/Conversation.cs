@@ -11,7 +11,6 @@ namespace LeCollectionneur.Modeles
     class Conversation
     {
         #region  Variable
-        
         public int Id { get; set; }
         public Utilisateur UserActif;
         public Utilisateur UserAutre;
@@ -20,6 +19,8 @@ namespace LeCollectionneur.Modeles
         public string NomUserAutre { get; set; }
         public string lastMessage { get; set; }
         public DateTime? date { get; set; }
+        
+
         #endregion
 
         #region Constructeur
@@ -37,6 +38,8 @@ namespace LeCollectionneur.Modeles
         //Constructeur avec DataSet
         public Conversation(DataSet data)
         {
+            
+
             this.Id = (int)data.Tables[0].Rows[0]["id"];
             if((int)data.Tables[0].Rows[0]["IdUtilisateur1"] == UtilisateurADO.utilisateur.Id)
             {
@@ -114,6 +117,11 @@ namespace LeCollectionneur.Modeles
                 return ListMessage[ListMessage.Count() - 1];
         }
         
+        private void reset()
+        {
+           
+
+        }
         #endregion
     }
 }
