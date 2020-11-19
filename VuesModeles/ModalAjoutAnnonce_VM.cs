@@ -88,6 +88,26 @@ namespace LeCollectionneur.VuesModeles
             }
         }
 
+        private bool _typeAnnonce;
+        public bool TypeAnnonce
+        {
+            get { return _typeAnnonce; }
+            set
+            {
+                _typeAnnonce = value;
+                if (_typeAnnonce)
+                {
+                    Type = LesTypesAnnonce[0];
+                }
+                else
+                {
+                    Type = LesTypesAnnonce[1];
+                }
+                cmdAjouter_Annonce = new Commande(cmdAjouter, champsRemplis);
+                OnPropertyChanged("TypeAnnonce");
+            }
+        }
+
         //Le type de la nouvelle annonce
         private string _type;
         public string Type
@@ -182,6 +202,7 @@ namespace LeCollectionneur.VuesModeles
 
             //On va récupérer les types d'annonce possibles
             LesTypesAnnonce = annonceADO.RecupererTypes();
+            TypeAnnonce = false;
 
             LesItems = new ObservableCollection<Item>();
             Montant = 0;
