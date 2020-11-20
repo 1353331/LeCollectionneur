@@ -87,6 +87,26 @@ namespace LeCollectionneur.VuesModeles
             }
         }
 
+        private bool _typeAnnonce;
+        public bool TypeAnnonce
+        {
+            get { return _typeAnnonce; }
+            set
+            {
+                _typeAnnonce = value;
+                if (_typeAnnonce)
+                {
+                    Type = LesTypesAnnonce[0];
+                }
+                else
+                {
+                    Type = LesTypesAnnonce[1];
+                }
+                cmdModifier_Annonce = new Commande(cmdModifier, champsRemplis); 
+                OnPropertyChanged("TypeAnnonce");
+            }
+        }
+
         //Le type de la nouvelle annonce
         private string _type;
         public string Type
@@ -192,6 +212,14 @@ namespace LeCollectionneur.VuesModeles
 
             Titre = AnnonceAMod.Titre;
             Type = AnnonceAMod.Type;
+            if(Type == "Vente")
+            {
+                TypeAnnonce = false;
+            }
+            else
+            {
+                TypeAnnonce = true;
+            }
             Description = AnnonceAMod.Description;
             Montant = AnnonceAMod.Montant;
         }

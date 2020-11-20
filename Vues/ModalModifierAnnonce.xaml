@@ -28,9 +28,10 @@
         <TextBox x:Name="txtTitre" Grid.Column="1" Margin="0,20,0,0" Grid.ColumnSpan="2" Text="{Binding Titre}"></TextBox>
 
         <!--Type annonce-->
-        <Label Content="Type d'annonce" Grid.Row="1"  HorizontalAlignment="left" VerticalAlignment="Center" Margin="10,0,0,0"></Label>
-        <ComboBox Name="cmbType" Grid.Row="1" Grid.Column="1" Margin="0,20,0,20" Grid.ColumnSpan="2" ItemsSource="{Binding Path=LesTypesAnnonce}" SelectedItem="{Binding Path=Type}" />
-
+        <!--<Label Content="Type d'annonce" Grid.Row="1"  HorizontalAlignment="left" VerticalAlignment="Center" Margin="10,0,0,0"></Label>
+        <ComboBox Name="cmbType" Grid.Row="1" Grid.Column="1" Margin="0,20,0,20" Grid.ColumnSpan="2" ItemsSource="{Binding Path=LesTypesAnnonce}" SelectedItem="{Binding Path=Type}" />-->
+        <Label Content="Voulez-vous accepter les échanges?" Grid.Row="1" Grid.ColumnSpan="2"  HorizontalAlignment="left" VerticalAlignment="Center" Margin="10,0,0,0"></Label>
+        <CheckBox Grid.Row="1" VerticalAlignment="Center" Grid.Column="1" IsChecked="{Binding Path=TypeAnnonce, Mode=TwoWay}" Grid.ColumnSpan="2" Margin="100.8,25.6,149.4,27.6"></CheckBox>
         <!--Description-->
         <Label Content="Description" Grid.Row="2"  HorizontalAlignment="left" VerticalAlignment="Top" Margin="10,0,0,0"></Label>
         <TextBox x:Name="txtDescription" Grid.Column="1" Grid.Row="2" Margin="0,0,0,20" Grid.ColumnSpan="2" TextWrapping="Wrap" Text="{Binding Description}"></TextBox>
@@ -49,8 +50,8 @@
                 </Grid.ColumnDefinitions>
 
                 <!--Bouton Retirer et Ajouter item-->
-                <Button Content="Retirer Item" Grid.Row="0" Width="228.8" Height="25" HorizontalAlignment="left" Margin="0,0,0,0" Command="{Binding cmdSupprimerItem_Annonce}" CommandParameter="{Binding ElementName=WindowModifierAnnonce}"></Button>
-                <Button Content="Ajouter Item" Grid.Row="0" Grid.Column="1" Width="228.8" Height="25" HorizontalAlignment="Right" Margin="0,0,0,0" Command="{Binding cmdAjouterItem_Annonce}" CommandParameter="{Binding ElementName=WindowModifierAnnonce}"></Button>
+                <Button Content="+" FontWeight="Bold" VerticalAlignment="Center" FontSize="20" Padding="0,0,0,0" Grid.Row="0" Width="45" Height="Auto" HorizontalAlignment="Right" Margin="0,10,184.6,12.6" Command="{Binding cmdAjouterItem_Annonce}" CommandParameter="{Binding ElementName=WindowModifierAnnonce}"/>
+                <Button Content="-" FontWeight="Bold" VerticalAlignment="Center" FontSize="20" Padding="0,0,0,0" Grid.Row="0" Width="45" Height="Auto" HorizontalAlignment="Left" Margin="63,10,0,12.6" Command="{Binding cmdSupprimerItem_Annonce}" CommandParameter="{Binding ElementName=WindowModifierAnnonce}"></Button>
 
                 <!--Items-->
                 <DataGrid ItemsSource="{Binding LesItemsMod}" SelectedItem="{Binding ItemSelectionneMod}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" Grid.Row="1" Grid.ColumnSpan="2" IsReadOnly="True">
