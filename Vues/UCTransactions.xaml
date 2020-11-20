@@ -47,6 +47,7 @@
             <DataGrid Name="dgPropositions" ItemsSource="{Binding TransactionsAffichees}" SelectedItem="{Binding TransactionSelectionnee}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" IsReadOnly="True" Margin="7,10,0,0">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Path=PropositionTrx.AnnonceLiee.Titre}" Header="Annonce Concernée" Width="2*"></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Path=Role}" Header="Rôle" Width="*"></DataGridTextColumn>
                     <DataGridTextColumn Binding="{Binding Path=Date, StringFormat={}\{0:yyyy-MM-dd\}}" Header="Date" Width="*"></DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>

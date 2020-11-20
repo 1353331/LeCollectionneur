@@ -144,7 +144,7 @@ namespace LeCollectionneur.Modeles
 
         public void Modifier(Annonce a)
         {
-            string req = $"UPDATE annonces SET Nom='{a.Titre.Replace("'", @"\'")}', IdUtilisateur={a.Annonceur.Id} , Montant={a.Montant}, Date='{a.DatePublication}', idTypeAnnonce= (Select Id from typesannonce where nom = '{a.Type}'), Description = '{a.Description.Replace("'", @"\'")}', IdEtatAnnonce = (SELECT Id FROM EtatsAnnonce WHERE Nom = '{a.EtatAnnonce}') WHERE id ={a.Id}";
+            string req = $"UPDATE annonces SET Nom='{a.Titre.Replace("'", @"\'")}', IdUtilisateur={a.Annonceur.Id} , Montant={a.Montant}, Date='{a.DatePublication:yyyy-MM-dd HH:mm:ss}', idTypeAnnonce= (Select Id from typesannonce where nom = '{a.Type}'), Description = '{a.Description.Replace("'", @"\'")}', IdEtatAnnonce = (SELECT Id FROM EtatsAnnonce WHERE Nom = '{a.EtatAnnonce}') WHERE id ={a.Id}";
             MaBD.Commande(req);
             
             req = $"delete from itemannonce where idAnnonce = {a.Id}";
@@ -182,17 +182,6 @@ namespace LeCollectionneur.Modeles
 								      WHERE IdItem IN ({idItems})
 						         );
 				      ";
-
-               /* Enlever la suppression des items des annonces pour l'instant
-             
-               DELETE FROM ItemAnnonce
-               WHERE IdItem IN ({idItems})
-               AND IdAnnonce IN (
-                                    SELECT Id
-                                    FROM Annonces
-                                    WHERE IdEtatAnnonce = (SELECT Id FROM EtatsAnnonce WHERE Nom = '{EtatsAnnonce.Annulee}')
-                                )
-                */
                MaBD.Commande(requete);
             }
         }

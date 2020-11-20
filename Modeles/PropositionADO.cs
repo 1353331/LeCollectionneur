@@ -165,7 +165,7 @@ namespace LeCollectionneur.Modeles
 			IdAnnonce = {prop.AnnonceLiee.Id},
 			IdUtilisateur = {prop.Proposeur.Id},
 			Montant = {prop.Montant},
-			Date = '{prop.DateProposition}',
+			Date = '{prop.DateProposition:yyyy-MM-dd HH:mm:ss}',
 			IdEtatProposition = (SELECT Id FROM EtatsProposition WHERE Nom = '{prop.EtatProposition}')
 			WHERE Id = {prop.Id};
 			";
@@ -210,6 +210,58 @@ namespace LeCollectionneur.Modeles
 				*/
 				MaBd.Commande(requete);
 			}
+		}
+
+		public void RefuserPropositionsActivesAvecItems(IEnumerable<Item> items)
+		{
+			if (items.Count() > 0)
+			{
+				string idItems = "";
+
+				foreach (Item item in items)
+				{
+					idItems += $"{item.Id}";
+					if (item != items.Last())
+						idItems += ", ";
+				}
+
+				string requete = $@"
+				UPDATE Propositions
+				SET
+				IdEtatProposition = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.Refusee}')
+				WHERE IdEtatProposition = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.EnAttente}')
+				AND Id IN (
+								SELECT IdProposition
+								FROM ItemProposition
+								WHERE IdItem IN ({idItems})
+						   );
+				
+				";
+				/* Enlever la suppression des items des propositions pour l'instant
+				
+				DELETE FROM ItemProposition
+            WHERE IdItem IN ({idItems})
+            AND IdProposition IN (
+                                SELECT Id
+                                FROM Propositions
+                                WHERE IdEtatProposition = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.Annulee}')
+                             )
+				*/
+				MaBd.Commande(requete);
+			}
+		}
+
+		public void RefuserPropositionsActivesSurAnnonce(int idAnnonce)
+		{
+			string requete = $@"
+				UPDATE Propositions
+				SET
+				IdEtatProposition = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.Refusee}')
+				WHERE IdEtatProposition = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.EnAttente}')
+						AND IdAnnonce = {idAnnonce}
+				";
+
+			MaBd.Commande(requete);
 		}
 
 		#endregion

@@ -25,7 +25,7 @@ namespace LeCollectionneur.VuesModeles
 			get { return _message; }
 			set 
 			{
-				_message = value.Replace("'", @"\'"); 
+				_message = value; 
 			}
 		}
 
@@ -42,7 +42,8 @@ namespace LeCollectionneur.VuesModeles
 		{
 			try
 			{
-				convADO.EnvoyerMessage(Message, ConversationADO.ChercherIdConversation(UtilisateurADO.utilisateur, Destinataire));
+				string message = Message.Replace("'", @"\'");
+				convADO.EnvoyerMessage(message, ConversationADO.ChercherIdConversation(UtilisateurADO.utilisateur, Destinataire));
 				MessageBox.Show("Message envoyé!", "Confirmation", MessageBoxButton.OK, MessageBoxImage.Information);
 			}
 			catch (Exception e)

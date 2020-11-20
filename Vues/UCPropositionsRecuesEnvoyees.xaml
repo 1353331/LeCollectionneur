@@ -111,7 +111,7 @@
                         </DataGrid>
 
                         <Label Name="lblMontantGauche" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Montant demandé: "></Label>
-                        <TextBox Name="tbxMontantProposition" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsEnabled="False" Text="{Binding MontantGauche}" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center"></TextBox>
+                        <TextBox Name="tbxMontantProposition" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsReadOnly="True" Text="{Binding MontantGauche}" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center"></TextBox>
                     </Grid>
                 </GroupBox>
 
@@ -150,7 +150,7 @@
                         </DataGrid>
 
                         <Label Name="lblMontantDroite" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Montant proposé: "></Label>
-                        <TextBox Name="tbxMontantOffre" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsEnabled="False" Text="{Binding MontantDroite}" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center"></TextBox>
+                        <TextBox Name="tbxMontantOffre" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsReadOnly="True" Text="{Binding MontantDroite}" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center"></TextBox>
 
                         <Button Name="btnMessageOffre" Grid.Row="2" Grid.Column="1" Style="{StaticResource btnMessageImageStyle}" Margin="60,0,0,0" Visibility="Visible" Command="{Binding cmdEnvoyerMessage}"
                             CommandParameter="{Binding ElementName=UCPropositions}" MaxHeight="50" MaxWidth="80"></Button>
@@ -158,7 +158,7 @@
                 </GroupBox>
 
                 <!-- Propositions reçues -->
-                <Button Name="btnRefuserProposition" Grid.RowSpan="2" Grid.Row="1" Grid.Column="0"  HorizontalAlignment="Stretch" Margin="100,10,100,10" Visibility="Visible" Content="Refuser" Command="{Binding cmdRefuserProposition}" MaxWidth="80" MaxHeight="50">
+                <Button Name="btnRefuserProposition" Grid.RowSpan="2" Grid.Row="1" Grid.Column="0"  HorizontalAlignment="Stretch" Margin="25,10,25,10" Visibility="Visible" Content="Refuser" Command="{Binding cmdRefuserProposition}" MaxWidth="125" MaxHeight="50">
                     <!-- Sert à arrondir les coins du bouton -->
                     <Button.Resources>
                         <Style TargetType="Border">
@@ -166,7 +166,7 @@
                         </Style>
                     </Button.Resources>
                 </Button>
-                <Button Name="btnAccepterProposition" Grid.RowSpan="2" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="100,10,100,10" Visibility="Visible" Content="Accepter" Command="{Binding cmdAccepterProposition}" MaxWidth="80" MaxHeight="50">
+                <Button Name="btnAccepterProposition" Grid.RowSpan="2" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="25,10,25,10" Visibility="Visible" Content="Accepter" Command="{Binding cmdAccepterProposition}" MaxWidth="120" MaxHeight="50">
                     <!-- Sert à arrondir les coins du bouton -->
                     <Button.Resources>
                         <Style TargetType="Border">
@@ -177,7 +177,7 @@
 
                 <!-- Propositions envoyées -->
                 <Label Name="lblEtatProposition" Grid.Row="1" Grid.Column="0"  HorizontalAlignment="Right" Visibility="Hidden" VerticalAlignment="Center">État de la proposition: </Label>
-                <TextBox Text="{Binding PropositionSelectionnee.EtatProposition}" Name="txbEtatProposition" Grid.Row="1" Grid.Column="1"  HorizontalAlignment="Left" Visibility="Hidden" VerticalAlignment="Center" IsEnabled="False"></TextBox>
+                <TextBox Text="{Binding PropositionSelectionnee.EtatProposition}" Name="txbEtatProposition" Grid.Row="1" Grid.Column="1"  HorizontalAlignment="Left" Visibility="Hidden" VerticalAlignment="Center" IsReadOnly="True"></TextBox>
                 <Button Name="btnAnnulerProposition" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,5,0,0" Visibility="Hidden" Content="Annuler proposition" Command="{Binding cmdAnnulerProposition}">
                     <!-- Sert à arrondir les coins du bouton -->
                     <Button.Resources>

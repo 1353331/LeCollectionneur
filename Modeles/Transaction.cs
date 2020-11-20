@@ -14,11 +14,13 @@ namespace LeCollectionneur.Modeles
 		public int Id { get; set; }
 		public Proposition PropositionTrx { get; set; }
 		public DateTime Date { get; set; }
+		public string Role { get; set; }
 
 		public Transaction(Proposition proposition)
 		{
 			PropositionTrx = proposition;
 			Date = DateTime.Now;
+			Role = PropositionTrx.Proposeur.Id == UtilisateurADO.utilisateur.Id ? "Proposeur" : "Annonceur";
 		}
 
 		public Transaction(DataRow dr)
@@ -26,6 +28,7 @@ namespace LeCollectionneur.Modeles
 			Id = (int)dr["id"];
 			PropositionTrx = new PropositionADO().RecupererUnParId((int)dr["idProposition"]);
 			Date = (DateTime)dr["date"];
+			Role = PropositionTrx.Proposeur.Id == UtilisateurADO.utilisateur.Id ? "Proposeur" : "Annonceur";
 		}
 
 		public void EffectuerTransaction()
@@ -39,6 +42,8 @@ namespace LeCollectionneur.Modeles
 			propADO.Modifier(PropositionTrx);
 			PropositionTrx.AnnonceLiee.EtatAnnonce = EtatsAnnonce.Terminee;
 			annonceADO.Modifier(PropositionTrx.AnnonceLiee);
+
+			propADO.RefuserPropositionsActivesSurAnnonce(PropositionTrx.AnnonceLiee.Id);
 
 			if (PropositionTrx.ItemsProposes.Count() > 0)
 			{
