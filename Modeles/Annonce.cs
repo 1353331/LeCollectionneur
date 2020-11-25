@@ -12,6 +12,7 @@ namespace LeCollectionneur.Modeles
     public class Annonce
     {
         public static DateTime PlusAncienneDate = DateTime.Now.Date;
+        public static ObservableCollection<Annonce> ToutesLesAnnonces = new ObservableCollection<Annonce>();
 
         #region Propriétés
         public int Id { get; set; }
@@ -38,15 +39,15 @@ namespace LeCollectionneur.Modeles
         public Annonce(DataRow dr)
         {
             UtilisateurADO ud = new UtilisateurADO();
-            AnnonceADO annonceADO = new AnnonceADO();
-            
+            //AnnonceADO annonceADO = new AnnonceADO();
+
             Id = (int)dr["Id"];
             Annonceur = ud.RechercherUtilisateurById((int)dr["IdUtilisateur"]);
             Titre = (string)dr["Nom"];
             DatePublication = (DateTime)dr["Date"];
             Type = (string)dr["typeAnnonce"];
             Description = (string)dr["Description"];
-            ListeItems = annonceADO.RecupererListeItems(Id);
+            //ListeItems = annonceADO.RecupererListeItems(Id);
             Montant = (double)dr["montant"];
             EtatAnnonce = (string)dr["etatAnnonce"];
 
@@ -54,6 +55,12 @@ namespace LeCollectionneur.Modeles
             {
                 PlusAncienneDate = DatePublication;
             }
+        }
+
+        public void RecupererItems()
+        {
+            AnnonceADO annonceADO = new AnnonceADO();
+            ListeItems = annonceADO.RecupererListeItems(Id);
         }
         #endregion
 

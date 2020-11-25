@@ -77,8 +77,12 @@ namespace LeCollectionneur.VuesModeles
                 Description = _annonceSelectionnee.Description;
                 Montant = _annonceSelectionnee.Montant;
 
-                LesItems = _annonceSelectionnee.ListeItems;
+                if(_annonceSelectionnee.ListeItems is null)
+                {
+                    _annonceSelectionnee.RecupererItems();
+                }
 
+                LesItems = _annonceSelectionnee.ListeItems;
 
                 if (EstMonAnnonce())
                 {
@@ -92,8 +96,6 @@ namespace LeCollectionneur.VuesModeles
                 }
 
                 OnPropertyChanged("AnnonceSelectionnee");
-
-
             } 
         }
 
@@ -275,6 +277,7 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _typeItemFiltre = value;
+                //ChargerTousLesItems();
                 cmdFiltrer_Annonce.Execute(null);
                 OnPropertyChanged("TypeItemFiltre");
             }
@@ -368,7 +371,15 @@ namespace LeCollectionneur.VuesModeles
         private void initAnnonces()
         {
             LesAnnonces = new ObservableCollection<Annonce>();
-            LesAnnonces = annonceADO.Recuperer();
+
+            if(Annonce.ToutesLesAnnonces.Count == 0)
+            {
+                LesAnnonces = annonceADO.Recuperer();
+            }
+            else
+            {
+                LesAnnonces = Annonce.ToutesLesAnnonces;
+            }
         }
 
         private void cmdAjouterAnnonce(object param)
@@ -482,6 +493,11 @@ namespace LeCollectionneur.VuesModeles
 
         private ObservableCollection<Annonce> FiltrerParTypeItem()
         {
+            for (int i = 0; i < LesAnnonces.Count; i++)
+            {
+                LesAnnonces[i].RecupererItems();
+            }
+            
             //Dans le premier Where on va regarder dans chacune des annonces leur liste d'items
             ObservableCollection<Annonce> LesAnnoncesFiltrees = new ObservableCollection<Annonce>(LesAnnonces.Where(a => 
                 //Ici dans le 2e Where, on regarde si les items ont le type d'item spécifié par l'utilisateur

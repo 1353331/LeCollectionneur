@@ -42,6 +42,7 @@ namespace LeCollectionneur.Modeles
                 ListeAnnonces.Add(new Annonce(RowAnnonce));
             }
 
+            Annonce.ToutesLesAnnonces = ListeAnnonces;
             return ListeAnnonces;
         }
 
