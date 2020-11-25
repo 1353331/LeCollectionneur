@@ -25,9 +25,9 @@ namespace LeCollectionneur.Modeles
 		public void Ajouter(Proposition prop)
 		{
 			string requete = $@"
-			INSERT INTO Propositions (Id, IdAnnonce, IdUtilisateur, Montant, Date, IdEtatProposition)
+			INSERT INTO Propositions (AnnonceLiee_Id, Proposeur_Id, Montant, DateProposition, EtatProposition_Id)
 			VALUES
-			(NULL, {prop.AnnonceLiee.Id}, {prop.Proposeur.Id}, {prop.Montant}, '{prop.DateProposition}', (SELECT Id FROM EtatsProposition WHERE Nom = '{prop.EtatProposition}'));
+			({prop.AnnonceLiee.Id}, {prop.Proposeur.Id}, {prop.Montant}, '{prop.DateProposition}', (SELECT Id FROM EtatsProposition WHERE Nom = '{prop.EtatProposition.Nom}'));
 			SELECT LAST_INSERT_ID();
 			";
 			prop.Id = MaBd.CommandeCreationAvecRetourId(requete);
@@ -49,10 +49,10 @@ namespace LeCollectionneur.Modeles
 			ObservableCollection<Proposition> ocPropositions = new ObservableCollection<Proposition>();
 
 			string requeteProposition = @"
-			SELECT p.Id, p.idAnnonce, p.idUtilisateur, p.montant, p.date AS dateProposition, ep.Nom AS etatProposition
+			SELECT p.Id, p.AnnonceLiee_Id, p.Proposeur_Id, p.montant, p.DateProposition, ep.Nom AS etatProposition
 			FROM Propositions p
 			LEFT JOIN EtatsProposition ep
-			ON p.IdEtatProposition = ep.Id
+			ON p.EtatProposition_Id = ep.Id
 			";
 
 			DataSet setProposition = MaBd.Selection(requeteProposition);
@@ -71,10 +71,10 @@ namespace LeCollectionneur.Modeles
 		public Proposition RecupererUnParId(int idProposition)
 		{
 			string requete = $@"
-			SELECT p.Id, p.idAnnonce, p.idUtilisateur, p.montant, p.date AS dateProposition, ep.Nom AS etatProposition
+			SELECT p.Id, p.AnnonceLiee_Id, p.Proposeur_Id, p.montant, p.dateProposition, ep.Nom AS etatProposition
 			FROM Propositions p
 			LEFT JOIN EtatsProposition ep
-			ON p.IdEtatProposition = ep.Id
+			ON p.EtatProposition_Id = ep.Id
 			WHERE p.Id = {idProposition} 
 			";
 
@@ -87,30 +87,14 @@ namespace LeCollectionneur.Modeles
 			return propTemp;
 		}
 
-		public int RecupererIdParProposition(Proposition prop)
-		{
-			string reqId = $@"
-			SELECT p.Id
-			FROM Propositions p
-			LEFT JOIN EtatsProposition ep
-			ON p.IdEtatProposition = ep.Id
-			WHERE p.idAnnonce = {prop.AnnonceLiee.Id} AND p.idUtilisateur = {prop.Proposeur.Id} AND p.montant = {prop.Montant} AND p.date = '{prop.DateProposition}' AND ep.Nom = '{prop.EtatProposition}'
-			";
-
-			DataSet setId = MaBd.Selection(reqId);
-			DataTable tableId = setId.Tables[0];
-
-			return (int)tableId.Rows[0]["Id"];
-		}
-
 		public ObservableCollection<Proposition> RecupererPropositionsEnvoyees(int idUtilisateur)
 		{
 			string requete = $@"
-				SELECT p.Id, p.idAnnonce, p.idUtilisateur, p.montant, p.date AS dateProposition, ep.Nom AS etatProposition
+				SELECT p.Id, p.AnnonceLiee_Id, p.Proposeur_Id, p.montant, p.dateProposition, ep.Nom AS etatProposition
 				FROM Propositions p
 				LEFT JOIN EtatsProposition ep
-				ON p.IdEtatProposition = ep.Id
-				WHERE p.idUtilisateur = {idUtilisateur}
+				ON p.EtatProposition_Id = ep.Id
+				WHERE p.Proposeur_Id = {idUtilisateur}
 				ORDER BY dateProposition DESC; 
 			";
 			ObservableCollection<Proposition> ocPropositions = new ObservableCollection<Proposition>();
@@ -130,13 +114,13 @@ namespace LeCollectionneur.Modeles
 		public ObservableCollection<Proposition> RecupererPropositionsRecues(int idUtilisateur)
 		{
 			string requete = $@"
-				SELECT p.Id, p.idAnnonce, p.idUtilisateur, p.montant, p.date AS dateProposition, ep.Nom AS etatProposition
+				SELECT p.Id, p.AnnonceLiee_Id, p.Proposeur_Id, p.montant, p.dateProposition, ep.Nom AS etatProposition
 				FROM Propositions p
 				INNER JOIN EtatsProposition ep
-				ON p.IdEtatProposition = ep.Id
+				ON p.EtatProposition_Id = ep.Id
 				LEFT JOIN Annonces a
-				ON p.idAnnonce = a.Id
-				WHERE a.idUtilisateur = {idUtilisateur}
+				ON p.AnnonceLiee_Id = a.Id
+				WHERE a.Annonceur_Id = {idUtilisateur}
 				ORDER BY dateProposition DESC;
 			";
 			ObservableCollection<Proposition> ocPropositions = new ObservableCollection<Proposition>();
@@ -162,11 +146,11 @@ namespace LeCollectionneur.Modeles
 			string requete = $@"
 			UPDATE Propositions
 			SET
-			IdAnnonce = {prop.AnnonceLiee.Id},
-			IdUtilisateur = {prop.Proposeur.Id},
+			AnnonceLiee_Id = {prop.AnnonceLiee.Id},
+			Proposeur_Id = {prop.Proposeur.Id},
 			Montant = {prop.Montant},
-			Date = '{prop.DateProposition:yyyy-MM-dd HH:mm:ss}',
-			IdEtatProposition = (SELECT Id FROM EtatsProposition WHERE Nom = '{prop.EtatProposition}')
+			DateProposition = '{prop.DateProposition:yyyy-MM-dd HH:mm:ss}',
+			EtatProposition_Id = (SELECT Id FROM EtatsProposition WHERE Nom = '{prop.EtatProposition.Nom}')
 			WHERE Id = {prop.Id};
 			";
 
@@ -189,25 +173,15 @@ namespace LeCollectionneur.Modeles
 				string requete = $@"
 				UPDATE Propositions
 				SET
-				IdEtatProposition = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.Annulee}')
-				WHERE IdEtatProposition = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.EnAttente}')
+				EtatProposition_Id = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.Annulee}')
+				WHERE EtatProposition_Id = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.EnAttente}')
 				AND Id IN (
-								SELECT IdProposition
-								FROM ItemProposition
-								WHERE IdItem IN ({idItems})
+								SELECT Proposition_Id
+								FROM propositionitems
+								WHERE Item_Id IN ({idItems})
 						   );
 				
 				";
-				/* Enlever la suppression des items des propositions pour l'instant
-				
-				DELETE FROM ItemProposition
-            WHERE IdItem IN ({idItems})
-            AND IdProposition IN (
-                                SELECT Id
-                                FROM Propositions
-                                WHERE IdEtatProposition = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.Annulee}')
-                             )
-				*/
 				MaBd.Commande(requete);
 			}
 		}
@@ -228,25 +202,15 @@ namespace LeCollectionneur.Modeles
 				string requete = $@"
 				UPDATE Propositions
 				SET
-				IdEtatProposition = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.Refusee}')
-				WHERE IdEtatProposition = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.EnAttente}')
+				EtatProposition_Id = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.Refusee}')
+				WHERE EtatProposition_Id = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.EnAttente}')
 				AND Id IN (
-								SELECT IdProposition
-								FROM ItemProposition
-								WHERE IdItem IN ({idItems})
+								SELECT Proposition_Id
+								FROM propositionitems
+								WHERE Item_Id IN ({idItems})
 						   );
 				
 				";
-				/* Enlever la suppression des items des propositions pour l'instant
-				
-				DELETE FROM ItemProposition
-            WHERE IdItem IN ({idItems})
-            AND IdProposition IN (
-                                SELECT Id
-                                FROM Propositions
-                                WHERE IdEtatProposition = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.Annulee}')
-                             )
-				*/
 				MaBd.Commande(requete);
 			}
 		}
@@ -256,9 +220,9 @@ namespace LeCollectionneur.Modeles
 			string requete = $@"
 				UPDATE Propositions
 				SET
-				IdEtatProposition = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.Refusee}')
-				WHERE IdEtatProposition = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.EnAttente}')
-						AND IdAnnonce = {idAnnonce}
+				EtatProposition_Id = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.Refusee}')
+				WHERE EtatProposition_Id = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.EnAttente}')
+						AND AnnonceLiee_Id = {idAnnonce}
 				";
 
 			MaBd.Commande(requete);
@@ -289,10 +253,10 @@ namespace LeCollectionneur.Modeles
 			string reqItemsProp = $@"
          SELECT i.Id, i.Nom AS nomItem, i.Description, i.dateSortie, i.cheminImage, t.Nom AS typeItem, i.Manufacturier, c.Nom AS 'condition'
          FROM Items i
-         INNER JOIN TypesItem as t ON i.idTypeItem = t.Id
-         INNER JOIN Conditions c ON i.idCondition = c.Id
-         LEFT JOIN ItemProposition ip ON i.Id = ip.IdItem
-         WHERE ip.IdProposition = {idProposition}
+         INNER JOIN TypesItem as t ON i.Type_Id = t.Id
+         INNER JOIN Conditions c ON i.Condition_Id = c.Id
+         LEFT JOIN propositionitems ip ON i.Id = ip.Item_Id
+         WHERE ip.Proposition_Id = {idProposition}
          ";
 
 			DataSet SetItems = MaBd.Selection(reqItemsProp);
@@ -308,7 +272,7 @@ namespace LeCollectionneur.Modeles
 		private void ajouterItemsAProposition(int idProposition, ObservableCollection<Item> lstItems)
 		{
 			string reqInsererItem = $@"
-			INSERT INTO ItemProposition (IdProposition, idItem)
+			INSERT INTO propositionitems (Proposition_Id, Item_Id)
 			VALUES ";
 
 			Item dernierListe = lstItems.Last();

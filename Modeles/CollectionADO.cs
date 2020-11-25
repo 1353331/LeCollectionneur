@@ -22,7 +22,7 @@ namespace LeCollectionneur.Modeles
         public ObservableCollection<Collection> Recuperer(int idUtilisateur)
         {
             ObservableCollection<Collection> lesCollections = new ObservableCollection<Collection>();
-            string sel = $"select * from Collections where idUtilisateur = {idUtilisateur}";
+            string sel = $"select * from Collections where Utilisateur_Id = {idUtilisateur}";
             DataSet SetCollection = MaBD.Selection(sel);
             DataTable TableCollection = SetCollection.Tables[0];
 
@@ -35,7 +35,7 @@ namespace LeCollectionneur.Modeles
         public ObservableCollection<Collection> RecupererToutesSaufUne(int idUtilisateur,int idPasRecupere)
         {
             ObservableCollection<Collection> lesCollections = new ObservableCollection<Collection>();
-            string sel = $"select * from Collections where idUtilisateur = {idUtilisateur} AND NOT id={idPasRecupere}";
+            string sel = $"select * from Collections where Utilisateur_Id = {idUtilisateur} AND NOT id={idPasRecupere}";
             DataSet SetCollection = MaBD.Selection(sel);
             DataTable TableCollection = SetCollection.Tables[0];
 
@@ -66,7 +66,7 @@ namespace LeCollectionneur.Modeles
         #region Delete
         public void Supprimer(int id)
         {
-            string req = $"delete from Items Where idCollection ={id}; delete from Collections where ID = " + id;
+            string req = $"delete from Items Where Collection_Id ={id}; delete from Collections where ID = " + id;
             try
             {
                 MaBD.Commande(req);
@@ -83,13 +83,13 @@ namespace LeCollectionneur.Modeles
         #region Insert
         public void Ajouter(Collection c,int IdUtilisateur)
         {
-            string req = $"insert into Collections (id,idUtilisateur,nom) values(NULL,{IdUtilisateur},'{c.Nom}' )";
+            string req = $"insert into Collections (Utilisateur_Id,nom) values({IdUtilisateur},'{c.Nom}')";
             MaBD.Commande(req);
         }
 
         public int AjouterRetourId(Collection c, int IdUtilisateur)
         {
-            string req = $"insert into Collections (id,idUtilisateur,nom) values(NULL,{IdUtilisateur},'{c.Nom}' ); SELECT LAST_INSERT_ID();";
+            string req = $"insert into Collections (Utilisateur_Id,nom) values({IdUtilisateur},'{c.Nom}'); SELECT LAST_INSERT_ID();";
             return MaBD.CommandeCreationAvecRetourId(req);
       }
 

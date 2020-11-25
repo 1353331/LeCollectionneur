@@ -211,7 +211,7 @@ namespace LeCollectionneur.VuesModeles
             }
 
             Titre = AnnonceAMod.Titre;
-            Type = AnnonceAMod.Type;
+            Type = AnnonceAMod.Type.Nom;
             if(Type == "Vente")
             {
                 TypeAnnonce = false;
@@ -230,7 +230,7 @@ namespace LeCollectionneur.VuesModeles
             //Ici on veut ajouter l'annonce en BD
             AnnonceAMod.Titre = Titre.Trim();
             AnnonceAMod.Montant = Math.Round(Montant, 2);
-            AnnonceAMod.Type = Type;
+            AnnonceAMod.Type = new TypeAnnonce(Type);
             if (String.IsNullOrWhiteSpace(Description))
             {
                 AnnonceAMod.Description = "";

@@ -58,8 +58,8 @@
             <DataGrid DockPanel.Dock="Bottom" ItemsSource="{Binding CollectionSelectionnee.ItemsCollection}" SelectedItem="{Binding ItemSelectionne}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" IsReadOnly="True"   Margin="10,10,10,10" VerticalAlignment="Stretch">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Path=Nom}" Header="Nom" Width="4*"></DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding Path=Type, StringFormat=yyyy-MM-dd}" Header="Type" Width="3*"></DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding Path=Condition}" Header="Condition" Width="3*"></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Path=Type.Nom, StringFormat=yyyy-MM-dd}" Header="Type" Width="3*"></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Path=Condition.Nom}" Header="Condition" Width="3*"></DataGridTextColumn>
                     <DataGridTemplateColumn Header="Déplacer" Width="3*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>

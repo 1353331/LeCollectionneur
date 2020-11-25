@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
              xmlns:local="clr-namespace:LeCollectionneur.Vues"
              xmlns:converters="clr-namespace:LeCollectionneur.Outils"
              mc:Ignorable="d"
@@ -46,22 +47,24 @@
 
            <!-- RadioButton propositions -->
         <StackPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10">
-            <RadioButton Padding="5" Name="radPropositionsRecues" Content="Reçues" IsChecked="True" Checked="radPropositionsRecues_Checked" Command="{Binding cmdPropositionsRecues}"></RadioButton>
-            <RadioButton Padding="5" Name="radPropositionsEnvoyees" Content="Envoyées" Checked="radPropositionsEnvoyees_Checked" Command="{Binding cmdPropositionsEnvoyees}"></RadioButton>
+            <RadioButton Padding="5" Name="radPropositionsRecues" Content="Reçues" IsChecked="True" IsEnabled="{Binding ControlesActifs}" Checked="radPropositionsRecues_Checked" Command="{Binding cmdPropositionsRecues}"></RadioButton>
+            <RadioButton Padding="5" Name="radPropositionsEnvoyees" Content="Envoyées" Checked="radPropositionsEnvoyees_Checked" IsEnabled="{Binding ControlesActifs}" Command="{Binding cmdPropositionsEnvoyees}"></RadioButton>
         </StackPanel>
 
         <!-- Listes Reçues/Envoyées -->
         <DockPanel LastChildFill="True" Grid.Row="1">
             <TextBlock Text="Mes Propositions" FontWeight="DemiBold" DockPanel.Dock="Top" TextAlignment="Center" />
 
-            <DataGrid Name="dgPropositions" ItemsSource="{Binding PropositionsAffichees}" SelectedItem="{Binding PropositionSelectionnee}" HorizontalScrollBarVisibility="Auto" AutoGenerateColumns="False" IsReadOnly="True" Margin="7,10,0,0">
+            <DataGrid Name="dgPropositions" ItemsSource="{Binding PropositionsAffichees}" SelectedItem="{Binding PropositionSelectionnee}" IsHitTestVisible="{Binding ControlesActifs}" HorizontalScrollBarVisibility="Auto" AutoGenerateColumns="False" IsReadOnly="True" Margin="7,10,0,0">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Path=AnnonceLiee.Titre}" Header="Annonce Concernée" Width="2*"></DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding Path=EtatProposition}" Header="État" Width="*"></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Path=EtatProposition.Nom}" Header="État" Width="*"></DataGridTextColumn>
                     <DataGridTextColumn Binding="{Binding Path=DateProposition, StringFormat={}\{0:yyyy-MM-dd\}}" Header="Date" Width="*" SortDirection="Descending"></DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>
+        <fa:ImageAwesome Icon="CircleOutlineNotch" Spin="True" Grid.Row="1" Margin="85" MaxHeight="50" MaxWidth="50" Visibility="{Binding VisibiliteSpinner}"></fa:ImageAwesome>
+
         <!-- Section détails -->
         <GroupBox Header="Détails" Grid.Row="1" Margin="10,0,10,10" Grid.Column="1" BorderBrush="Black" FontWeight="Bold">
             <!-- Grille interne des détails -->
@@ -92,7 +95,7 @@
                         <DataGrid Name="dgProposition" ItemsSource="{Binding ItemsGauche}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" Grid.ColumnSpan="2" IsReadOnly="True">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Path=Nom}" Header="Nom" Width="3*"></DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path=Condition}" Header="Condition" Width="3*"></DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Path=Condition.Nom}" Header="Condition" Width="3*"></DataGridTextColumn>
                                 <DataGridTemplateColumn Width="2*">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
@@ -131,7 +134,7 @@
                         <DataGrid Name="dgOffre" ItemsSource="{Binding ItemsDroite}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" Grid.ColumnSpan="2" IsReadOnly="True">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Path=Nom}" Header="Nom" Width="3*"></DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path=Condition}" Header="Condition" Width="3*"></DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Path=Condition.Nom}" Header="Condition" Width="3*"></DataGridTextColumn>
                                 <DataGridTemplateColumn Width="2*">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
@@ -177,7 +180,7 @@
 
                 <!-- Propositions envoyées -->
                 <Label Name="lblEtatProposition" Grid.Row="1" Grid.Column="0"  HorizontalAlignment="Right" Visibility="Hidden" VerticalAlignment="Center">État de la proposition: </Label>
-                <TextBox Text="{Binding PropositionSelectionnee.EtatProposition}" Name="txbEtatProposition" Grid.Row="1" Grid.Column="1"  HorizontalAlignment="Left" Visibility="Hidden" VerticalAlignment="Center" IsReadOnly="True"></TextBox>
+                <TextBox Text="{Binding PropositionSelectionnee.EtatProposition.Nom}" Name="txbEtatProposition" Grid.Row="1" Grid.Column="1"  HorizontalAlignment="Left" Visibility="Hidden" VerticalAlignment="Center" IsReadOnly="True"></TextBox>
                 <Button Name="btnAnnulerProposition" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,5,0,0" Visibility="Hidden" Content="Annuler proposition" Command="{Binding cmdAnnulerProposition}">
                     <!-- Sert à arrondir les coins du bouton -->
                     <Button.Resources>

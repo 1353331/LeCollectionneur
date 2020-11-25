@@ -29,10 +29,10 @@ namespace LeCollectionneur.Modeles
             SELECT a.*, ta.Nom AS typeAnnonce, ea.Nom as etatAnnonce 
             FROM annonces a
             INNER JOIN EtatsAnnonce ea
-            ON a.IdEtatAnnonce = ea.Id
+            ON a.EtatAnnonce_Id = ea.Id
             LEFT JOIN typesannonce ta 
-            ON a.idTypeAnnonce = ta.Id
-            WHERE idEtatAnnonce = (Select id From etatsannonce Where Nom = '{EtatsAnnonce.Active}')
+            ON a.Type_Id = ta.Id
+            WHERE EtatAnnonce_Id = (Select id From etatsannonce Where Nom = '{EtatsAnnonce.Active}')
             ";
             DataSet SetAnnonce = MaBD.Selection(sel);
             DataTable TableAnnonce = SetAnnonce.Tables[0];
@@ -50,13 +50,13 @@ namespace LeCollectionneur.Modeles
             ObservableCollection<Item> ListeItems = new ObservableCollection<Item>();
             ItemADO ItemADO = new ItemADO();
 
-            string sel = $"SELECT idItem from itemannonce where idAnnonce = {idAnnonce}";
+            string sel = $"SELECT Item_Id from itemannonces where Annonce_Id = {idAnnonce}";
             DataSet SetItem = MaBD.Selection(sel);
             DataTable TableItem = SetItem.Tables[0];
 
             foreach(DataRow RowItem in TableItem.Rows)
             {
-                ListeItems.Add(ItemADO.RecupererUn((int)RowItem["idItem"]));
+                ListeItems.Add(ItemADO.RecupererUn((int)RowItem["Item_Id"]));
             }
 
             return ListeItems;
@@ -72,10 +72,10 @@ namespace LeCollectionneur.Modeles
             SELECT a.*, ta.Nom AS typeAnnonce, ea.Nom AS etatAnnonce 
             from annonces a 
             INNER JOIN EtatsAnnonce ea
-            ON a.IdEtatAnnonce = ea.Id
+            ON a.EtatAnnonce_Id = ea.Id
             LEFT JOIN typesannonce ta 
-            ON a.idTypeAnnonce = ta.Id 
-            WHERE idUtilisateur = {UtilisateurConnecte.Id}
+            ON a.Type_Id = ta.Id 
+            WHERE Annonceur_Id = {UtilisateurConnecte.Id}
             ";
 
             DataSet SetAnnonce = MaBD.Selection(sel);
@@ -95,9 +95,9 @@ namespace LeCollectionneur.Modeles
             SELECT a.*, ta.Nom AS typeAnnonce, ea.Nom AS etatAnnonce 
             FROM annonces a
             INNER JOIN EtatsAnnonce ea
-            ON a.IdEtatAnnonce = ea.Id
+            ON a.EtatAnnonce_Id = ea.Id
             LEFT JOIN typesannonce ta 
-            ON a.idTypeAnnonce = ta.Id 
+            ON a.Type_Id = ta.Id 
             WHERE a.Id = {id}";
             DataSet SetAnnonce = MaBD.Selection(sel);
             DataTable TableAnnonce = SetAnnonce.Tables[0];
@@ -126,16 +126,16 @@ namespace LeCollectionneur.Modeles
             ItemADO ItemADO = new ItemADO();
             Item ItemTemp = new Item();
 
-            string sel = "SELECT idItem FROM itemannonce";
+            string sel = "SELECT Item_Id FROM itemannonces";
             DataSet SetTypeItem = MaBD.Selection(sel);
             DataTable TableTypeItem = SetTypeItem.Tables[0];
 
             foreach(DataRow RowTypeItem in TableTypeItem.Rows)
             {
-                ItemTemp = ItemADO.RecupererUn((int)RowTypeItem["idItem"]);
-                if (!ListeTypesItem.Contains(ItemTemp.Type))
+                ItemTemp = ItemADO.RecupererUn((int)RowTypeItem["Item_Id"]);
+                if (!ListeTypesItem.Contains(ItemTemp.Type.Nom))
                 {
-                    ListeTypesItem.Add(ItemTemp.Type);
+                    ListeTypesItem.Add(ItemTemp.Type.Nom);
                 }
             }
 
@@ -144,16 +144,16 @@ namespace LeCollectionneur.Modeles
 
         public void Modifier(Annonce a)
         {
-            string req = $"UPDATE annonces SET Nom='{a.Titre.Replace("'", @"\'")}', IdUtilisateur={a.Annonceur.Id} , Montant={a.Montant}, Date='{a.DatePublication:yyyy-MM-dd HH:mm:ss}', idTypeAnnonce= (Select Id from typesannonce where nom = '{a.Type}'), Description = '{a.Description.Replace("'", @"\'")}', IdEtatAnnonce = (SELECT Id FROM EtatsAnnonce WHERE Nom = '{a.EtatAnnonce}') WHERE id ={a.Id}";
+            string req = $"UPDATE annonces SET Titre='{a.Titre.Replace("'", @"\'")}', Annonceur_Id={a.Annonceur.Id} , Montant={a.Montant}, DatePublication='{a.DatePublication:yyyy-MM-dd HH:mm:ss}', Type_Id= (Select Id from typesannonce where nom = '{a.Type.Nom}'), Description = '{a.Description.Replace("'", @"\'")}', EtatAnnonce_Id = (SELECT Id FROM EtatsAnnonce WHERE Nom = '{a.EtatAnnonce.Nom}') WHERE id ={a.Id}";
             MaBD.Commande(req);
             
-            req = $"delete from itemannonce where idAnnonce = {a.Id}";
+            req = $"delete from itemannonces where Annonce_Id = {a.Id}";
             MaBD.Commande(req);
 
             //Ajouter ses items
             foreach (Item i in a.ListeItems)
             {
-                req = $"INSERT INTO `itemannonce`(`Id`, `IdAnnonce`, `IdItem`) VALUES ( null, (select Id FROM annonces where Id = {a.Id}), (select Id FROM items where Id = {i.Id}) )";
+                req = $"INSERT INTO `itemannonces`(`Annonce_Id`, `Item_Id`) VALUES ((select Id FROM annonces where Id = {a.Id}), (select Id FROM items where Id = {i.Id}) )";
                 MaBD.Commande(req);
             }
         }
@@ -174,12 +174,12 @@ namespace LeCollectionneur.Modeles
                string requete = $@"
 				      UPDATE Annonces
 				      SET
-				      IdEtatAnnonce = (SELECT Id FROM EtatsAnnonce WHERE Nom = '{EtatsAnnonce.Annulee}')
-				      WHERE IdEtatAnnonce = (SELECT Id FROM EtatsAnnonce WHERE Nom = '{EtatsAnnonce.Active}')
+				      EtatAnnonce_Id = (SELECT Id FROM EtatsAnnonce WHERE Nom = '{EtatsAnnonce.Annulee}')
+				      WHERE EtatAnnonce_Id = (SELECT Id FROM EtatsAnnonce WHERE Nom = '{EtatsAnnonce.Active}')
 				      AND Id IN (
-								      SELECT IdAnnonce
-								      FROM ItemAnnonce
-								      WHERE IdItem IN ({idItems})
+								      SELECT Annonce_Id
+								      FROM itemannonces
+								      WHERE Item_Id IN ({idItems})
 						         );
 				      ";
                MaBD.Commande(requete);
@@ -189,21 +189,21 @@ namespace LeCollectionneur.Modeles
         public void Ajouter(Annonce a)
         {
             //Ajouter l'annonce
-            string req = $"insert into Annonces values(NULL, '{a.Titre}', {a.Annonceur.Id}, {a.Montant}, '{a.DatePublication}', (Select Id from typesannonce Where Nom = '{a.Type}'), '{a.Description}', (SELECT Id FROM EtatsAnnonce WHERE nom = '{a.EtatAnnonce}')); SELECT LAST_INSERT_ID();";
+            string req = $"insert into Annonces(Titre, Annonceur_Id, Montant, DatePublication, Type_Id, Description,EtatAnnonce_Id) values('{a.Titre}', {a.Annonceur.Id}, {a.Montant}, '{a.DatePublication}', (Select Id from typesannonce Where Nom = '{a.Type.Nom}'), '{a.Description}', (SELECT Id FROM EtatsAnnonce WHERE nom = '{a.EtatAnnonce.Nom}')); SELECT LAST_INSERT_ID();";
             int Id = MaBD.CommandeCreationAvecRetourId(req);
 
             //Ajouter ses items
             foreach (Item i in a.ListeItems)
             {
-                req = $"INSERT INTO `itemannonce`(`Id`, `IdAnnonce`, `IdItem`) VALUES ( null, (select Id FROM annonces where Id = {Id}), (select Id FROM items where Id = {i.Id}) )";
+                req = $"INSERT INTO `itemannonces`(`Annonce_Id`, `Item_Id`) VALUES ((select Id FROM annonces where Id = {Id}), (select Id FROM items where Id = {i.Id}) )";
                 MaBD.Commande(req);
             }
         }
 
         public void Supprimer(Annonce a)
         {
-            // Supprimer toutes les items de l'annonce
-            string req = $"delete from itemannonce where idannonce = {a.Id}";
+            // Supprimer tous les items de l'annonce
+            string req = $"delete from itemannonces where Annonce_Id = {a.Id}";
             MaBD.Commande(req);
 
             //supprimer l'annonce

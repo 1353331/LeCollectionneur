@@ -57,7 +57,7 @@
                 <DataGrid ItemsSource="{Binding LesItemsMod}" SelectedItem="{Binding ItemSelectionneMod}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" Grid.Row="1" Grid.ColumnSpan="2" IsReadOnly="True">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Path=Nom}" Header="Nom" Width="170"></DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Path=Condition}" Header="Condition" Width="155"></DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=Condition.Nom}" Header="Condition" Width="155"></DataGridTextColumn>
                         <DataGridTemplateColumn Header="Détails" Width="130">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>

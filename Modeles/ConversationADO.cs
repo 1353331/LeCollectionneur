@@ -21,7 +21,7 @@ namespace LeCollectionneur.Modeles
         public static void EnvoyerMessageStatic(Message message,Conversation convo)
         {
             //"INSERT INTO `messages` (`Date`, `Message`, `IdConversation`, `IdUtilisateur`) VALUES ( '" + message.Date.ToString("yyyy-MM-dd hh:mm:ss")+"', '"+message.Contenu+"', '"+Convo.Id+"', '"+message.idUtilisateur+"');";
-            string req = "INSERT INTO `messages` (`Date`,`Message`,`idConversation`,`item`,`image`,`emoji`,`idUtilisateur`) " +
+            string req = "INSERT INTO `messages` (`Date`,`Message`,`Covnersation_Id`,`item`,`image`,`emoji`,`utilisateur_Id`) " +
                 "VALUES('"+DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss") + "' , '"+message.Contenu+"',"+convo.Id+","+true+","+false+","+false+","+UtilisateurADO.utilisateur.Id+");";
             BD.Commande(req);
         }
@@ -35,7 +35,7 @@ namespace LeCollectionneur.Modeles
         }
         public List<Message> GetMessages(int idConversation)
         {
-            string req = "SELECT * FROM `messages` WHERE IdConversation = " + idConversation;
+            string req = "SELECT * FROM `messages` WHERE Conversation_Id = " + idConversation;
             DataSet MessageConvo = BD.Selection(req);
             List<Message> temp = new List<Message>();
 
@@ -47,7 +47,7 @@ namespace LeCollectionneur.Modeles
         }
         public static List<Message> GetMessagesList(int idConversation)
         {
-            string req = "SELECT * FROM `messages` WHERE IdConversation = " + idConversation;
+            string req = "SELECT * FROM `messages` WHERE Conversation_Id = " + idConversation;
             DataSet MessageConvo = BD.Selection(req);
             List<Message> temp = new List<Message>();
 
@@ -67,7 +67,7 @@ namespace LeCollectionneur.Modeles
                     //1.2 Si elle n'existe pas on la créé
                 Convo.Id = ChercherIdConversation(Convo.UserActif,Convo.UserAutre);
                 //2. On va chercher tout les messages des utilisateurs
-                string req = "SELECT * FROM `messages` WHERE IdConversation = " + Convo.Id;
+                string req = "SELECT * FROM `messages` WHERE Conversation_Id = " + Convo.Id;
                 DataSet MessageConvo = BD.Selection(req);
 
 
@@ -87,8 +87,8 @@ namespace LeCollectionneur.Modeles
         public static int ChercherIdConversation(Utilisateur UserActif, Utilisateur UserAutre)
         {
             // Deux possibilité d'eregistrement en bd
-            string req = "SELECT id FROM `conversations` WHERE IdUtilisateur1 = " + UserActif.Id + " AND IdUtilisateur2 = " + UserAutre.Id;
-            string req2 = "SELECT id FROM `conversations` WHERE IdUtilisateur1 = " + UserAutre.Id + " AND IdUtilisateur2 = " + UserActif.Id;
+            string req = "SELECT id FROM `conversations` WHERE Utilisateur1_Id = " + UserActif.Id + " AND Utilisateur2_Id = " + UserAutre.Id;
+            string req2 = "SELECT id FROM `conversations` WHERE Utilisateur1_Id = " + UserAutre.Id + " AND Utilisateur2_Id = " + UserActif.Id;
 
             DataSet Convo = BD.Selection(req);
             //Regarde si la onversation existe
@@ -110,7 +110,7 @@ namespace LeCollectionneur.Modeles
         {
             
             //1: Trouver la conversation
-            string req = "SELECT* FROM  conversations WHERE (idUtilisateur1 = " + UtilisateurADO.utilisateur.Id + " AND idUtilisateur2 = " + idUtilisateurAutre + ")OR (idUtilisateur1 = "+ idUtilisateurAutre + " AND idUtilisateur2 = "+ UtilisateurADO.utilisateur.Id+");";
+            string req = "SELECT* FROM  conversations WHERE (Utilisateur1_Id = " + UtilisateurADO.utilisateur.Id + " AND Utilisateur2_Id = " + idUtilisateurAutre + ")OR (Utilisateur1_Id = " + idUtilisateurAutre + " AND Utilisateur2_Id = " + UtilisateurADO.utilisateur.Id+");";
             var t = BD.Selection(req);
             Conversation tf = new Conversation(t);
             var temp = new ObservableCollection<Message>();
@@ -125,9 +125,9 @@ namespace LeCollectionneur.Modeles
         {
             
 
-                string req = "INSERT INTO `conversations` (`IdUtilisateur1`, `IdUtilisateur2`) VALUES (" + UserActif.Id + ", " + UserAutre.Id + ");";
+                string req = "INSERT INTO `conversations` (`Utilisateur1_Id`, `Utilisateur2_Id`) VALUES (" + UserActif.Id + ", " + UserAutre.Id + ");";
                 BD.Commande(req);
-                req = "SELECT id FROM `conversations` WHERE IdUtilisateur1 = " + UserActif.Id + " AND IdUtilisateur2 = " + UserAutre.Id;
+                req = "SELECT id FROM `conversations` WHERE Utilisateur1_Id = " + UserActif.Id + " AND Utilisateur2_Id = " + UserAutre.Id;
                 DataSet temp = BD.Selection(req);
                 return (int)temp.Tables[0].Rows[0]["id"];
             
@@ -137,7 +137,7 @@ namespace LeCollectionneur.Modeles
         public void EnvoyerMessage(string Contenu)
         {
             Message message = new Message(Contenu, UtilisateurADO.utilisateur);
-            string req = "INSERT INTO `messages` (`Date`, `Message`, `IdConversation`, `IdUtilisateur`) VALUES ( '" + message.Date.ToString("yyyy-MM-dd hh:mm:ss")+"', '"+message.Contenu+"', '"+Convo.Id+"', '"+message.idUtilisateur+"');";
+            string req = "INSERT INTO `messages` (`Date`, `Message`, `Conversation_Id`, `utilisateur_Id`) VALUES ( '" + message.Date.ToString("yyyy-MM-dd hh:mm:ss")+"', '"+message.Contenu+"', '"+Convo.Id+"', '"+message.idUtilisateur+"');";
             BD.Commande(req);
             GetMessages();
         }
@@ -145,7 +145,7 @@ namespace LeCollectionneur.Modeles
         public void EnvoyerMessage(string Contenu,int idConversation)
         {
             Message message = new Message(Contenu, UtilisateurADO.utilisateur);
-            string req = "INSERT INTO `messages` (`Date`, `Message`, `IdConversation`, `IdUtilisateur`) VALUES ( '" + message.Date.ToString("yyyy-MM-dd hh:mm:ss") + "', '" + message.Contenu + "', '" + idConversation + "', '" + message.idUtilisateur + "');";
+            string req = "INSERT INTO `messages` (`Date`, `Message`, `Conversation_Id`, `utilisateur_Id`) VALUES ( '" + message.Date.ToString("yyyy-MM-dd hh:mm:ss") + "', '" + message.Contenu + "', '" + idConversation + "', '" + message.idUtilisateur + "');";
             BD.Commande(req);
             GetMessages();
         }
@@ -154,7 +154,7 @@ namespace LeCollectionneur.Modeles
         {
             List<Conversation> ListConversation = new List<Conversation>();
             
-            string req = "SELECT * FROM  conversations WHERE idUtilisateur1 = "+ UtilisateurADO.utilisateur.Id+ " OR idUtilisateur2=" + UtilisateurADO.utilisateur.Id;
+            string req = "SELECT * FROM  conversations WHERE Utilisateur1_Id = " + UtilisateurADO.utilisateur.Id+ " OR Utilisateur2_Id=" + UtilisateurADO.utilisateur.Id;
             
             DataSet conversation = BD.Selection(req);
             for (int i = 0; i < conversation.Tables[0].Rows.Count; i++)
@@ -167,7 +167,7 @@ namespace LeCollectionneur.Modeles
         {
             ObservableCollection<Conversation> ListConversation = new ObservableCollection<Conversation>();
 
-            string req = "SELECT * FROM  conversations WHERE idUtilisateur1 = " + UtilisateurADO.utilisateur.Id + " OR idUtilisateur2 = " + UtilisateurADO.utilisateur.Id;
+            string req = "SELECT * FROM  conversations WHERE Utilisateur1_Id = " + UtilisateurADO.utilisateur.Id + " OR Utilisateur2_Id = " + UtilisateurADO.utilisateur.Id;
             
             DataSet conversation = BD.Selection(req);
             for (int i = 0; i < conversation.Tables[0].Rows.Count; i++)

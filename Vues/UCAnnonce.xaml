@@ -134,7 +134,7 @@
                 <DataGridTextColumn Binding="{Binding Path=Titre}" Header="Titre" Width="4*"></DataGridTextColumn>
                 <DataGridTextColumn Binding="{Binding Path=Annonceur.NomUtilisateur}" Header="Annonceur" Width="2*"></DataGridTextColumn>
                 <DataGridTextColumn Binding="{Binding Path=DatePublication, StringFormat=yyyy-MM-dd}" Header="Date" Width="1.4*"></DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Path=Type}" Header="Type d'annonce" Width="2*"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=Type.Nom}" Header="Type d'annonce" Width="2*"></DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
 
@@ -179,8 +179,8 @@
                 <DataGrid ItemsSource="{Binding LesItems}" SelectedItem="{Binding ItemSelectionne}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" Grid.Row="5" Grid.ColumnSpan="2" IsReadOnly="True" SelectionChanged="DataGrid_SelectionChanged">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Path=Nom}" Header="Nom" Width="3*"></DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Path=Type}" Header="Type" Width="2*"></DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Path=Condition}" Header="Condition" Width="2*"></DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=Type.Nom}" Header="Type" Width="2*"></DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=Condition.Nom}" Header="Condition" Width="2*"></DataGridTextColumn>
                         <DataGridTemplateColumn Header="Détails" Width="2*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>

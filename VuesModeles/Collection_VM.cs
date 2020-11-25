@@ -369,8 +369,8 @@ namespace LeCollectionneur.VuesModeles
                     Nom = Validateur.Echappement(Nom.Trim());
                     neoItem = new Item();
                     neoItem.Nom = Nom;
-                    neoItem.Type = Type;
-                    neoItem.Condition = Condition;
+                    neoItem.Type = new TypeItem(Type);
+                    neoItem.Condition = new Modeles.Condition(Condition);
                     if (!(Description is null) && Description.Trim().Length > 0)
                     {
                         Description = Validateur.Echappement(Description.Trim());
@@ -471,8 +471,8 @@ namespace LeCollectionneur.VuesModeles
                 
                     ItemSelectionne.Nom = Validateur.Echappement(Nom.Trim());
                     ItemSelectionne.DateSortie = DateSortie.GetValueOrDefault();
-                    ItemSelectionne.Type = Type;
-                    ItemSelectionne.Condition = Condition;
+                    ItemSelectionne.Type = new TypeItem(Type);
+                    ItemSelectionne.Condition = new Modeles.Condition(Condition);
                     ItemSelectionne.Description = Validateur.Echappement(Description.Trim());
                     ItemSelectionne.Manufacturier = Validateur.Echappement(Manufacturier.Trim());
                     if (!(NomFichier is null)&&NomFichier.Trim().Length>0)
@@ -652,8 +652,8 @@ namespace LeCollectionneur.VuesModeles
             Nom = ItemSelectionne.Nom;
             DateSortie = ItemSelectionne.DateSortie;
             Manufacturier = ItemSelectionne.Manufacturier;
-            Condition = ItemSelectionne.Condition;
-            Type = ItemSelectionne.Type;
+            Condition = ItemSelectionne.Condition.Nom;
+            Type = ItemSelectionne.Type.Nom;
             Description = ItemSelectionne.Description;
         }
         private void ChangerImageItem()

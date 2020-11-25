@@ -214,7 +214,7 @@ namespace LeCollectionneur.VuesModeles
             //Ici on veut ajouter l'annonce en BD
             NouvelleAnnonce.Titre = Validateur.Echappement(Titre.Trim());
             NouvelleAnnonce.Montant = Math.Round(Montant, 2);
-            NouvelleAnnonce.Type = Type;
+            NouvelleAnnonce.Type = new TypeAnnonce(Type);
             if(String.IsNullOrWhiteSpace(Description))
             {
                 NouvelleAnnonce.Description = "";

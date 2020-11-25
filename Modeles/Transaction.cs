@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -9,11 +10,13 @@ using LeCollectionneur.Outils.Enumerations;
 
 namespace LeCollectionneur.Modeles
 {
+	[Table("Transactions")]
 	public class Transaction
 	{
 		public int Id { get; set; }
 		public Proposition PropositionTrx { get; set; }
 		public DateTime Date { get; set; }
+		[NotMapped]
 		public string Role { get; set; }
 
 		public Transaction(Proposition proposition)
@@ -26,7 +29,7 @@ namespace LeCollectionneur.Modeles
 		public Transaction(DataRow dr)
 		{
 			Id = (int)dr["id"];
-			PropositionTrx = new PropositionADO().RecupererUnParId((int)dr["idProposition"]);
+			PropositionTrx = new PropositionADO().RecupererUnParId((int)dr["PropositionTrx_Id"]);
 			Date = (DateTime)dr["date"];
 			Role = PropositionTrx.Proposeur.Id == UtilisateurADO.utilisateur.Id ? "Proposeur" : "Annonceur";
 		}
@@ -38,9 +41,9 @@ namespace LeCollectionneur.Modeles
 			CollectionADO collADO = new CollectionADO();
 			ItemADO iADO = new ItemADO();
 
-			PropositionTrx.EtatProposition = EtatsProposition.Acceptee;
+			PropositionTrx.EtatProposition = new EtatProposition(EtatsProposition.Acceptee);
 			propADO.Modifier(PropositionTrx);
-			PropositionTrx.AnnonceLiee.EtatAnnonce = EtatsAnnonce.Terminee;
+			PropositionTrx.AnnonceLiee.EtatAnnonce = new EtatAnnonce(EtatsAnnonce.Terminee);
 			annonceADO.Modifier(PropositionTrx.AnnonceLiee);
 
 			propADO.RefuserPropositionsActivesSurAnnonce(PropositionTrx.AnnonceLiee.Id);
@@ -52,7 +55,7 @@ namespace LeCollectionneur.Modeles
 
 				//Transfert Items Proposeur->Annonceur
 				int idNouvelleCollectionAnnonceur = collADO.AjouterRetourId(
-					new Collection() { DateCreation = DateTime.Now, Nom = $"{PropositionTrx.AnnonceLiee.Type}: {PropositionTrx.AnnonceLiee.Titre.Replace("'", @"\'")}", ItemsCollection = new ObservableCollection<Item>() },
+					new Collection() { DateCreation = DateTime.Now, Nom = $"{PropositionTrx.AnnonceLiee.Type.Nom}: {PropositionTrx.AnnonceLiee.Titre.Replace("'", @"\'")}", ItemsCollection = new ObservableCollection<Item>() },
 					PropositionTrx.AnnonceLiee.Annonceur.Id
 					);
 
@@ -67,7 +70,7 @@ namespace LeCollectionneur.Modeles
 			annonceADO.AnnulerAnnoncesActivesAvecItems(PropositionTrx.AnnonceLiee.ListeItems);
 			//Transfert Items Annonceur->Proposeur
 			int idNouvelleCollectionProposeur = collADO.AjouterRetourId(
-					new Collection() { DateCreation = DateTime.Now, Nom = $"{PropositionTrx.AnnonceLiee.Type}: {PropositionTrx.AnnonceLiee.Titre.Replace("'", @"\'")}", ItemsCollection = new ObservableCollection<Item>() },
+					new Collection() { DateCreation = DateTime.Now, Nom = $"{PropositionTrx.AnnonceLiee.Type.Nom}: {PropositionTrx.AnnonceLiee.Titre.Replace("'", @"\'")}", ItemsCollection = new ObservableCollection<Item>() },
 					PropositionTrx.Proposeur.Id
 					);
 

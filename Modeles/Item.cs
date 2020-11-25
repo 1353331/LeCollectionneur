@@ -1,6 +1,8 @@
 ﻿using LeCollectionneur.Outils;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -10,19 +12,22 @@ using System.Windows.Media.Imaging;
 
 namespace LeCollectionneur.Modeles
 {
-    public class Item
+   [Table("Items")]
+   public class Item
     {
         #region Propriétés
         public int Id { get; set; }
         public string Nom { get; set; }
         public DateTime? DateSortie { get; set; }
-        public String CheminImage { get; set; } 
-        public string Type { get; set; }
-        public string Condition { get; set; }
+        public string CheminImage { get; set; } 
+        public TypeItem Type { get; set; }
+        public Condition Condition { get; set; }
         public string Manufacturier { get; set; }
+        public ObservableCollection<Proposition> Propositions { get; set; }
+        public ObservableCollection<Annonce> Annonces { get; set; }
         //public int Quantite { get; set; }
         public string Description { get; set; }
-       
+        [NotMapped]
         public BitmapImage BmImage { get; set; }
         #endregion
 
@@ -46,8 +51,8 @@ namespace LeCollectionneur.Modeles
             if (!drItem.IsNull("dateSortie"))
             DateSortie = (DateTime)drItem["dateSortie"];
             // Reste à get le Type, Condition et Manufacturier.
-            Type = (String)drItem["typeItem"];
-                Condition = (String)drItem["condition"]; 
+            Type = new TypeItem((String)drItem["typeItem"]);
+              Condition = new Condition((String)drItem["condition"]); 
             if (!(CheminImage is null))
             {
                 BmImage = Fichier.TransformerBitmapEnBitmapImage(Fichier.RecupererImageServeur(CheminImage));

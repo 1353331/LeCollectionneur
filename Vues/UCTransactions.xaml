@@ -79,7 +79,7 @@
                         <DataGrid Name="dgProposition" ItemsSource="{Binding ItemsGauche}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" Grid.ColumnSpan="2" IsReadOnly="True">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Path=Nom}" Header="Nom" Width="3*"></DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path=Condition}" Header="Condition" Width="3*"></DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Path=Condition.Nom}" Header="Condition" Width="3*"></DataGridTextColumn>
                                 <DataGridTemplateColumn Width="2*">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
@@ -117,7 +117,7 @@
                         <DataGrid Name="dgOffre" ItemsSource="{Binding ItemsDroite}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" Grid.ColumnSpan="2" IsReadOnly="True">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Path=Nom}" Header="Nom" Width="3*"></DataGridTextColumn>
-                                <DataGridTextColumn Binding="{Binding Path=Condition}" Header="Condition" Width="3*"></DataGridTextColumn>
+                                <DataGridTextColumn Binding="{Binding Path=Condition.Nom}" Header="Condition" Width="3*"></DataGridTextColumn>
                                 <DataGridTemplateColumn Width="2*">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>

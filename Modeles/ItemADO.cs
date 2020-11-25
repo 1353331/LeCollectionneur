@@ -46,9 +46,9 @@ namespace LeCollectionneur.Modeles
             // On recherche les Items selon la Collection entrée.
             ObservableCollection<Item> lesItems = new ObservableCollection<Item>();
             string sel = $"select i.id , i.nom as nomItem, i.description,i.dateSortie , i.cheminImage  , c.nom as 'condition' , t.nom as 'typeItem' , manufacturier from Items i " +
-                $" INNER JOIN Conditions as c on i.idCondition = c.id" +
-                $" INNER JOIN TypesItem as t on i.idTypeItem=t.id" +
-                $" WHERE i.idCollection = {idCollection};";
+                $" INNER JOIN Conditions as c on i.Condition_Id = c.id" +
+                $" INNER JOIN TypesItem as t on i.Type_Id=t.id" +
+                $" WHERE i.Collection_Id = {idCollection};";
             DataSet SetItem = MaBD.Selection(sel);
             DataTable TableItem = SetItem.Tables[0];
 
@@ -61,8 +61,8 @@ namespace LeCollectionneur.Modeles
         public Item RecupererUn(int id)
         {
             string sel = $"select i.id, i.nom as nomItem, i.description,i.dateSortie , i.cheminImage , t.nom as 'typeItem' , manufacturier, c.Nom AS 'condition' from Items i " +
-                $" INNER JOIN TypesItem as t on i.idTypeItem=t.id" +
-                $" INNER JOIN Conditions as c on i.idCondition = c.id" +
+                $" INNER JOIN TypesItem as t on i.Type_Id=t.id" +
+                $" INNER JOIN Conditions as c on i.Condition_Id = c.id" +
                 $" WHERE i.id = {id};";
             DataSet SetItem = MaBD.Selection(sel);
             DataTable TableItem = SetItem.Tables[0];
@@ -71,10 +71,10 @@ namespace LeCollectionneur.Modeles
         }
         public int RecupererIdCollection(Item item)
         {
-            string select = $"SELECT idCollection from Items WHERE id={item.Id}";
+            string select = $"SELECT Collection_Id from Items WHERE id={item.Id}";
             DataSet SetId = MaBD.Selection(select);
             DataTable TableId = SetId.Tables[0];
-            return (int)TableId.Rows[0]["idCollection"];
+            return (int)TableId.Rows[0]["Collection_Id"];
         }
         #endregion
 
@@ -84,10 +84,10 @@ namespace LeCollectionneur.Modeles
             // Ne modifie pas le chemin de l'image.
             string req = $"update Items set Nom = '{i.Nom}' , " +
                 $"Description='{i.Description}', " +
-                $"idTypeItem= (SELECT id from TypesItem WHERE nom='{i.Type}')," +
+                $"Type_Id= (SELECT id from TypesItem WHERE nom='{i.Type.Nom}')," +
                 $"Manufacturier = " + (!(i.Manufacturier is null) ? $"'{i.Manufacturier}'" : "NULL") + ", " +
                 $"dateSortie = "+ (i.DateSortie.HasValue&&DateTime.Compare(i.DateSortie.GetValueOrDefault(),new DateTime(1,1,1,0,0,0))!=0 ? $"'{i.DateSortie.GetValueOrDefault().Year}-{i.DateSortie.GetValueOrDefault().Month}-{i.DateSortie.GetValueOrDefault().Day}'":"NULL") +", " +
-                $"idCondition = (SELECT id FROM conditions WHERE nom='{i.Condition}')"+
+                $"Condition_Id = (SELECT id FROM conditions WHERE nom='{i.Condition.Nom}')"+
                 $"where id = {i.Id}";
             MaBD.Commande(req);
             
@@ -95,7 +95,7 @@ namespace LeCollectionneur.Modeles
         public void TransfererItem(Collection cDestination, Item i)
         {
             // Transfert d'un item d'une collection à une autre en BD.
-            string req = $"UPDATE Items SET idCollection={cDestination.Id} WHERE id={i.Id}";
+            string req = $"UPDATE Items SET Collection_Id={cDestination.Id} WHERE id={i.Id}";
             MaBD.Commande(req);
         }
 
@@ -123,11 +123,11 @@ namespace LeCollectionneur.Modeles
         #region Insert
         public void Ajouter(Item i,Collection c)
         {
-            string req = $"insert into Items" +
-                $" values(NULL,{c.Id},(SELECT id from Conditions WHERE nom='{i.Condition}')," +
+            string req = $"insert into Items (Collection_Id, Condition_Id, Nom, CheminImage, Type_Id, Description, DateSortie, Manufacturier)" +
+                $" values({c.Id},(SELECT id from Conditions WHERE nom='{i.Condition.Nom}')," +
                 $"'{i.Nom}'," +
                 (i.CheminImage is null ? "NULL," : $"'{i.CheminImage}',") +
-                $"(SELECT id from TypesItem WHERE nom='{i.Type}')," +
+                $"(SELECT id from TypesItem WHERE nom='{i.Type.Nom}')," +
                 $"'{i.Description}'," +
                  (i.DateSortie.HasValue ? $"'{i.DateSortie.GetValueOrDefault().Year}-{i.DateSortie.GetValueOrDefault().Month}-{i.DateSortie.GetValueOrDefault().Day}'" : "NULL") + ", " +
                  (!(i.Manufacturier is null) ? $"'{i.Manufacturier}'" : "NULL") + "); ";
@@ -136,11 +136,11 @@ namespace LeCollectionneur.Modeles
         }
         public int AjouterAvecRetourId(Item i, Collection c)
         {
-            string req = $"insert into Items" +
-                $" values(NULL,{c.Id},(SELECT id from Conditions WHERE nom='{i.Condition}')," +
+            string req = $"insert into Items (Collection_Id, Condition_Id, Nom, CheminImage, Type_Id, Description, DateSortie, Manufacturier)" +
+                $" values({c.Id},(SELECT id from Conditions WHERE nom='{i.Condition.Nom}')," +
                 $"'{i.Nom}'," +
                 (i.CheminImage is null ? "NULL," : $"'{i.CheminImage}',") +
-                $"(SELECT id from TypesItem WHERE nom='{i.Type}')," +
+                $"(SELECT id from TypesItem WHERE nom='{i.Type.Nom}')," +
                 $"'{i.Description}'," +
                 (i.DateSortie.HasValue ? $"'{i.DateSortie.GetValueOrDefault().Year}-{i.DateSortie.GetValueOrDefault().Month}-{i.DateSortie.GetValueOrDefault().Day}'" : "NULL") + ", " +
                 (!(i.Manufacturier is null ) ? $"'{i.Manufacturier}'" : "NULL") + "); "+
@@ -182,7 +182,7 @@ namespace LeCollectionneur.Modeles
 
         public bool EstDansAnnonce(Item item)
         {
-            string requete = $"SELECT * FROM Itemannonce WHERE idItem = {item.Id}";
+            string requete = $"SELECT * FROM itemannonces WHERE Item_Id = {item.Id}";
             DataSet resultat=MaBD.Selection(requete);
             if (resultat.Tables[0].Rows.Count > 0)
             {
@@ -194,7 +194,7 @@ namespace LeCollectionneur.Modeles
 
         public bool EstDansProposition(Item item)
         {
-            string requete = $"SELECT * FROM ItemProposition WHERE idItem = {item.Id}";
+            string requete = $"SELECT * FROM propositionitems WHERE Item_Id = {item.Id}";
             DataSet resultat = MaBD.Selection(requete);
             if (resultat.Tables[0].Rows.Count>0)
             {
