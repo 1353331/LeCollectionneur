@@ -73,7 +73,7 @@ namespace LeCollectionneur.VuesModeles
                 Annonceur = _annonceSelectionnee.Annonceur;
                 Titre = _annonceSelectionnee.Titre;
                 DatePublication = _annonceSelectionnee.DatePublication;
-                Type = _annonceSelectionnee.Type;
+                Type = _annonceSelectionnee.Type.Nom;
                 Description = _annonceSelectionnee.Description;
                 Montant = _annonceSelectionnee.Montant;
 
@@ -487,7 +487,7 @@ namespace LeCollectionneur.VuesModeles
 
         private ObservableCollection<Annonce> FiltrerParTypeAnnonce()
         {
-            ObservableCollection<Annonce> LesAnnoncesFiltrees = new ObservableCollection<Annonce>(LesAnnonces.Where(a => a.Type == TypeAnnonceFiltre).ToList());
+            ObservableCollection<Annonce> LesAnnoncesFiltrees = new ObservableCollection<Annonce>(LesAnnonces.Where(a => a.Type.Nom == TypeAnnonceFiltre).ToList());
             return LesAnnoncesFiltrees;
         }
 
@@ -503,7 +503,7 @@ namespace LeCollectionneur.VuesModeles
                 //Ici dans le 2e Where, on regarde si les items ont le type d'item spécifié par l'utilisateur
                 //Puis, on garde seulement les items avec le type spécifié (la fonction ToList())
                 //Si la liste a au moins un item à l'intérieur ( plus grand que 0 ), alors cela veut dire que l'annonce a un item avec le type d'item spécifié
-                a.ListeItems.Where(i => i.Type == TypeItemFiltre).ToList().Count() > 0
+                a.ListeItems.Where(i => i.Type.Nom == TypeItemFiltre).ToList().Count() > 0
             ).ToList()); //On garde seulement les annonces ayant un item du type d'item spécifié
 
             return LesAnnoncesFiltrees;

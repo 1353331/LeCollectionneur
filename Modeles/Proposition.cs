@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ using LeCollectionneur.Outils.Enumerations;
 
 namespace LeCollectionneur.Modeles
 {
+	[Table("Propositions")]
 	public class Proposition
 	{
 
@@ -17,14 +19,14 @@ namespace LeCollectionneur.Modeles
 		public Utilisateur Proposeur { get; set; }
 		public double Montant { get; set; }
 		public DateTime DateProposition{ get; set; }
-		public string EtatProposition{ get; set; }
+		public EtatProposition EtatProposition{ get; set; }
 
 		public ObservableCollection<Item> ItemsProposes { get; set; }
 
 		public Proposition()
 		{
 			ItemsProposes = new ObservableCollection<Item>();
-			EtatProposition = EtatsProposition.EnAttente;
+			EtatProposition = new EtatProposition(EtatsProposition.EnAttente);
 		}
 
 		public Proposition(DataRow dr)
@@ -33,11 +35,11 @@ namespace LeCollectionneur.Modeles
 			UtilisateurADO utilisateurADO = new UtilisateurADO();
 
 			Id = (int)dr["id"];
-			AnnonceLiee = annonceADO.RecupererUn((int)dr["idAnnonce"]);
-			Proposeur = utilisateurADO.RechercherUtilisateurById((int)dr["idUtilisateur"]);
+			AnnonceLiee = annonceADO.RecupererUn((int)dr["AnnonceLiee_Id"]);
+			Proposeur = utilisateurADO.RechercherUtilisateurById((int)dr["Proposeur_Id"]);
 			Montant = (double)dr["montant"];
 			DateProposition = (DateTime)dr["dateProposition"];
-			EtatProposition = (string)dr["etatProposition"];
+			EtatProposition = new EtatProposition((string)dr["etatProposition"]);
 
 			ItemsProposes = new ObservableCollection<Item>();
 		}

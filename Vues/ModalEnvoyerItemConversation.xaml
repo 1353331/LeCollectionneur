@@ -33,8 +33,8 @@
         <DataGrid Grid.Column="1" SelectionMode="Extended" SelectedItem="{Binding ItemsSelectionnes}"  ItemsSource="{Binding ItemsCollectionSelectionnee}"  Grid.RowSpan="3" Margin="10" SelectionUnit="FullRow" IsReadOnly="True" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Nom" Binding="{Binding Nom}" Width="Auto" />
-                <DataGridTextColumn Header="Type" Binding="{Binding Type}"  Width="Auto"  />
-                <DataGridTextColumn Header="Condition" Binding="{Binding Condition}"  Width="Auto"  />
+                <DataGridTextColumn Header="Type" Binding="{Binding Type.Nom}"  Width="Auto"  />
+                <DataGridTextColumn Header="Condition" Binding="{Binding Condition.Nom}"  Width="Auto"  />
             </DataGrid.Columns>
         </DataGrid>
 
@@ -62,12 +62,12 @@
                 </StackPanel>
                 <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="2,5,5,0">
                     <Label>Condition:</Label>
-                    <TextBox Text="{Binding ItemsSelectionnes.Condition}" Name="tbxConditionItem" Height="23" Width="118" Margin="0,4" IsReadOnly="True">
+                    <TextBox Text="{Binding ItemsSelectionnes.Condition.Nom}" Name="tbxConditionItem" Height="23" Width="118" Margin="0,4" IsReadOnly="True">
                     </TextBox>
                 </StackPanel>
                 <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="5,5,5,0">
                     <Label>Type:</Label>
-                    <TextBox Text="{Binding ItemsSelectionnes.Type}" Name="tbxItemType" Height="23" Width="143" Margin="0,4" IsReadOnly="True">
+                    <TextBox Text="{Binding ItemsSelectionnes.Type.Nom}" Name="tbxItemType" Height="23" Width="143" Margin="0,4" IsReadOnly="True">
                     </TextBox>
                 </StackPanel>
                 <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="5,5,5,0">

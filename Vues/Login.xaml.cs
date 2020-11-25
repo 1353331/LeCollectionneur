@@ -1,4 +1,5 @@
-﻿using LeCollectionneur.Modeles;
+﻿using LeCollectionneur.EF;
+using LeCollectionneur.Modeles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,9 @@ namespace LeCollectionneur.Vues
         public Login()
         {
             InitializeComponent();
-        }
+
+            OutilEF outilEF = new OutilEF();
+      }
 
         private void ButtonInscription(object sender, RoutedEventArgs e)
         {

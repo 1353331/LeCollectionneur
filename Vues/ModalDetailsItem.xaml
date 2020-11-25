@@ -34,13 +34,13 @@
 
         <StackPanel Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2">
             <Label VerticalAlignment="Center" >Condition:</Label>
-            <TextBox Text="{Binding ItemDetails.Condition}" VerticalAlignment="Center" Name="tbxConditionItem" Height="auto" Margin="5" IsReadOnly="True">
+            <TextBox Text="{Binding ItemDetails.Condition.Nom}" VerticalAlignment="Center" Name="tbxConditionItem" Height="auto" Margin="5" IsReadOnly="True">
             </TextBox>
         </StackPanel>
         
         <StackPanel Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2">
             <Label VerticalAlignment="Center" >Type:</Label>
-            <TextBox Text="{Binding ItemDetails.Type}" VerticalAlignment="Center" Name="tbxItemType" Height="auto" Margin="5" IsReadOnly="True">
+            <TextBox Text="{Binding ItemDetails.Type.Nom}" VerticalAlignment="Center" Name="tbxItemType" Height="auto" Margin="5" IsReadOnly="True">
             </TextBox>
         </StackPanel>
 

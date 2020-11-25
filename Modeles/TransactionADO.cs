@@ -22,7 +22,7 @@ namespace LeCollectionneur.Modeles
 		public void Ajouter(Transaction trx)
 		{
 			string requete = $@"
-			INSERT INTO Transactions (idProposition, Date)
+			INSERT INTO Transactions (PropositionTrx_Id, Date)
 			VALUES
 			({trx.PropositionTrx.Id}, '{trx.Date:yyyy-MM-dd HH:mm:ss}');
 			";
@@ -38,7 +38,7 @@ namespace LeCollectionneur.Modeles
 			ObservableCollection<Transaction> lstTrx = new ObservableCollection<Transaction>();
 
 			string requete = @"
-			SELECT id, idProposition, Date
+			SELECT id, PropositionTrx_Id, Date
 			FROM Transactions
 			ORDER BY Date DESC;
 			";
@@ -57,7 +57,7 @@ namespace LeCollectionneur.Modeles
 		public Transaction RecupereUn(int idTransaction)
 		{
 			string requete = $@"
-			SELECT Id, idProposition, Date
+			SELECT Id, PropositionTrx_Id, Date
 			FROM Transactions
 			WHERE Id = {idTransaction} 
 			";
@@ -66,7 +66,6 @@ namespace LeCollectionneur.Modeles
 			DataTable tableTransaction = setTransaction.Tables[0];
 
 			return new Transaction(tableTransaction.Rows[0]);
-
 		}
 
 		public ObservableCollection<Transaction> RecupererToutParUtilisateur(int idUtilisateur)
@@ -74,13 +73,13 @@ namespace LeCollectionneur.Modeles
 			ObservableCollection<Transaction> lstTrx = new ObservableCollection<Transaction>();
 
 			string requete = $@"
-			SELECT id, idProposition, Date
+			SELECT id, PropositionTrx_Id, Date
 			FROM Transactions
-			WHERE idProposition IN (SELECT Id
-											FROM Propositions
-											WHERE (idUtilisateur = {idUtilisateur} OR idAnnonce IN (SELECT Id
-																													 FROM Annonces
-																													 WHERE idUtilisateur = {idUtilisateur})))
+			WHERE PropositionTrx_Id IN (SELECT Id
+												FROM Propositions
+												WHERE (Proposeur_Id = {idUtilisateur} OR AnnonceLiee_Id IN (SELECT Id
+																															FROM Annonces
+																															WHERE Annonceur_Id = {idUtilisateur})))
 
 			ORDER BY Date DESC;
 			";
@@ -103,7 +102,7 @@ namespace LeCollectionneur.Modeles
 		{
 			string requete = $@"
 			UPDATE Transactions
-			SET idProposition = {trx.PropositionTrx.Id}, Date = '{trx.Date:yyyy-MM-dd HH:mm:ss}'
+			SET PropositionTrx_Id = {trx.PropositionTrx.Id}, Date = '{trx.Date:yyyy-MM-dd HH:mm:ss}'
 			WHERE Id = {trx.Id}
 			";
 

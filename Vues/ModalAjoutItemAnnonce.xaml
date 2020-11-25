@@ -43,8 +43,8 @@
             </DataGrid.RowStyle>
             <local2:CustomDataGrid.Columns>
                 <DataGridTextColumn Header="Nom" Binding="{Binding Nom}" Width="1.5*" />
-                <DataGridTextColumn Header="Type" Binding="{Binding Type}"  Width="*"  />
-                <DataGridTextColumn Header="Condition" Binding="{Binding Condition}"  Width="*"  />
+                <DataGridTextColumn Header="Type" Binding="{Binding Type.Nom}"  Width="*"  />
+                <DataGridTextColumn Header="Condition" Binding="{Binding Condition.Nom}"  Width="*"  />
             </local2:CustomDataGrid.Columns>
         </local2:CustomDataGrid>
 
@@ -72,12 +72,12 @@
                 </StackPanel>
                 <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="2,5,5,0">
                     <Label>Condition:</Label>
-                    <TextBox Text="{Binding ItemSelectionne.Condition}" Name="tbxConditionItem" Height="23" Width="118" Margin="0,4" IsReadOnly="True">
+                    <TextBox Text="{Binding ItemSelectionne.Condition.Nom}" Name="tbxConditionItem" Height="23" Width="118" Margin="0,4" IsReadOnly="True">
                     </TextBox>
                 </StackPanel>
                 <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="5,5,5,0">
                     <Label>Type:</Label>
-                    <TextBox Text="{Binding ItemSelectionne.Type}" Name="tbxItemType" Height="23" Width="143" Margin="0,4" IsReadOnly="True">
+                    <TextBox Text="{Binding ItemSelectionne.Type.Nom}" Name="tbxItemType" Height="23" Width="143" Margin="0,4" IsReadOnly="True">
                     </TextBox>
                 </StackPanel>
                 <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="5,5,5,0">

@@ -49,7 +49,7 @@ namespace LeCollectionneur.VuesModeles.ContexteAdmin
                 Annonceur = _annonceSelectionnee.Annonceur;
                 Titre = _annonceSelectionnee.Titre;
                 DatePublication = _annonceSelectionnee.DatePublication;
-                Type = _annonceSelectionnee.Type;
+                Type = _annonceSelectionnee.Type.Nom;
                 Description = _annonceSelectionnee.Description;
                 Montant = _annonceSelectionnee.Montant;
 
