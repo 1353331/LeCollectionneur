@@ -1,4 +1,5 @@
-﻿using LeCollectionneur.Modeles;
+﻿using LeCollectionneur.EF;
+using LeCollectionneur.Modeles;
 using LeCollectionneur.Outils;
 using LeCollectionneur.Outils.Interfaces;
 using LeCollectionneur.Vues;
@@ -12,6 +13,7 @@ using System.IO.Packaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Annotations;
 using System.Windows.Input;
 using System.Windows.Markup;
@@ -50,6 +52,7 @@ namespace LeCollectionneur.VuesModeles
         private AnnonceADO annonceADO = new AnnonceADO();
 
         #region Partie Annonce
+
         private ObservableCollection<Annonce> _lesAnnonces;
         public ObservableCollection<Annonce> LesAnnonces 
         { 
@@ -76,11 +79,6 @@ namespace LeCollectionneur.VuesModeles
                 Type = _annonceSelectionnee.Type.Nom;
                 Description = _annonceSelectionnee.Description;
                 Montant = _annonceSelectionnee.Montant;
-
-                if(_annonceSelectionnee.ListeItems is null)
-                {
-                    _annonceSelectionnee.RecupererItems();
-                }
 
                 LesItems = _annonceSelectionnee.ListeItems;
 
@@ -161,7 +159,6 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _lesItems = value;
-
                 OnPropertyChanged("LesItems");
             }
         }
@@ -233,6 +230,18 @@ namespace LeCollectionneur.VuesModeles
                 OnPropertyChanged("ProposerOuModifier");
             }
         }
+
+        private Visibility _visibiliteSpinner;
+        public Visibility VisibiliteSpinner
+        {
+            get { return _visibiliteSpinner; }
+            set
+            {
+                _visibiliteSpinner = value;
+                OnPropertyChanged("VisibiliteSpinner");
+            }
+        }
+
         #endregion
 
         #region Partie Filtres
@@ -365,28 +374,96 @@ namespace LeCollectionneur.VuesModeles
                 OnPropertyChanged("FiltrerParMesAnnonces");
             }
         }
+
+
         #endregion
 
         #region Méthodes
         private void initAnnonces()
         {
             LesAnnonces = new ObservableCollection<Annonce>();
+            chargerAnnonces();
+            //if(Annonce.ToutesLesAnnonces.Count == 0)
+            //{
+            //    LesAnnonces = annonceADO.Recuperer();
+            //}
+            //else
+            //{
+            //    LesAnnonces = Annonce.ToutesLesAnnonces;
+            //}
+        }
 
-            if(Annonce.ToutesLesAnnonces.Count == 0)
+        private readonly BackgroundWorker worker = new BackgroundWorker();
+
+        private void chargerAnnonces()
+        {
+            LesAnnonces = new ObservableCollection<Annonce>();
+            VisibiliteSpinner = Visibility.Visible;
+            if (!worker.IsBusy)
             {
-                LesAnnonces = annonceADO.Recuperer();
+                worker.DoWork += Worker_DoWork;
+                worker.RunWorkerCompleted += WorkerEnvoyees_RunWorkerCompleted;
+                worker.RunWorkerAsync();
             }
-            else
+        }
+
+        private void Worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            using (Context context = new Context())
             {
-                LesAnnonces = Annonce.ToutesLesAnnonces;
+                List<Annonce> lstAnnonces = context.Annonces.Include("Annonceur")
+                                                                .Include("EtatAnnonce")
+                                                                .Include("Type")
+                                                                .Include("ListeItems.Type")
+                                                                .Include("ListeItems.Condition")
+                                                                .Where(a => a.EtatAnnonce.Id == 2)
+                                                                .ToList();
+
+                ObservableCollection<Annonce> ocAnnonces = changerListAnnoncesEnOCAnnonces(lstAnnonces);
+                LesAnnonces = ocAnnonces;
             }
+        }
+
+        private void WorkerEnvoyees_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            VisibiliteSpinner = Visibility.Collapsed;
+            if (LesAnnonces.Count > 0)
+            {
+                AnnonceSelectionnee = LesAnnonces.First();
+            }
+        }
+
+
+        private ObservableCollection<Annonce> changerListAnnoncesEnOCAnnonces(List<Annonce> lstAnnonces)
+        {
+            ObservableCollection<Annonce> ocAnnonces = new ObservableCollection<Annonce>();
+            foreach (Annonce annonce in lstAnnonces)
+            {
+                foreach (Item item in annonce.ListeItems)
+                {
+                    if (!String.IsNullOrWhiteSpace(item.CheminImage))
+                    {
+                        item.BmImage = Fichier.TransformerBitmapEnBitmapImage(Fichier.RecupererImageServeur(item.CheminImage));
+                        if (item.BmImage is null)
+                        {
+                            ItemADO gestionItem = new ItemADO();
+                            item.CheminImage = null;
+                            gestionItem.EnleverCheminImage(item.Id);
+                        }
+                    }
+                }
+                ocAnnonces.Add(annonce);
+            }
+
+            return ocAnnonces;
         }
 
         private void cmdAjouterAnnonce(object param)
         {
             IOuvreModal fenetre = param as IOuvreModal;
             fenetre.OuvrirModal();
-            LesAnnonces = annonceADO.Recuperer();
+            //LesAnnonces = annonceADO.Recuperer();
+            chargerAnnonces();
         }
 
         private void cmdProposer(object param)
@@ -409,7 +486,8 @@ namespace LeCollectionneur.VuesModeles
             {
                 Annonce AnnonceTEMP = AnnonceSelectionnee;
                 modal.OuvrirModal(AnnonceSelectionnee, nomModal);
-                LesAnnonces = annonceADO.Recuperer();
+                //LesAnnonces = annonceADO.Recuperer();
+                chargerAnnonces();
                 AnnonceSelectionnee = LesAnnonces.Single(a => a.Id == AnnonceTEMP.Id);
             }
         }
@@ -470,8 +548,9 @@ namespace LeCollectionneur.VuesModeles
 
         private void cmdFiltrer(object param)
         {
-            LesAnnonces = annonceADO.Recuperer();
-
+            //LesAnnonces = annonceADO.Recuperer();
+            chargerAnnonces();
+            
             if (TypeAnnonceFiltre != null && TypeAnnonceFiltre != FILTRE_NULL)
                 LesAnnonces = FiltrerParTypeAnnonce();
 
@@ -529,7 +608,8 @@ namespace LeCollectionneur.VuesModeles
             }
             else
             {
-                LesAnnonces = annonceADO.Recuperer();
+                //LesAnnonces = annonceADO.Recuperer();
+                chargerAnnonces();
             }
         }
 
@@ -545,7 +625,8 @@ namespace LeCollectionneur.VuesModeles
             DateFinFiltre = DateTime.Now;
             FiltrerParMesAnnonces = false;
 
-            LesAnnonces = annonceADO.Recuperer();
+            //LesAnnonces = annonceADO.Recuperer();
+            chargerAnnonces();
 
         }
 

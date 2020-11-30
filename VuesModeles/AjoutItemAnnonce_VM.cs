@@ -152,11 +152,11 @@ namespace LeCollectionneur.VuesModeles
             //EvenementSysteme.Publier<EnvoyerItemMessage>(new EnvoyerItemMessage() { Item = ItemSelectionne });
             EnvoyerItemsMessage EIM = new EnvoyerItemsMessage();
             EvenementSysteme.Publier<EnvoyerItemsMessage>(new EnvoyerItemsMessage() { Items = EIM.ConvertirIListEnObservColl(ItemsSelectionnes) });
-			   foreach (ItemAjout item in ItemsSelectionnes)
-			   {
-               item.EstAjoute = true;
-               ItemsAjoutes.Add(item);
-			   }
+			foreach (ItemAjout item in ItemsSelectionnes)
+			{
+                item.EstAjoute = true;
+                ItemsAjoutes.Add(item);
+			}
             ItemsSelectionnes = null;
             CollectionSelectionnee = CollectionSelectionnee;
       }

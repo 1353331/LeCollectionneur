@@ -188,7 +188,6 @@ namespace LeCollectionneur.VuesModeles
 			}
 		}
 
-
 		private bool _recuesSelectionnees;
 
 		private bool RecuesSelectionnees

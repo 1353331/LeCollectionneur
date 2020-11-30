@@ -4,6 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
              xmlns:local="clr-namespace:LeCollectionneur.Vues"
              mc:Ignorable="d" 
              d:DesignHeight="900" d:DesignWidth="1500">
@@ -137,6 +138,7 @@
                 <DataGridTextColumn Binding="{Binding Path=Type.Nom}" Header="Type d'annonce" Width="2*"></DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
+        <fa:ImageAwesome Icon="CircleOutlineNotch" Spin="True" Grid.Row="1" Grid.ColumnSpan="2" Margin="85" MaxHeight="50" MaxWidth="50" Visibility="{Binding VisibiliteSpinner}"></fa:ImageAwesome>
 
         <!--GroupBox pour l'affichage d'une annonce-->
         <GroupBox Header="Détails de l'annonce" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2"  Margin="7,10,0,0">

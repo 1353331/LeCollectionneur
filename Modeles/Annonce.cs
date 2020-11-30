@@ -49,7 +49,9 @@ namespace LeCollectionneur.Modeles
             DatePublication = (DateTime)dr["DatePublication"];
             Type = new TypeAnnonce((string)dr["typeAnnonce"]);
             Description = (string)dr["Description"];
+
             //ListeItems = annonceADO.RecupererListeItems(Id);
+            ListeItems = new ObservableCollection<Item>();
             Montant = (double)dr["montant"];
             EtatAnnonce = new EtatAnnonce((string)dr["etatAnnonce"]);
 
