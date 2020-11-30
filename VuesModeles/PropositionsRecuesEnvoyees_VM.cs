@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 using LeCollectionneur.EF;
 using LeCollectionneur.Modeles;
 using LeCollectionneur.Outils;
@@ -18,6 +19,7 @@ namespace LeCollectionneur.VuesModeles
 {
 	public class PropositionsRecuesEnvoyees_VM : INotifyPropertyChanged
 	{
+		#region Commandes
 		private ICommand _cmdAccepterProposition;
 
 		public ICommand cmdAccepterProposition
@@ -60,6 +62,7 @@ namespace LeCollectionneur.VuesModeles
 		public ICommand cmdPropositionsEnvoyees { get; set; }
 
 		public ICommand cmdEnvoyerMessage { get; set; }
+		#endregion
 
 		#region Propriétés
 		PropositionADO propADO = new PropositionADO();
@@ -86,7 +89,18 @@ namespace LeCollectionneur.VuesModeles
 				OnPropertyChanged("VisibiliteSpinner");
 			}
 		}
+		
+		private Visibility _visibiliteMessage;
 
+		public Visibility VisibiliteMessage
+		{
+			get { return _visibiliteMessage; }
+			set
+			{
+				_visibiliteMessage = value;
+				OnPropertyChanged("VisibiliteMessage");
+			}
+		}
 
 		private ObservableCollection<Proposition> _propositionsAffichees;
 
@@ -127,6 +141,7 @@ namespace LeCollectionneur.VuesModeles
 						ItemsDroite = PropositionSelectionnee.AnnonceLiee.ListeItems;
 						MontantDroite = PropositionSelectionnee.AnnonceLiee.Montant;
 					}
+					VisibiliteMessage = Visibility.Visible;
 				}
 				else
 				{
@@ -134,6 +149,7 @@ namespace LeCollectionneur.VuesModeles
 					ItemsDroite = new ObservableCollection<Item>();
 					MontantDroite = 0;
 					MontantGauche = 0;
+					VisibiliteMessage = Visibility.Hidden;
 				}
 
 				OnPropertyChanged("PropositionSelectionnee");
@@ -209,14 +225,21 @@ namespace LeCollectionneur.VuesModeles
 		{
 			_recuesSelectionnees = true;
 			ControlesActifs = true;
+			VisibiliteMessage = Visibility.Hidden;
 			chargerPropositionsRecues();
-			//PropositionsAffichees = propADO.RecupererPropositionsRecues(UtilisateurADO.utilisateur.Id);
 			changementVisibiliteCommandes();
 			cmdPropositionsRecues = new Commande(cmdRecues);
 			cmdPropositionsEnvoyees = new Commande(cmdEnvoyees);
 			cmdDetails_Item = new Commande(cmdDetailsItem);
 			cmdEnvoyerMessage = new Commande(cmdEnvMessage);
 		}
+
+		~PropositionsRecuesEnvoyees_VM()
+		{
+			
+		}
+
+		#region Async
 
 		private readonly BackgroundWorker worker = new BackgroundWorker();
 
@@ -227,8 +250,8 @@ namespace LeCollectionneur.VuesModeles
 			VisibiliteSpinner = Visibility.Visible;
 			if (!worker.IsBusy)
 			{
-				worker.DoWork += Worker_DoWork;
-				worker.RunWorkerCompleted += WorkerEnvoyees_RunWorkerCompleted;
+				worker.DoWork += Worker_DoWorkRecues;
+				worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
 				worker.RunWorkerAsync();
 			}
 		}
@@ -241,14 +264,14 @@ namespace LeCollectionneur.VuesModeles
 			VisibiliteSpinner = Visibility.Visible;
 			if (!worker.IsBusy)
 			{
-				worker.DoWork += Worker_DoWork2;
-				worker.RunWorkerCompleted += WorkerEnvoyees_RunWorkerCompleted;
+				worker.DoWork += Worker_DoWorkEnvoyees;
+				worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
 				worker.RunWorkerAsync();
 			}
 
 		}
 
-		private void WorkerEnvoyees_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+		private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
 			ControlesActifs = true;
 			VisibiliteSpinner = Visibility.Collapsed;
@@ -258,31 +281,37 @@ namespace LeCollectionneur.VuesModeles
 			}
 		}
 
-		private void Worker_DoWork(object sender, DoWorkEventArgs e)
+		private void Worker_DoWorkRecues(object sender, DoWorkEventArgs e)
 		{
-			List<Proposition> lstPropositions = OutilEF.ctx.Propositions.Include("Proposeur")
-																					.Include("AnnonceLiee.ListeItems.Condition")
-																					.Include("AnnonceLiee.ListeItems.Type")
-																					.Include("AnnonceLiee.Type")
-																					.Include("AnnonceLiee.EtatAnnonce")
-																					.Include("ItemsProposes.Type")
-																					.Include("ItemsProposes.Condition")
-																					.Include("EtatProposition")
-																					.Include("AnnonceLiee.Annonceur")
-																					.Where(p => p.AnnonceLiee.Annonceur.Id == UtilisateurADO.utilisateur.Id)
-																					.ToList();
-
-			ObservableCollection<Proposition> ocPropositions = changerListPropositionsEnOCProposition(lstPropositions);
-
-			if (RecuesSelectionnees)
+			using (Context context = new Context())
 			{
-				PropositionsAffichees = ocPropositions;
+				List<Proposition> lstPropositions = context.Propositions.Include("Proposeur")
+																					 .Include("AnnonceLiee.ListeItems.Condition")
+																					 .Include("AnnonceLiee.ListeItems.Type")
+																					 .Include("AnnonceLiee.Type")
+																					 .Include("AnnonceLiee.EtatAnnonce")
+																					 .Include("ItemsProposes.Type")
+																					 .Include("ItemsProposes.Condition")
+																					 .Include("EtatProposition")
+																					 .Include("AnnonceLiee.Annonceur")
+																					 .AsNoTracking()
+																					 .Where(p => p.AnnonceLiee.Annonceur.Id == UtilisateurADO.utilisateur.Id)
+																					 .ToList();
+
+				ObservableCollection<Proposition> ocPropositions = changerListPropositionsEnOCProposition(lstPropositions);
+
+				if (RecuesSelectionnees)
+				{
+					PropositionsAffichees = ocPropositions;
+				}
 			}
 		}
 
-		private void Worker_DoWork2(object sender, DoWorkEventArgs e)
+		private void Worker_DoWorkEnvoyees(object sender, DoWorkEventArgs e)
 		{
-			List<Proposition> lstPropositions = OutilEF.ctx.Propositions.Include("Proposeur")
+			using (Context context = new Context())
+			{
+				List<Proposition> lstPropositions = context.Propositions.Include("Proposeur")
 																					.Include("EtatProposition")
 																					.Include("AnnonceLiee.ListeItems.Condition")
 																					.Include("AnnonceLiee.ListeItems.Type")
@@ -291,53 +320,19 @@ namespace LeCollectionneur.VuesModeles
 																					.Include("AnnonceLiee.Annonceur")
 																					.Include("ItemsProposes.Type")
 																					.Include("ItemsProposes.Condition")
+																					.AsNoTracking()
 																					.Where(p => p.Proposeur.Id == UtilisateurADO.utilisateur.Id)
 																					.ToList();
 
-			ObservableCollection<Proposition> ocPropositions = changerListPropositionsEnOCProposition(lstPropositions);
-			if (!RecuesSelectionnees)
-			{
-				PropositionsAffichees = ocPropositions;
+				ObservableCollection<Proposition> ocPropositions = changerListPropositionsEnOCProposition(lstPropositions);
+				if (!RecuesSelectionnees)
+				{
+					PropositionsAffichees = ocPropositions;
+				}
 			}
 		}
 
-		private ObservableCollection<Proposition> changerListPropositionsEnOCProposition(List<Proposition> lstPropositions)
-		{
-			ObservableCollection<Proposition> ocPropositions = new ObservableCollection<Proposition>();
-			foreach (Proposition proposition in lstPropositions)
-			{
-				foreach (Item item in proposition.ItemsProposes)
-				{
-					if (!String.IsNullOrWhiteSpace(item.CheminImage))
-					{
-						item.BmImage = Fichier.TransformerBitmapEnBitmapImage(Fichier.RecupererImageServeur(item.CheminImage));
-						if (item.BmImage is null)
-						{
-							ItemADO gestionItem = new ItemADO();
-							item.CheminImage = null;
-							gestionItem.EnleverCheminImage(item.Id);
-						}
-					}
-				}
-
-				foreach (Item item in proposition.AnnonceLiee.ListeItems)
-				{
-					if (!String.IsNullOrWhiteSpace(item.CheminImage))
-					{
-						item.BmImage = Fichier.TransformerBitmapEnBitmapImage(Fichier.RecupererImageServeur(item.CheminImage));
-						if (item.BmImage is null)
-						{
-							ItemADO gestionItem = new ItemADO();
-							item.CheminImage = null;
-							gestionItem.EnleverCheminImage(item.Id);
-						}
-					}
-				}
-				ocPropositions.Add(proposition);
-			}
-
-			return ocPropositions;
-		}
+		#endregion
 
 		#region Implémentation des commandes
 		private void cmdAccepter(object param)
@@ -347,7 +342,14 @@ namespace LeCollectionneur.VuesModeles
 				//On modifie la propriété sélectionnée en BD, puis on reload les propositions reçues
 				Transaction nouvelleTransaction = new Transaction(PropositionSelectionnee);
 				nouvelleTransaction.EffectuerTransaction();
-				MessageBox.Show($"La transaction a été effectuée. Vous pouvez retrouver vos nouveaux items dans la nouvelle collection \"{PropositionSelectionnee.AnnonceLiee.Type.Nom}: {PropositionSelectionnee.AnnonceLiee.Titre}\"", "Échange réussie", MessageBoxButton.OK, MessageBoxImage.Information);
+				if (PropositionSelectionnee.ItemsProposes.Count > 0)
+				{
+					MessageBox.Show($"La transaction a été effectuée. Vous pouvez retrouver vos nouveaux items dans la nouvelle collection \"{PropositionSelectionnee.AnnonceLiee.Type.Nom}: {PropositionSelectionnee.AnnonceLiee.Titre}\"", "Échange réussie", MessageBoxButton.OK, MessageBoxImage.Information);
+				}
+				else
+				{
+					MessageBox.Show($"La transaction a été effectuée. Vos items ont été transférés à l'utilisateur \" {PropositionSelectionnee.Proposeur.NomUtilisateur} \"", "Échange réussie", MessageBoxButton.OK, MessageBoxImage.Information);
+				}
 
 				chargerPropositionsRecues();
 				//PropositionsAffichees = propADO.RecupererPropositionsRecues(UtilisateurADO.utilisateur.Id);
@@ -419,6 +421,8 @@ namespace LeCollectionneur.VuesModeles
 		}
 		#endregion
 
+		#region Méthodes Privées
+
 		private bool UnePropositionSelectionnee()
 		{
 			return !(PropositionSelectionnee is null);
@@ -436,7 +440,46 @@ namespace LeCollectionneur.VuesModeles
 			cmdAnnulerProposition = new Commande(cmdAnnuler, BoutonsActifs);
 		}
 
+		private ObservableCollection<Proposition> changerListPropositionsEnOCProposition(List<Proposition> lstPropositions)
+		{
+			ObservableCollection<Proposition> ocPropositions = new ObservableCollection<Proposition>();
+			foreach (Proposition proposition in lstPropositions)
+			{
+				foreach (Item item in proposition.ItemsProposes)
+				{
+					if (!String.IsNullOrWhiteSpace(item.CheminImage))
+					{
+						item.BmImage = Fichier.TransformerBitmapEnBitmapImage(Fichier.RecupererImageServeur(item.CheminImage));
+						if (item.BmImage is null)
+						{
+							ItemADO gestionItem = new ItemADO();
+							item.CheminImage = null;
+							gestionItem.EnleverCheminImage(item.Id);
+						}
+					}
+				}
 
+				foreach (Item item in proposition.AnnonceLiee.ListeItems)
+				{
+					if (!String.IsNullOrWhiteSpace(item.CheminImage))
+					{
+						item.BmImage = Fichier.TransformerBitmapEnBitmapImage(Fichier.RecupererImageServeur(item.CheminImage));
+						if (item.BmImage is null)
+						{
+							ItemADO gestionItem = new ItemADO();
+							item.CheminImage = null;
+							gestionItem.EnleverCheminImage(item.Id);
+						}
+					}
+				}
+				ocPropositions.Add(proposition);
+			}
+
+			return ocPropositions;
+		}
+		
+
+		#endregion
 
 		#region NotifyPropertyChanged
 		public event PropertyChangedEventHandler PropertyChanged;

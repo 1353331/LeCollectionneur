@@ -186,41 +186,12 @@ namespace LeCollectionneur.Modeles
 			}
 		}
 
-		public void RefuserPropositionsActivesAvecItems(IEnumerable<Item> items)
-		{
-			if (items.Count() > 0)
-			{
-				string idItems = "";
-
-				foreach (Item item in items)
-				{
-					idItems += $"{item.Id}";
-					if (item != items.Last())
-						idItems += ", ";
-				}
-
-				string requete = $@"
-				UPDATE Propositions
-				SET
-				EtatProposition_Id = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.Refusee}')
-				WHERE EtatProposition_Id = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.EnAttente}')
-				AND Id IN (
-								SELECT Proposition_Id
-								FROM propositionitems
-								WHERE Item_Id IN ({idItems})
-						   );
-				
-				";
-				MaBd.Commande(requete);
-			}
-		}
-
 		public void RefuserPropositionsActivesSurAnnonce(int idAnnonce)
 		{
 			string requete = $@"
 				UPDATE Propositions
 				SET
-				EtatProposition_Id = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.Refusee}')
+				EtatProposition_Id = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.Declassee}')
 				WHERE EtatProposition_Id = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.EnAttente}')
 						AND AnnonceLiee_Id = {idAnnonce}
 				";

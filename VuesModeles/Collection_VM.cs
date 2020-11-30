@@ -376,7 +376,7 @@ namespace LeCollectionneur.VuesModeles
                         Description = Validateur.Echappement(Description.Trim());
                         neoItem.Description = Description;
                     }
-
+                    neoItem.DateSortie = DateSortie;
 
                     if (!(Manufacturier is null) && Manufacturier.Trim().Length > 0)
                     {

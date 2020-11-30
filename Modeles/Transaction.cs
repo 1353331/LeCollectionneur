@@ -19,6 +19,10 @@ namespace LeCollectionneur.Modeles
 		[NotMapped]
 		public string Role { get; set; }
 
+		public Transaction()
+		{
+
+		}
 		public Transaction(Proposition proposition)
 		{
 			PropositionTrx = proposition;
