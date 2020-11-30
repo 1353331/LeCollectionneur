@@ -4,11 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:fa="http://schemas.fontawesome.io/icons/"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:LeCollectionneur.Vues"
              xmlns:converters="clr-namespace:LeCollectionneur.Outils"
              mc:Ignorable="d"
              x:Name="UCPropositions"
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="700" d:DesignWidth="1500"
              >
 
     <!-- Pour utiliser l'image de message comme un bouton et éviter que l'image disparaisse lors d'un MouseOver -->
@@ -45,14 +46,14 @@
             <ColumnDefinition Width="3*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-           <!-- RadioButton propositions -->
-        <StackPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10">
-            <RadioButton Padding="5" Name="radPropositionsRecues" Content="Reçues" IsChecked="True" IsEnabled="{Binding ControlesActifs}" Checked="radPropositionsRecues_Checked" Command="{Binding cmdPropositionsRecues}"></RadioButton>
-            <RadioButton Padding="5" Name="radPropositionsEnvoyees" Content="Envoyées" Checked="radPropositionsEnvoyees_Checked" IsEnabled="{Binding ControlesActifs}" Command="{Binding cmdPropositionsEnvoyees}"></RadioButton>
-        </StackPanel>
-
+        <GroupBox Header="Type de proposition" FontWeight="SemiBold" Margin="5">
+            <DockPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" LastChildFill="True">
+                <RadioButton Margin="50,0" Name="radPropositionsRecues" Content="Reçues" IsChecked="True" IsEnabled="{Binding ControlesActifs}" Checked="radPropositionsRecues_Checked" Command="{Binding cmdPropositionsRecues}"></RadioButton>
+                <RadioButton Margin="50,0" Name="radPropositionsEnvoyees" Content="Envoyées" Checked="radPropositionsEnvoyees_Checked" IsEnabled="{Binding ControlesActifs}" Command="{Binding cmdPropositionsEnvoyees}"></RadioButton>
+            </DockPanel>
+        </GroupBox>
         <!-- Listes Reçues/Envoyées -->
-        <DockPanel LastChildFill="True" Grid.Row="1">
+        <DockPanel LastChildFill="True" Grid.Row="1" Margin="5,10,5,10">
             <TextBlock Text="Mes Propositions" FontWeight="DemiBold" DockPanel.Dock="Top" TextAlignment="Center" />
 
             <DataGrid Name="dgPropositions" ItemsSource="{Binding PropositionsAffichees}" SelectedItem="{Binding PropositionSelectionnee}" IsHitTestVisible="{Binding ControlesActifs}" HorizontalScrollBarVisibility="Auto" AutoGenerateColumns="False" IsReadOnly="True" Margin="7,10,0,0">
@@ -63,7 +64,7 @@
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>
-        <fa:ImageAwesome Icon="CircleOutlineNotch" Spin="True" Grid.Row="1" Margin="85" MaxHeight="50" MaxWidth="50" Visibility="{Binding VisibiliteSpinner}"></fa:ImageAwesome>
+        <fa:ImageAwesome Icon="CircleOutlineNotch" Foreground="#607D8B" Spin="True" Grid.Row="1" Margin="85" MaxHeight="75" MaxWidth="75" Visibility="{Binding VisibiliteSpinner}"/>
 
         <!-- Section détails -->
         <GroupBox Header="Détails" Grid.Row="1" Margin="10,0,10,10" Grid.Column="1" BorderBrush="Black" FontWeight="Bold">
@@ -114,7 +115,7 @@
                         </DataGrid>
 
                         <Label Name="lblMontantGauche" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Montant demandé: "></Label>
-                        <TextBox Name="tbxMontantProposition" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsReadOnly="True" Text="{Binding MontantGauche}" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center"></TextBox>
+                        <TextBox Name="tbxMontantProposition" FontSize="18" FontWeight="Bold" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsReadOnly="True" Text="{Binding MontantGauche}" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center"></TextBox>
                     </Grid>
                 </GroupBox>
 
@@ -153,9 +154,9 @@
                         </DataGrid>
 
                         <Label Name="lblMontantDroite" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Montant proposé: "></Label>
-                        <TextBox Name="tbxMontantOffre" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsReadOnly="True" Text="{Binding MontantDroite}" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center"></TextBox>
+                        <TextBox Name="tbxMontantOffre" FontSize="18" FontWeight="Bold"  Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsReadOnly="True" Text="{Binding MontantDroite}" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center"></TextBox>
 
-                        <Button Name="btnMessageOffre" Grid.Row="2" Grid.Column="1" Style="{StaticResource btnMessageImageStyle}" Margin="60,0,0,0" Visibility="Visible" Command="{Binding cmdEnvoyerMessage}"
+                        <Button Name="btnMessageOffre" Grid.Row="2" Grid.Column="1" Style="{StaticResource btnMessageImageStyle}" Margin="60,0,0,0" Visibility="{Binding VisibiliteMessage}" Command="{Binding cmdEnvoyerMessage}"
                             CommandParameter="{Binding ElementName=UCPropositions}" MaxHeight="50" MaxWidth="80"></Button>
                     </Grid>
                 </GroupBox>

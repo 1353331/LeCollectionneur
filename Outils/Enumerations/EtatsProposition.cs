@@ -12,5 +12,6 @@ namespace LeCollectionneur.Outils.Enumerations
 		public const string Acceptee = "Acceptée";
 		public const string EnAttente = "En attente";
 		public const string Refusee = "Refusée";
+		public const string Declassee = "Déclassée";
 	}
 }

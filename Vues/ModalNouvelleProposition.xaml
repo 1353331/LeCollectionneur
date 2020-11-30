@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LeCollectionneur.Vues"
         mc:Ignorable="d"
-        Title="Nouvelle proposition" Height="500" Width="1000"
+        Title="Nouvelle proposition" MinHeight="500" MinWidth="1000" Height="500" Width="1000"
         xmlns:converters="clr-namespace:LeCollectionneur.Outils">
         <!-- Ligne en haut de celle-ci à ajouter pour avoir accès aux outils -->
     <Window.Resources>
@@ -76,14 +76,16 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <Button Grid.Row="1" Margin="15,10,15,10" Content="Retirer Item" Command="{Binding cmdSupprimerItem_Proposition}">
+                <TextBlock FontSize="15" FontWeight="Black" Grid.ColumnSpan="2" Visibility="{Binding VisibiliteAvertissement}" Text="L'ajout d'items est désactivé sur une annonce de type Vente" HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+                <Button Grid.Row="1" Margin="15,10,15,10" Content="Retirer Item" Command="{Binding cmdSupprimerItem_Proposition}" Visibility="{Binding VisibiliteControles}">
                     <Button.Resources>
                         <Style TargetType="Border">
                             <Setter Property="CornerRadius" Value="3"/>
                         </Style>
                     </Button.Resources>
                 </Button>
-                <Button Grid.Row="1" Grid.Column="1" Margin="15,10,15,10" Content="Ajouter Item" Command="{Binding cmdAjouterItem_Proposition}" CommandParameter="{Binding ElementName=WindowNouvelleProposition}">
+                <Button Grid.Row="1" Grid.Column="1" Margin="15,10,15,10" Content="Ajouter Item" Command="{Binding cmdAjouterItem_Proposition}" Visibility="{Binding VisibiliteControles}" CommandParameter="{Binding ElementName=WindowNouvelleProposition}">
                     <Button.Resources>
                         <Style TargetType="Border">
                             <Setter Property="CornerRadius" Value="3"/>
@@ -91,7 +93,7 @@
                     </Button.Resources>
                 </Button>
                 <Label Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">Montant proposé ($)</Label>
-                <TextBox Name="tbxMontantProposition" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center" Text="{Binding MontantProposition}" PreviewTextInput="tbxMontantProposition_PreviewTextInput"></TextBox>
+                <TextBox FontSize="16" Name="tbxMontantProposition" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center" Text="{Binding MontantProposition}" PreviewTextInput="tbxMontantProposition_PreviewTextInput"></TextBox>
             </Grid>
         </GroupBox>
 
@@ -134,7 +136,7 @@
                 </DataGrid>
 
                 <Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">Montant demandé ($)</Label>
-                <TextBox IsReadOnly="True" Name="tbxMontantOffre" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Text="{Binding MontantDemande}" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center"></TextBox>
+                <TextBox FontSize="16" IsReadOnly="True" Name="tbxMontantOffre" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Text="{Binding MontantDemande}" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center"></TextBox>
 
                 <Button Name="btnMessageOffre" Grid.Row="2" Grid.Column="1" Style="{StaticResource btnMessageImageStyle}" Margin="60,0,0,0" Command="{Binding cmdEnvoyerMessage}" CommandParameter="{Binding ElementName=WindowNouvelleProposition}"></Button>
             </Grid>

@@ -45,6 +45,37 @@ namespace LeCollectionneur.VuesModeles
 
 		public double MontantDemande { get; set; }
 
+		private Visibility _visibiliteAvertissement;
+
+		public Visibility VisibiliteAvertissement
+		{
+			get { return _visibiliteAvertissement; }
+			set 
+			{ 
+				_visibiliteAvertissement = value;
+				OnPropertyChanged("VisibiliteAvertissement");
+			}
+		}
+
+		private Visibility _visibiliteControles;
+
+		public Visibility VisibiliteControles
+		{
+			get { return _visibiliteControles; }
+			set
+			{
+				_visibiliteControles = value;
+				if (value == Visibility.Visible)
+				{
+					VisibiliteAvertissement = Visibility.Collapsed;
+				}
+				else
+				{
+					VisibiliteAvertissement = Visibility.Visible;
+				}
+				OnPropertyChanged("VisibiliteControles");
+			}
+		}
 
 		private double _montantProposition;
 
@@ -109,6 +140,15 @@ namespace LeCollectionneur.VuesModeles
 			MontantDemande = annonce.Montant;
 			ItemsAnnonce = annonce.ListeItems;
 			TitreEncadreProposition = $"Proposition sur {annonce.Titre}";
+
+			if (annonce.Type.Nom == "Vente")
+			{
+				VisibiliteControles = Visibility.Collapsed;
+			}
+			else
+			{
+				VisibiliteControles = Visibility.Visible;
+			}
 
 			//Abonnement à l'évènement Ajout d'un item à une proposition
 			EvenementSysteme.Abonnement<EnvoyerItemsMessage>(ajouterItemsMessage);
