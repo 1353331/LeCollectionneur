@@ -18,6 +18,8 @@ namespace LeCollectionneur.Modeles
         public string NomUtilisateur { get; set; }
         public string MotDePasse { get; set; }                                      
         public string Courriel { get; set; }
+        public string Role { get; set; }
+        public bool EstActif { get; set; }
         public ObservableCollection<Collection> MesCollections { get; set; }
         #endregion
 
@@ -36,6 +38,10 @@ namespace LeCollectionneur.Modeles
             this.Id = (int)Compte.Tables[0].Rows[0]["id"];
             this.NomUtilisateur = Compte.Tables[0].Rows[0]["NomUtilisateur"].ToString();
             this.Courriel = Compte.Tables[0].Rows[0]["Courriel"].ToString();
+
+            //VC Ajout des colonnes EstActif et Role
+            EstActif = (bool)Compte.Tables[0].Rows[0]["EstActif"];
+            Role = Compte.Tables[0].Rows[0]["Role"].ToString();
         }
         //Contrusteur par DataRow
         public Utilisateur(DataRow Compte)
@@ -43,6 +49,13 @@ namespace LeCollectionneur.Modeles
             this.Id = (int)Compte["id"];
             this.NomUtilisateur = Compte["NomUtilisateur"].ToString();
             this.Courriel = Compte["Courriel"].ToString();
+        }
+        public Utilisateur(DataRow donnees,bool versionAdmin)
+        {
+            Id = (int)donnees["id"];
+            NomUtilisateur = (string)donnees["nomUtilisateur"];
+            Role = (string)donnees["role"];
+            EstActif = (bool)donnees["estActif"];
         }
         //Constructeur Vide pour Utilisateur Ado
         public Utilisateur(){ }
