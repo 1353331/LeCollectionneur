@@ -78,14 +78,14 @@
 
                 <TextBlock FontSize="15" FontWeight="Black" Grid.ColumnSpan="2" Visibility="{Binding VisibiliteAvertissement}" Text="L'ajout d'items est désactivé sur une annonce de type Vente" HorizontalAlignment="Center" VerticalAlignment="Center" />
 
-                <Button Grid.Row="1" Margin="15,10,15,10" Content="Retirer Item" Command="{Binding cmdSupprimerItem_Proposition}" Visibility="{Binding VisibiliteControles}">
+                <Button Grid.Row="1" Margin="15,10,15,10" Content="Retirer Item" Command="{Binding cmdSupprimerItem_Proposition}" IsEnabled="{Binding ControlesActifs}">
                     <Button.Resources>
                         <Style TargetType="Border">
                             <Setter Property="CornerRadius" Value="3"/>
                         </Style>
                     </Button.Resources>
                 </Button>
-                <Button Grid.Row="1" Grid.Column="1" Margin="15,10,15,10" Content="Ajouter Item" Command="{Binding cmdAjouterItem_Proposition}" Visibility="{Binding VisibiliteControles}" CommandParameter="{Binding ElementName=WindowNouvelleProposition}">
+                <Button Grid.Row="1" Grid.Column="1" Margin="15,10,15,10" Content="Ajouter Item" Command="{Binding cmdAjouterItem_Proposition}" IsEnabled="{Binding ControlesActifs}" CommandParameter="{Binding ElementName=WindowNouvelleProposition}">
                     <Button.Resources>
                         <Style TargetType="Border">
                             <Setter Property="CornerRadius" Value="3"/>
@@ -138,7 +138,8 @@
                 <Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">Montant demandé ($)</Label>
                 <TextBox FontSize="16" IsReadOnly="True" Name="tbxMontantOffre" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Text="{Binding MontantDemande}" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center"></TextBox>
 
-                <Button Name="btnMessageOffre" Grid.Row="2" Grid.Column="1" Style="{StaticResource btnMessageImageStyle}" Margin="60,0,0,0" Command="{Binding cmdEnvoyerMessage}" CommandParameter="{Binding ElementName=WindowNouvelleProposition}"></Button>
+                <Button Name="btnMessageOffre" Grid.Row="2" Grid.Column="1" Style="{StaticResource btnMessageImageStyle}" Margin="60,0,0,0" Command="{Binding cmdEnvoyerMessage}" 
+                CommandParameter="{Binding ElementName=WindowNouvelleProposition}" MaxHeight="50" MaxWidth="80"></Button>
             </Grid>
         </GroupBox>
 

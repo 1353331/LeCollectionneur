@@ -20,6 +20,7 @@ namespace LeCollectionneur.Modeles
         public string Courriel { get; set; }
         public string Role { get; set; }
         public bool EstActif { get; set; }
+
         public ObservableCollection<Collection> MesCollections { get; set; }
         #endregion
 

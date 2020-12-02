@@ -42,11 +42,11 @@ namespace LeCollectionneur.Vues
 				txbEtatProposition.Visibility = Visibility.Hidden;
 				btnAnnulerProposition.Visibility = Visibility.Hidden;
 
-				gbGauche.Header = "Mon Annonce";
-				lblMontantGauche.Content = "Montant demandé: ";
+				dpPropositions.Visibility = Visibility.Visible;
+				dpTransactions.Visibility = Visibility.Collapsed;
 
-				gbDroite.Header = "Proposition";
-				lblMontantDroite.Content = "Montant proposé: ";
+				gbTypePropositions.Visibility = Visibility.Visible;
+				gbRoleTransactions.Visibility = Visibility.Collapsed;
 			}
 		}
 
@@ -59,11 +59,46 @@ namespace LeCollectionneur.Vues
 			txbEtatProposition.Visibility = Visibility.Visible;
 			btnAnnulerProposition.Visibility = Visibility.Visible;
 
-			gbGauche.Header = "Ma Proposition";
-			lblMontantGauche.Content = "Montant proposé: ";
+			dpPropositions.Visibility = Visibility.Visible;
+			dpTransactions.Visibility = Visibility.Collapsed;
+		}
+		private void btnTransactions_Click(object sender, RoutedEventArgs e)
+		{
+			btnRefuserProposition.Visibility = Visibility.Hidden;
+			btnAccepterProposition.Visibility = Visibility.Hidden;
+			lblEtatProposition.Visibility = Visibility.Hidden;
+			txbEtatProposition.Visibility = Visibility.Hidden;
+			btnAnnulerProposition.Visibility = Visibility.Hidden;
+			dpPropositions.Visibility = Visibility.Hidden;
+			gbTypePropositions.Visibility = Visibility.Hidden;
+			btnRafraichirPropositions.Visibility = Visibility.Hidden;
 
-			gbDroite.Header = "Annonce";
-			lblMontantDroite.Content = "Montant demandé: ";
+			dpTransactions.Visibility = Visibility.Visible;
+			gbRoleTransactions.Visibility = Visibility.Visible;
+			btnTransactions.Visibility = Visibility.Collapsed;
+			btnPropositions.Visibility = Visibility.Visible;
+		}
+
+		private void btnPropositions_Click(object sender, RoutedEventArgs e)
+		{
+			btnRefuserProposition.Visibility = Visibility.Visible;
+			btnAccepterProposition.Visibility = Visibility.Visible;
+			lblEtatProposition.Visibility = Visibility.Hidden;
+			txbEtatProposition.Visibility = Visibility.Hidden;
+			btnAnnulerProposition.Visibility = Visibility.Hidden;
+			btnRafraichirPropositions.Visibility = Visibility.Visible;
+
+			dpPropositions.Visibility = Visibility.Visible;
+			dpTransactions.Visibility = Visibility.Collapsed;
+
+			gbTypePropositions.Visibility = Visibility.Visible;
+			gbRoleTransactions.Visibility = Visibility.Collapsed;
+
+			btnTransactions.Visibility = Visibility.Visible;
+			btnPropositions.Visibility = Visibility.Collapsed;
+
+			radPropositionsEnvoyees.IsChecked = false;
+			radPropositionsRecues.IsChecked = true;
 		}
 
 		public void OuvrirModal(Item itemSelectionne)
@@ -79,5 +114,6 @@ namespace LeCollectionneur.Vues
 			modalMessage.Owner = Window.GetWindow(this);
 			modalMessage.ShowDialog();
 		}
+
 	}
 }

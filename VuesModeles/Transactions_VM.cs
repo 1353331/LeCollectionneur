@@ -159,21 +159,6 @@ namespace LeCollectionneur.VuesModeles
 			}
 		}
 
-		private string _dateTransaction;
-
-		public string DateTransaction
-		{
-			get
-			{
-				if (TransactionSelectionnee != null)
-				{
-					return TransactionSelectionnee.Date.ToString("yyyy-MM-dd");
-				}
-				return "Indisponible";
-			}
-			set { _dateTransaction = value; }
-		}
-
 
 		private ObservableCollection<Item> _itemsGauche;
 
