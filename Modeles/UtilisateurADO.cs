@@ -30,10 +30,19 @@ namespace LeCollectionneur.Modeles
         public bool connectionParId(int id)
         {
             utilisateur = RechercherUtilisateurById(id);
-            chargerColletion();
-            admin = utilisateur.NomUtilisateur == "admin";
-
-            return true;
+            
+            if (utilisateur.EstActif)
+            {
+                chargerColletion();
+                //admin = utilisateur.NomUtilisateur == "admin";
+                admin = utilisateur.Role == "Administrateur";
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            
         }
         public static List<Utilisateur> getAllUtilisateur()
         {
@@ -120,10 +129,14 @@ namespace LeCollectionneur.Modeles
             if (InfoValideConnection(User, MP))
             {
                 utilisateur = new Utilisateur(GetUserDataSet(User));
-                chargerColletion();
-                admin = utilisateur.NomUtilisateur == "admin";
-                       
-                return true;
+                if (utilisateur.EstActif)
+                {
+                    chargerColletion();
+                    //admin = utilisateur.NomUtilisateur == "admin";
+                    admin = utilisateur.Role == "Administrateur";                       
+                    return true;
+                }
+                
             }
             return false;
         }
@@ -193,8 +206,69 @@ namespace LeCollectionneur.Modeles
             collection = temp.Recuperer(utilisateur.Id);
         }
 
+        public ObservableCollection<Utilisateur> GetAllUsers()
+        {
+            ObservableCollection<Utilisateur> lesUtilisateurs = new ObservableCollection<Utilisateur>();
+            string req = $"SELECT id, nomUtilisateur,estActif,Role FROM Utilisateurs WHERE id!={utilisateur.Id}";
+            DataSet data=BD.Selection(req);
+            DataTable table = data.Tables[0];
+            foreach (DataRow item in table.Rows)
+            {
+                lesUtilisateurs.Add(new Utilisateur(item,true));
+            }
+            return lesUtilisateurs;
+        }
 
+        public int CompterCollections(Utilisateur utilisateur)
+        {
+            string req = $"SELECT COUNT(Id) FROM Collections WHERE Utilisateur_ID = {utilisateur.Id}";
+            DataSet data = BD.Selection(req);
+            DataTable table = data.Tables[0];
+            string retour = ((Int64)(table.Rows[0]["COUNT(Id)"])).ToString();
+            return int.Parse(retour);
+        }
+        public int CompterItems(Utilisateur utilisateur)
+        {
+            string req = $"SELECT COUNT(i.Id) FROM Items i INNER JOIN Collections c ON c.Id=Collection_Id WHERE c.Utilisateur_ID = {utilisateur.Id}";
+            DataSet data = BD.Selection(req);
+            DataTable table = data.Tables[0];
+            string retour = ((Int64)(table.Rows[0]["COUNT(i.Id)"])).ToString();
+            return int.Parse(retour);
+        }
+        public int CompterAnnonces(Utilisateur utilisateur)
+        {
+            string req = $"SELECT COUNT(Id) FROM Annonces  WHERE Annonceur_ID = {utilisateur.Id}";
+            DataSet data = BD.Selection(req);
+            DataTable table = data.Tables[0];
+            string retour = ((Int64)(table.Rows[0]["COUNT(Id)"])).ToString();
+            return int.Parse(retour);
+        }
+        public int CompterPropositions(Utilisateur utilisateur)
+        {
+            string req = $"SELECT COUNT(Id) FROM Propositions  WHERE Proposeur_ID = {utilisateur.Id}";
+            DataSet data = BD.Selection(req);
+            DataTable table = data.Tables[0];
+            string retour = ((Int64)(table.Rows[0]["COUNT(Id)"])).ToString();
+            return int.Parse(retour);
+        }
+        public int CompterTransactions(Utilisateur utilisateur)
+        {
+            string req = $"SELECT COUNT(t.Id) FROM Transactions t INNER JOIN Propositions p ON p.id = propositionTrx_Id   WHERE p.Proposeur_ID = {utilisateur.Id}";
+            DataSet data = BD.Selection(req);
+            DataTable table = data.Tables[0];
+            string retourProposeur = ((Int64)(table.Rows[0]["COUNT(t.Id)"])).ToString();
+            string req2 = $"SELECT COUNT(t.Id) FROM Transactions t INNER JOIN Propositions p ON p.id = propositionTrx_Id INNER JOIN Annonces a ON a.Id=p.AnnonceLiee_Id WHERE a.Annonceur_Id = {utilisateur.Id}";
+            DataSet data2 = BD.Selection(req);
+            DataTable table2 = data2.Tables[0];
+            string retourAnnonceur = ((Int64)(table2.Rows[0]["COUNT(t.Id)"])).ToString();
+            return int.Parse(retourProposeur)+int.Parse(retourAnnonceur);
+        }
 
+        public void ModifierEstActif(Utilisateur utilisateur)
+        {
+            string req = $"UPDATE Utilisateurs SET EstActif={utilisateur.EstActif} WHERE Id ={utilisateur.Id}";
+            BD.Commande(req);
+        }
         #endregion
     }
 }

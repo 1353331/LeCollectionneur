@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="LeCollectionneur.Vues.ContexteAdmin.UCStatistiquesUtilisateur"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LeCollectionneur.Vues.ContexteAdmin"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="750">
+    <Grid>
+
+        <GroupBox Header="{Binding Titre}" Margin="10,10">
+            <StackPanel HorizontalAlignment="Left" Width="300">
+                <Label Content="{Binding TxtNbCollections}" Margin="10,15" Height="25"/>
+                <Label Content="{Binding TxtNbItems}" Margin="10,15" Height="25"/>
+                <Label Content="{Binding TxtNbAnnonces}" Margin="10,15" Height="25"/>
+                <Label Content="{Binding TxtNbPropositions}" Margin="10,15" Height="25"/>
+                <Label Content="{Binding TxtNbTransactions}" Margin="10,15" Height="25"/>
+            </StackPanel>
+        </GroupBox>
+    </Grid>
+</UserControl>

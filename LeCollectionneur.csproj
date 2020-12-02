@@ -207,6 +207,8 @@
     <Compile Include="VuesModeles\Annonce_VM.cs" />
     <Compile Include="VuesModeles\Collection_VM.cs" />
     <Compile Include="VuesModeles\ContexteAdmin\AnnonceAdmin_VM.cs" />
+    <Compile Include="VuesModeles\ContexteAdmin\StatistiquesUtilisateur_VM.cs" />
+    <Compile Include="VuesModeles\ContexteAdmin\UtilisateursAdmin_VM.cs" />
     <Compile Include="VuesModeles\Conversation_VM.cs" />
     <Compile Include="VuesModeles\DeplacementItem_VM.cs" />
     <Compile Include="VuesModeles\ModalAjoutAnnonce_VM.cs" />
@@ -221,6 +223,9 @@
     <Compile Include="VuesModeles\Transactions_VM.cs" />
     <Compile Include="Vues\ajouterConversation.xaml.cs">
       <DependentUpon>ajouterConversation.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Vues\ContexteAdmin\UCStatistiquesUtilisateur.xaml.cs">
+      <DependentUpon>UCStatistiquesUtilisateur.xaml</DependentUpon>
     </Compile>
     <Compile Include="Vues\Conversation.xaml.cs">
       <DependentUpon>Conversation.xaml</DependentUpon>
@@ -307,6 +312,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Vues\ajouterConversation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Vues\ContexteAdmin\UCStatistiquesUtilisateur.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

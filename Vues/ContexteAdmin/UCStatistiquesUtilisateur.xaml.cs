@@ -1,4 +1,7 @@
-﻿using System;
+﻿using LeCollectionneur.EF;
+using LeCollectionneur.Modeles;
+using LeCollectionneur.VuesModeles.ContexteAdmin;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,14 +19,17 @@ using System.Windows.Shapes;
 namespace LeCollectionneur.Vues.ContexteAdmin
 {
     /// <summary>
-    /// Logique d'interaction pour Utilisateurs.xaml
+    /// Logique d'interaction pour UCStatistiquesUtilisateur.xaml
     /// </summary>
-    public partial class UCUtilisateurs : UserControl
+    public partial class UCStatistiquesUtilisateur : UserControl
     {
-        public UCUtilisateurs()
+      
+		
+        public UCStatistiquesUtilisateur(Utilisateur utilisateur)
         {
             InitializeComponent();
-            DataContext = new VuesModeles.ContexteAdmin.UtilisateursAdmin_VM(ref presenteurContenu);
-        }
+			DataContext = new StatistiquesUtilisateur_VM(utilisateur);
+		}
+		
     }
 }

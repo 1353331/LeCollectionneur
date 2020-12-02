@@ -53,8 +53,13 @@ namespace LeCollectionneur.Vues
             UtilisateurADO.connectionProf = false;
             if (temp.Connection(User.Text, MDP.Text))
                 this.Close();
-            else
+            else if (UtilisateurADO.utilisateur==null)
                 MessageBox.Show("Champs invalide");
+            else if (UtilisateurADO.utilisateur!=null)
+            {
+                MessageBox.Show("Votre compte a été désactivé par un administrateur");
+                UtilisateurADO.utilisateur = null;
+            }
 
         }
 
