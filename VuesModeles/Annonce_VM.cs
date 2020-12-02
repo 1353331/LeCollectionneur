@@ -28,6 +28,16 @@ namespace LeCollectionneur.VuesModeles
         private const string NOM_MODAL_PROPOSITION = "proposition";
         private const string NOM_MODAL_MODIFICATION = "modifier";
 
+        private readonly BackgroundWorker worker = new BackgroundWorker();
+        private readonly BackgroundWorker worker_update = new BackgroundWorker();
+        private AnnonceADO annonceADO = new AnnonceADO();
+
+        private bool onInitialise = false;
+        private bool onAjouteAnnonce = false;
+        private bool onModifieAnnonce = false;
+        private int idAnnonceMod;
+        private bool onSupprimeAnnonce = false;
+
         public ICommand cmdAjouterAnnonce_Annonce { get; set; }
         public ICommand cmdFiltrerMesAnnonces_Annonce { get; set; }
         public ICommand cmdEnvoyerMessage_Annonce{ get; set; }
@@ -35,6 +45,7 @@ namespace LeCollectionneur.VuesModeles
 
         public Annonce_VM()
         {
+            //Initialisation des commandes présentes dans l'onglet Annonce
             cmdFiltrer_Annonce = new Commande(cmdFiltrer, UneColonneCochee);
             cmdProposerOuModifier_Annonce = new Commande(cmdProposer, UneAnnonceSelectionnee);
             cmdAjouterAnnonce_Annonce = new Commande(cmdAjouterAnnonce);
@@ -45,13 +56,18 @@ namespace LeCollectionneur.VuesModeles
 
             ProposerOuModifier = PROPOSER;
 
-            initAnnonces();
-            initFiltre();
+            //On indique que l'on initialise (Pour le filtre des dates, cela est nécessaire)
+            onInitialise = true;
+
+            //On initialise la liste des annonces
+            LesAnnonces = new ObservableCollection<Annonce>();
+
+            //On charge l'onglet annonce
+            chargerAnnonces();
         }
 
-        private AnnonceADO annonceADO = new AnnonceADO();
 
-        #region Partie Annonce
+        #region Variables de la liste des annonces
 
         private ObservableCollection<Annonce> _lesAnnonces;
         public ObservableCollection<Annonce> LesAnnonces 
@@ -73,6 +89,7 @@ namespace LeCollectionneur.VuesModeles
                 if (_annonceSelectionnee == null)
                     return;
 
+                //Affiche les informations de l'annonce dans la partie de droite de l'écran
                 Annonceur = _annonceSelectionnee.Annonceur;
                 Titre = _annonceSelectionnee.Titre;
                 DatePublication = _annonceSelectionnee.DatePublication;
@@ -82,13 +99,19 @@ namespace LeCollectionneur.VuesModeles
 
                 LesItems = _annonceSelectionnee.ListeItems;
 
+                //Connaitre si c'est une annonce à l'utilisateur connecté
                 if (EstMonAnnonce())
                 {
+                    //Si l'annonce appartient à l'utilisateur connecté, il peut la modifier
                     ProposerOuModifier = MODIFIER;
                     cmdProposerOuModifier_Annonce = new Commande(cmdModifier, UneAnnonceSelectionnee);
+
+                    // TODO : Pouvoir supprimer sa propre Annonce
+                    
                 }
                 else
                 {
+                    //L'annonce n'appartient pas à l'utilisateur connecté, alors il peut proposer une offre
                     ProposerOuModifier = PROPOSER;
                     cmdProposerOuModifier_Annonce = new Commande(cmdProposer, UneAnnonceSelectionnee);
                 }
@@ -96,6 +119,21 @@ namespace LeCollectionneur.VuesModeles
                 OnPropertyChanged("AnnonceSelectionnee");
             } 
         }
+
+        private Visibility _visibiliteSpinner;
+        public Visibility VisibiliteSpinner
+        {
+            get { return _visibiliteSpinner; }
+            set
+            {
+                _visibiliteSpinner = value;
+                OnPropertyChanged("VisibiliteSpinner");
+            }
+        }
+
+        #endregion
+
+        #region Variables pour une annonce sélectionnée
 
         private Utilisateur _annonceur;
         public Utilisateur Annonceur
@@ -209,17 +247,6 @@ namespace LeCollectionneur.VuesModeles
             }
         }
 
-        private ICommand _cmdFiltrer_Annonce;
-        public ICommand cmdFiltrer_Annonce 
-        { 
-            get { return _cmdFiltrer_Annonce; }
-            set 
-            {
-                _cmdFiltrer_Annonce = value;
-                OnPropertyChanged("cmdFiltrer_Annonce");
-            }
-        }
-
         private string _proposerOuModifier;
         public string ProposerOuModifier
         {
@@ -231,20 +258,21 @@ namespace LeCollectionneur.VuesModeles
             }
         }
 
-        private Visibility _visibiliteSpinner;
-        public Visibility VisibiliteSpinner
+        #endregion
+
+        #region Variables pour les filtres
+
+        private ICommand _cmdFiltrer_Annonce;
+        public ICommand cmdFiltrer_Annonce
         {
-            get { return _visibiliteSpinner; }
+            get { return _cmdFiltrer_Annonce; }
             set
             {
-                _visibiliteSpinner = value;
-                OnPropertyChanged("VisibiliteSpinner");
+                _cmdFiltrer_Annonce = value;
+                OnPropertyChanged("cmdFiltrer_Annonce");
             }
         }
 
-        #endregion
-
-        #region Partie Filtres
         private ObservableCollection<string> _lesTypesAnnonce;
         public ObservableCollection<string> LesTypesAnnonce
         {
@@ -263,7 +291,12 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _typeAnnonceFiltre = value;
-                cmdFiltrer_Annonce.Execute(null);
+
+                //Si on initialise, on ne veut pas appliquer la commande de filtrage
+                if (!onInitialise)
+                {
+                    cmdFiltrer_Annonce.Execute(null);
+                }
                 OnPropertyChanged("TypeAnnonceFiltre");
             }
         }
@@ -286,12 +319,15 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _typeItemFiltre = value;
-                //ChargerTousLesItems();
-                cmdFiltrer_Annonce.Execute(null);
+
+                //Si on initialise, on ne veut pas appliquer la commande de filtrage
+                if (!onInitialise)
+                {
+                    cmdFiltrer_Annonce.Execute(null);
+                }
                 OnPropertyChanged("TypeItemFiltre");
             }
         }
-
 
         private DateTime _dateDebutFiltre;
         public DateTime DateDebutFiltre
@@ -300,7 +336,12 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _dateDebutFiltre = value;
-                cmdFiltrer_Annonce.Execute(null);
+
+                //Si on initialise, on ne veut pas appliquer la commande de filtrage
+                if (!onInitialise)
+                {
+                    cmdFiltrer_Annonce.Execute(null);
+                }
                 OnPropertyChanged("DateDebutFiltre");
             }
         }
@@ -312,7 +353,12 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _dateFinFiltre = value;
-                cmdFiltrer_Annonce.Execute(null);
+
+                //Si on initialise, on ne veut pas appliquer la commande de filtrage
+                if (!onInitialise)
+                {
+                    cmdFiltrer_Annonce.Execute(null);
+                }
                 OnPropertyChanged("DateFinFiltre");
             }
         }
@@ -375,34 +421,25 @@ namespace LeCollectionneur.VuesModeles
             }
         }
 
-
         #endregion
 
-        #region Méthodes
-        private void initAnnonces()
-        {
-            LesAnnonces = new ObservableCollection<Annonce>();
-            chargerAnnonces();
-            //if(Annonce.ToutesLesAnnonces.Count == 0)
-            //{
-            //    LesAnnonces = annonceADO.Recuperer();
-            //}
-            //else
-            //{
-            //    LesAnnonces = Annonce.ToutesLesAnnonces;
-            //}
-        }
-
-        private readonly BackgroundWorker worker = new BackgroundWorker();
+        #region Méthodes pour les annonces
 
         private void chargerAnnonces()
         {
-            LesAnnonces = new ObservableCollection<Annonce>();
+            //On affiche le spinner de chargement
             VisibiliteSpinner = Visibility.Visible;
+
+            //On s'assure que le worker n'est pas occupé
             if (!worker.IsBusy)
             {
+                //Ce qu'il doit faire
                 worker.DoWork += Worker_DoWork;
+
+                //Ce qu'il doit faire lorsqu'il a fini sa tâche
                 worker.RunWorkerCompleted += WorkerEnvoyees_RunWorkerCompleted;
+
+                //On fait la tâche en Async
                 worker.RunWorkerAsync();
             }
         }
@@ -411,6 +448,7 @@ namespace LeCollectionneur.VuesModeles
         {
             using (Context context = new Context())
             {
+                //On va récupérer tous les annonces et tous leurs informations
                 List<Annonce> lstAnnonces = context.Annonces.Include("Annonceur")
                                                                 .Include("EtatAnnonce")
                                                                 .Include("Type")
@@ -419,20 +457,152 @@ namespace LeCollectionneur.VuesModeles
                                                                 .Where(a => a.EtatAnnonce.Id == 2)
                                                                 .ToList();
 
+                //On change la liste d'annonces en ObservableCollection
                 ObservableCollection<Annonce> ocAnnonces = changerListAnnoncesEnOCAnnonces(lstAnnonces);
+
+                //On initialise LesAnnonces
                 LesAnnonces = ocAnnonces;
+
+                //On va récupérer les types d'annonce
+                List<TypeAnnonce> lstTypesAnnonce = context.TypesAnnonce.ToList();
+
+                //On transforme la liste des types d'annonce en OC de string
+                ObservableCollection<string> ocTypesAnnonce = new ObservableCollection<string>();
+                foreach (TypeAnnonce ta in lstTypesAnnonce)
+                {
+                    ocTypesAnnonce.Add(ta.Nom);
+                }
+
+                //On initialise LesTypesAnnonce
+                LesTypesAnnonce = ocTypesAnnonce;
+
+                //On va récupérer tous les types items de présents dans les items des annonces
+                ObservableCollection<string> ocTypesItem = new ObservableCollection<string>();
+                foreach (Annonce a in LesAnnonces)
+                {
+                    foreach (Item i in a.ListeItems)
+                    {
+                        if (!ocTypesItem.Contains(i.Type.Nom))
+                        {
+                            ocTypesItem.Add(i.Type.Nom);
+                        }
+                    }
+                }
+
+                //On initialise LesTypesItems
+                LesTypesItems = ocTypesItem;
             }
         }
 
         private void WorkerEnvoyees_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            VisibiliteSpinner = Visibility.Collapsed;
+            //On sélectionne la première annonce de présente dans la OC
             if (LesAnnonces.Count > 0)
             {
-                AnnonceSelectionnee = LesAnnonces.First();
+                AnnonceSelectionnee = LesAnnonces.First();  
+            }
+
+            //On ajoute les filtres null
+            LesTypesAnnonce.Add(FILTRE_NULL);
+            LesTypesItems.Add(FILTRE_NULL);
+
+            //On sélectionne le filtre null (le dernier ajouté)
+            TypeAnnonceFiltre = LesTypesAnnonce.Last();
+            TypeItemFiltre = LesTypesItems.Last();
+
+            //On initialise les filtres de date
+            DateDebutFiltre = PlusVieilleAnnonce();
+            DateFinFiltre = DateTime.Now;
+
+            //Une case de cochée par défaut
+            FiltrerParTitreAnnonce = true;
+
+            //On a terminé d'initialiser
+            onInitialise = false;
+
+            //On enlève le spinner de chargement
+            VisibiliteSpinner = Visibility.Collapsed;
+
+            //Ce qu'il doit faire
+            worker.DoWork -= Worker_DoWork;
+
+            //Ce qu'il doit faire lorsqu'il a fini sa tâche
+            worker.RunWorkerCompleted -= WorkerEnvoyees_RunWorkerCompleted;
+        }
+
+
+        private void UpdateAnnonce()
+        {
+            //On affiche le spinner de chargement
+            VisibiliteSpinner = Visibility.Visible;
+            
+            //On s'assure que le worker n'est pas occupé
+            if (!worker_update.IsBusy)
+            {
+                //Ce qu'il doit faire
+                worker_update.DoWork += Worker_DoWork_Update;
+
+                //Ce qu'il doit faire lorsqu'il a fini sa tâche
+                worker_update.RunWorkerCompleted += WorkerEnvoyees_RunWorkerCompleted_Update;
+
+                //On fait la tâche en Async
+                worker_update.RunWorkerAsync();
             }
         }
 
+        private void Worker_DoWork_Update(object sender, DoWorkEventArgs e)
+        {
+            using (Context context = new Context())
+            {
+                //On va récupérer tous les annonces et tous leurs informations
+                List<Annonce> lstAnnonces = context.Annonces.Include("Annonceur")
+                                                                .Include("EtatAnnonce")
+                                                                .Include("Type")
+                                                                .Include("ListeItems.Type")
+                                                                .Include("ListeItems.Condition")
+                                                                .Where(a => a.EtatAnnonce.Id == 2)
+                                                                .ToList();
+
+                //On change la liste d'annonces en ObservableCollection
+                ObservableCollection<Annonce> ocAnnonces = changerListAnnoncesEnOCAnnonces(lstAnnonces);
+
+                //On update LesAnnonces
+                LesAnnonces = ocAnnonces;
+            }
+        }
+
+        private void WorkerEnvoyees_RunWorkerCompleted_Update(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (onSupprimeAnnonce)
+            {
+                //On sélectionne la première annonce de présente dans la OC
+                if (LesAnnonces.Count > 0)
+                {
+                    AnnonceSelectionnee = LesAnnonces.First();
+                }
+            }
+            if (onAjouteAnnonce)
+            {
+                AnnonceSelectionnee = LesAnnonces.Last();
+            }
+            if (onModifieAnnonce)
+            {
+                AnnonceSelectionnee = LesAnnonces.Single(a => a.Id == idAnnonceMod);
+            }
+
+            onSupprimeAnnonce = false;
+            onAjouteAnnonce = false;
+            onModifieAnnonce = false;
+
+            //On enlève le spinner de chargement
+            VisibiliteSpinner = Visibility.Collapsed;
+
+            //Ce qu'il doit faire
+            worker_update.DoWork -= Worker_DoWork_Update;
+
+            //Ce qu'il doit faire lorsqu'il a fini sa tâche
+            worker_update.RunWorkerCompleted -= WorkerEnvoyees_RunWorkerCompleted_Update;
+        }
 
         private ObservableCollection<Annonce> changerListAnnoncesEnOCAnnonces(List<Annonce> lstAnnonces)
         {
@@ -462,8 +632,9 @@ namespace LeCollectionneur.VuesModeles
         {
             IOuvreModal fenetre = param as IOuvreModal;
             fenetre.OuvrirModal();
-            //LesAnnonces = annonceADO.Recuperer();
-            chargerAnnonces();
+
+            onAjouteAnnonce = true;
+            UpdateAnnonce();
         }
 
         private void cmdProposer(object param)
@@ -486,9 +657,10 @@ namespace LeCollectionneur.VuesModeles
             {
                 Annonce AnnonceTEMP = AnnonceSelectionnee;
                 modal.OuvrirModal(AnnonceSelectionnee, nomModal);
-                //LesAnnonces = annonceADO.Recuperer();
-                chargerAnnonces();
-                AnnonceSelectionnee = LesAnnonces.Single(a => a.Id == AnnonceTEMP.Id);
+
+                onModifieAnnonce = true;
+                idAnnonceMod = AnnonceTEMP.Id;
+                UpdateAnnonce();
             }
         }
 
@@ -517,40 +689,21 @@ namespace LeCollectionneur.VuesModeles
 
         public bool EstMonAnnonce()
         {
-            UtilisateurADO Ud = new UtilisateurADO();
-            Utilisateur UtilisateurConnecte = Ud.RetourUtilisateurActif();
-
-            if (AnnonceSelectionnee.Annonceur.Id == UtilisateurConnecte.Id)
+            //Vérifie si l'annonce appartient à l'utilisateur connecté
+            if (AnnonceSelectionnee.Annonceur.Id == UtilisateurADO.utilisateur.Id)
                 return true;
 
             return false;
         }
         #endregion
 
-        #region Méthodes de filtres
-        private void initFiltre()
-        {
-
-            LesTypesAnnonce = new ObservableCollection<string>();
-            LesTypesItems = new ObservableCollection<string>();
-
-            LesTypesAnnonce = annonceADO.RecupererTypes();
-            LesTypesAnnonce.Add(FILTRE_NULL);
-
-            LesTypesItems = annonceADO.RecupererTypesItem();
-            LesTypesItems.Add(FILTRE_NULL);
-
-            DateDebutFiltre = Annonce.PlusAncienneDate;
-            DateFinFiltre = DateTime.Now;
-
-            FiltrerParTitreAnnonce = true;
-        }
+        #region Méthodes pour les filtres
 
         private void cmdFiltrer(object param)
         {
-            //LesAnnonces = annonceADO.Recuperer();
-            chargerAnnonces();
-            
+            // TODO: Changer le chargerAnnonces()
+            UpdateAnnonce();
+
             if (TypeAnnonceFiltre != null && TypeAnnonceFiltre != FILTRE_NULL)
                 LesAnnonces = FiltrerParTypeAnnonce();
 
@@ -608,26 +761,15 @@ namespace LeCollectionneur.VuesModeles
             }
             else
             {
-                //LesAnnonces = annonceADO.Recuperer();
-                chargerAnnonces();
+                // TODO: Changer le chargerAnnonces()
+                UpdateAnnonce();
             }
         }
 
         private void cmdAfficherTout(object param)
         {
-            FiltrerParNomAnnonceur = false;
-            FiltrerParNomItem = false;
-            FiltrerParTitreAnnonce = true;
-            RechercheTextuelle = "";
-            TypeItemFiltre = null;
-            TypeAnnonceFiltre = null;
-            DateDebutFiltre = Annonce.PlusAncienneDate;
-            DateFinFiltre = DateTime.Now;
-            FiltrerParMesAnnonces = false;
-
-            //LesAnnonces = annonceADO.Recuperer();
+            onInitialise = true;
             chargerAnnonces();
-
         }
 
         private bool FiltrerSelonChoix(Annonce a)
@@ -672,6 +814,12 @@ namespace LeCollectionneur.VuesModeles
             }
 
             return false;
+        }
+
+        private DateTime PlusVieilleAnnonce()
+        {
+           ObservableCollection<Annonce> temp =  new ObservableCollection<Annonce>(LesAnnonces.OrderBy(a => a.DatePublication));
+           return temp.First().DatePublication;
         }
         #endregion
 
