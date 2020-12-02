@@ -40,34 +40,62 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="7*"></RowDefinition>
+            <RowDefinition Height=".75*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1.2*"></ColumnDefinition>
             <ColumnDefinition Width="3*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <GroupBox Header="Type de proposition" FontWeight="SemiBold" Margin="5">
+        <GroupBox Name="gbTypePropositions" Header="Type de proposition" FontWeight="SemiBold" Margin="5">
             <DockPanel Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" LastChildFill="True">
-                <RadioButton Margin="50,0" Name="radPropositionsRecues" Content="Reçues" IsChecked="True" IsEnabled="{Binding ControlesActifs}" Checked="radPropositionsRecues_Checked" Command="{Binding cmdPropositionsRecues}"></RadioButton>
-                <RadioButton Margin="50,0" Name="radPropositionsEnvoyees" Content="Envoyées" Checked="radPropositionsEnvoyees_Checked" IsEnabled="{Binding ControlesActifs}" Command="{Binding cmdPropositionsEnvoyees}"></RadioButton>
+                <RadioButton Margin="25,0" Name="radPropositionsRecues" Content="Reçues" IsChecked="True" IsEnabled="{Binding ControlesActifs}" Checked="radPropositionsRecues_Checked" Command="{Binding cmdPropositionsRecues}"></RadioButton>
+                <RadioButton Margin="25,0" Name="radPropositionsEnvoyees" Content="Envoyées" Checked="radPropositionsEnvoyees_Checked" IsEnabled="{Binding ControlesActifs}" Command="{Binding cmdPropositionsEnvoyees}"></RadioButton>
             </DockPanel>
         </GroupBox>
+
+        <GroupBox Name="gbRoleTransactions" Header="Mon rôle" FontWeight="SemiBold" Margin="5" Visibility="Collapsed">
+            <StackPanel Grid.Row="0" VerticalAlignment="Stretch" Orientation="Horizontal" HorizontalAlignment="Center">
+                <CheckBox Margin="25,0" Content="Annonceur" IsChecked="{Binding FiltreAnnonceur}" IsEnabled="{Binding ControlesActifs}" ></CheckBox>
+                <CheckBox Margin="25,0" Content="Proposeur" IsChecked="{Binding FiltreProposeur}" IsEnabled="{Binding ControlesActifs}"></CheckBox>
+            </StackPanel>
+        </GroupBox>
+
+        <Button Name="btnTransactions" Grid.Column="1" Width="225" Content="Historique des Transactions" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10" Click="btnTransactions_Click" IsEnabled="{Binding ControlesActifs}" Command="{Binding cmdTransactions}"></Button>
+        <Button Name="btnPropositions" Grid.Column="1" Width="225" Content="Liste des Propositions" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10" Visibility="Collapsed" Click="btnPropositions_Click" IsEnabled="{Binding ControlesActifs}" Command="{Binding cmdPropositionsRecues}"></Button>
+
         <!-- Listes Reçues/Envoyées -->
-        <DockPanel LastChildFill="True" Grid.Row="1" Margin="5,10,5,10">
+        <DockPanel LastChildFill="True" Grid.Row="1" Margin="5,10,5,10" Name="dpPropositions">
             <TextBlock Text="Mes Propositions" FontWeight="DemiBold" DockPanel.Dock="Top" TextAlignment="Center" />
 
             <DataGrid Name="dgPropositions" ItemsSource="{Binding PropositionsAffichees}" SelectedItem="{Binding PropositionSelectionnee}" IsHitTestVisible="{Binding ControlesActifs}" HorizontalScrollBarVisibility="Auto" AutoGenerateColumns="False" IsReadOnly="True" Margin="7,10,0,0">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Path=AnnonceLiee.Titre}" Header="Annonce Concernée" Width="2*"></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Path=AnnonceLiee.Titre}" Header="Annonce Concernée" Width="1.8*"></DataGridTextColumn>
                     <DataGridTextColumn Binding="{Binding Path=EtatProposition.Nom}" Header="État" Width="*"></DataGridTextColumn>
                     <DataGridTextColumn Binding="{Binding Path=DateProposition, StringFormat={}\{0:yyyy-MM-dd\}}" Header="Date" Width="*" SortDirection="Descending"></DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>
+
+        <!-- Liste des Transactions -->
+        <DockPanel LastChildFill="True" Grid.Row="1" Margin="5,10,5,10" Name="dpTransactions" Visibility="Collapsed">
+            <TextBlock Text="Mes Transactions" FontWeight="DemiBold" DockPanel.Dock="Top" TextAlignment="Center" />
+
+            <DataGrid Name="dgTransactions" ItemsSource="{Binding TransactionsAfficheesView}" SelectedItem="{Binding TransactionSelectionnee}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" IsReadOnly="True" Margin="7,10,0,0">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Path=PropositionTrx.AnnonceLiee.Titre}" Header="Annonce Concernée" Width="1.8*"></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Path=Role}" Header="Rôle" Width="*"></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Path=Date, StringFormat={}\{0:yyyy-MM-dd\}}" Header="Date" Width="*"></DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
         <fa:ImageAwesome Icon="CircleOutlineNotch" Foreground="#607D8B" Spin="True" Grid.Row="1" Margin="85" MaxHeight="75" MaxWidth="75" Visibility="{Binding VisibiliteSpinner}"/>
 
+        <Button x:Name="btnRafraichirPropositions" Content="Rafraîchir" Grid.Row="2" Width="225" Command="{Binding cmdRafraichirPropositions}" IsEnabled="{Binding ControlesActifs}"></Button>
+
+
         <!-- Section détails -->
-        <GroupBox Header="Détails" Grid.Row="1" Margin="10,0,10,10" Grid.Column="1" BorderBrush="Black" FontWeight="Bold">
+        <GroupBox Header="Détails" Grid.Row="1" Grid.RowSpan="2" Margin="10,0,10,10" Grid.Column="1" BorderBrush="Black" FontWeight="Bold">
             <!-- Grille interne des détails -->
             <Grid Margin="5">
                 <Grid.RowDefinitions>
@@ -80,7 +108,7 @@
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
 
-                <GroupBox Name="gbGauche" Grid.Row="0" Grid.Column="0" Header="Annonce" Margin="5" BorderBrush="Black" FontWeight="DemiBold">
+                <GroupBox Name="gbGauche" Grid.Row="0" Grid.Column="0" Header="{Binding Path=TitreGauche}" Margin="5" BorderBrush="Black" FontWeight="DemiBold">
                     <!-- Grid interne de Proposition -->
                     <Grid Margin="5">
                         <Grid.RowDefinitions>
@@ -114,12 +142,14 @@
                             </DataGrid.Columns>
                         </DataGrid>
 
-                        <Label Name="lblMontantGauche" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Montant demandé: "></Label>
+                        <TextBlock Text="Pas d'items dans la proposition" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.ColumnSpan="2" FontSize="25" Visibility="{Binding VisibiliteItemsVideGauche}"/>
+
+                        <Label Name="lblMontantGauche" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding TitreMontantGauche}"></Label>
                         <TextBox Name="tbxMontantProposition" FontSize="18" FontWeight="Bold" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsReadOnly="True" Text="{Binding MontantGauche}" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center"></TextBox>
                     </Grid>
                 </GroupBox>
 
-                <GroupBox Name="gbDroite" Grid.Row="0" Grid.Column="1" Header="Proposition" Margin="5" BorderBrush="Black" FontWeight="DemiBold">
+                <GroupBox Name="gbDroite" Grid.Row="0" Grid.Column="1" Header="{Binding TitreDroite}" Margin="5" BorderBrush="Black" FontWeight="DemiBold">
                     <!-- Grid interne d'Offre -->
                     <Grid Margin="5">
                         <Grid.RowDefinitions>
@@ -153,7 +183,9 @@
                             </DataGrid.Columns>
                         </DataGrid>
 
-                        <Label Name="lblMontantDroite" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Content="Montant proposé: "></Label>
+                        <TextBlock Text="Pas d'items dans la proposition" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.ColumnSpan="2" FontSize="25" Visibility="{Binding VisibiliteItemsVideDroite}"/>
+
+                        <Label Name="lblMontantDroite" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{Binding TitreMontantDroite}"></Label>
                         <TextBox Name="tbxMontantOffre" FontSize="18" FontWeight="Bold"  Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" IsReadOnly="True" Text="{Binding MontantDroite}" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center"></TextBox>
 
                         <Button Name="btnMessageOffre" Grid.Row="2" Grid.Column="1" Style="{StaticResource btnMessageImageStyle}" Margin="60,0,0,0" Visibility="{Binding VisibiliteMessage}" Command="{Binding cmdEnvoyerMessage}"
@@ -181,7 +213,7 @@
 
                 <!-- Propositions envoyées -->
                 <Label Name="lblEtatProposition" Grid.Row="1" Grid.Column="0"  HorizontalAlignment="Right" Visibility="Hidden" VerticalAlignment="Center">État de la proposition: </Label>
-                <TextBox Text="{Binding PropositionSelectionnee.EtatProposition.Nom}" Name="txbEtatProposition" Grid.Row="1" Grid.Column="1"  HorizontalAlignment="Left" Visibility="Hidden" VerticalAlignment="Center" IsReadOnly="True"></TextBox>
+                <TextBox Text="{Binding PropositionSelectionnee.EtatProposition.Nom}" FontWeight="Bold" Name="txbEtatProposition" Grid.Row="1" Grid.Column="1"  HorizontalAlignment="Left" Visibility="Hidden" VerticalAlignment="Center" IsReadOnly="True"></TextBox>
                 <Button Name="btnAnnulerProposition" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,5,0,0" Visibility="Hidden" Content="Annuler proposition" Command="{Binding cmdAnnulerProposition}">
                     <!-- Sert à arrondir les coins du bouton -->
                     <Button.Resources>

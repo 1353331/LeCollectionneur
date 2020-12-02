@@ -57,23 +57,16 @@ namespace LeCollectionneur.VuesModeles
 			}
 		}
 
-		private Visibility _visibiliteControles;
+		private bool _controlesActifs;
 
-		public Visibility VisibiliteControles
+		public bool ControlesActifs
 		{
-			get { return _visibiliteControles; }
+			get { return _controlesActifs; }
 			set
 			{
-				_visibiliteControles = value;
-				if (value == Visibility.Visible)
-				{
-					VisibiliteAvertissement = Visibility.Collapsed;
-				}
-				else
-				{
-					VisibiliteAvertissement = Visibility.Visible;
-				}
-				OnPropertyChanged("VisibiliteControles");
+				_controlesActifs = value;
+				VisibiliteAvertissement = value ? Visibility.Hidden : Visibility.Visible;
+				OnPropertyChanged("ControlesActifs");
 			}
 		}
 
@@ -143,11 +136,11 @@ namespace LeCollectionneur.VuesModeles
 
 			if (annonce.Type.Nom == "Vente")
 			{
-				VisibiliteControles = Visibility.Collapsed;
+				ControlesActifs = false;
 			}
 			else
 			{
-				VisibiliteControles = Visibility.Visible;
+				ControlesActifs = true;
 			}
 
 			//Abonnement à l'évènement Ajout d'un item à une proposition

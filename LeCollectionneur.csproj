@@ -164,6 +164,10 @@
     <Compile Include="Migrations\202011250248554_CollMigration.designer.cs">
       <DependentUpon>202011250248554_CollMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202012021824572_UtilisateursRole.cs" />
+    <Compile Include="Migrations\202012021824572_UtilisateursRole.designer.cs">
+      <DependentUpon>202012021824572_UtilisateursRole.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Modeles\Annonce.cs" />
     <Compile Include="Modeles\AnnonceADO.cs" />
@@ -424,6 +428,9 @@
     </Compile>
     <EmbeddedResource Include="Migrations\202011250248554_CollMigration.resx">
       <DependentUpon>202011250248554_CollMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202012021824572_UtilisateursRole.resx">
+      <DependentUpon>202012021824572_UtilisateursRole.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

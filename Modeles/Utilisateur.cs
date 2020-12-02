@@ -18,6 +18,8 @@ namespace LeCollectionneur.Modeles
         public string NomUtilisateur { get; set; }
         public string MotDePasse { get; set; }                                      
         public string Courriel { get; set; }
+        public string Role { get; set; }
+        public bool estActif { get; set; }
         public ObservableCollection<Collection> MesCollections { get; set; }
         #endregion
 
