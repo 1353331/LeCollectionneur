@@ -1,4 +1,5 @@
 ﻿using LeCollectionneur.Modeles;
+using LeCollectionneur.Outils.Messages;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -31,36 +32,35 @@ namespace LeCollectionneur.Vues
 
 		private void btnCollections_Click(object sender, RoutedEventArgs e)
 		{
+			EvenementSysteme.Publier<EnvoyerThreadPropositionsMessage>(new EnvoyerThreadPropositionsMessage()) ;
 			presenteurContenu.Content = new UCCollection();
 			modifierBackgroundBoutons(sender);
 		}
 
 		private void btnAnnonces_Click(object sender, RoutedEventArgs e)
 		{
+			EvenementSysteme.Publier<EnvoyerThreadPropositionsMessage>(new EnvoyerThreadPropositionsMessage());
 			presenteurContenu.Content = new UCAnnonce();
 			modifierBackgroundBoutons(sender);
 		}
 
 		private void btnPropositions_Click(object sender, RoutedEventArgs e)
 		{
+			EvenementSysteme.Publier<EnvoyerThreadPropositionsMessage>(new EnvoyerThreadPropositionsMessage());
 			presenteurContenu.Content = new UCPropositionsRecuesEnvoyees();
-			modifierBackgroundBoutons(sender);
-		}
-
-		private void btnTransactions_Click(object sender, RoutedEventArgs e)
-		{
-			presenteurContenu.Content = new UCTransactions();
 			modifierBackgroundBoutons(sender);
 		}
 
 		private void btnConversations_Click(object sender, RoutedEventArgs e)
 		{
+			EvenementSysteme.Publier<EnvoyerThreadPropositionsMessage>(new EnvoyerThreadPropositionsMessage());
 			presenteurContenu.Content = new UCConversation();
 			modifierBackgroundBoutons(sender);
 		}
 
 		private void btnDeconnexion_Click(object sender, RoutedEventArgs e)
 		{
+			EvenementSysteme.Publier<EnvoyerThreadPropositionsMessage>(new EnvoyerThreadPropositionsMessage());
 			UtilisateurADO gestionUser = new UtilisateurADO();
 			gestionUser.Deconnection();
 			// Restart de l'application permet de se login par MainWindow, ce qui permettra de se connecter en tant qu'admin si besoin.
@@ -70,6 +70,7 @@ namespace LeCollectionneur.Vues
 
 		private void btnParametres_Click(object sender, RoutedEventArgs e)
 		{
+			EvenementSysteme.Publier<EnvoyerThreadPropositionsMessage>(new EnvoyerThreadPropositionsMessage());
 			presenteurContenu.Content = new UCParametre();
 			modifierBackgroundBoutons(sender);
 		}

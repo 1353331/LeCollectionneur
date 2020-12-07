@@ -25,7 +25,7 @@
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
 
-        <Image Name="imgItem" Source="{Binding ImageItem}" Grid.Column="1" Grid.RowSpan="3" Grid.ColumnSpan="2" Stretch="UniformToFill"  Margin="5,10,5,10" />
+        <Image Name="imgItem" Source="{Binding ImageItem}" Grid.Column="1" Grid.RowSpan="3" Grid.ColumnSpan="2" Stretch="Uniform"  Margin="5,10,5,10" />
 
         <StackPanel Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="4">
             <Label VerticalAlignment="Center" >Nom:</Label>

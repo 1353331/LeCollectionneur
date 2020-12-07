@@ -203,6 +203,7 @@
     <Compile Include="Outils\Interfaces\IOuvreModalAvecParametre.cs" />
     <Compile Include="Outils\Messages\EnvoyerItemsMessage.cs" />
     <Compile Include="Outils\Messages\EnvoyerItemMessage.cs" />
+    <Compile Include="Outils\Messages\EnvoyerThreadPropositionsMessage.cs" />
     <Compile Include="Outils\Messages\EvenementSysteme.cs" />
     <Compile Include="Outils\Validateur.cs" />
     <Compile Include="VuesModeles\AjoutCollection_VM.cs" />

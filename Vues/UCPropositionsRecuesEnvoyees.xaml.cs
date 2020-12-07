@@ -71,7 +71,6 @@ namespace LeCollectionneur.Vues
 			btnAnnulerProposition.Visibility = Visibility.Hidden;
 			dpPropositions.Visibility = Visibility.Hidden;
 			gbTypePropositions.Visibility = Visibility.Hidden;
-			btnRafraichirPropositions.Visibility = Visibility.Hidden;
 
 			dpTransactions.Visibility = Visibility.Visible;
 			gbRoleTransactions.Visibility = Visibility.Visible;
@@ -86,7 +85,6 @@ namespace LeCollectionneur.Vues
 			lblEtatProposition.Visibility = Visibility.Hidden;
 			txbEtatProposition.Visibility = Visibility.Hidden;
 			btnAnnulerProposition.Visibility = Visibility.Hidden;
-			btnRafraichirPropositions.Visibility = Visibility.Visible;
 
 			dpPropositions.Visibility = Visibility.Visible;
 			dpTransactions.Visibility = Visibility.Collapsed;
