@@ -15,6 +15,7 @@ using LeCollectionneur.Modeles;
 using LeCollectionneur.Outils;
 using LeCollectionneur.Outils.Enumerations;
 using LeCollectionneur.Outils.Interfaces;
+using LeCollectionneur.Outils.Messages;
 
 namespace LeCollectionneur.VuesModeles
 {
@@ -170,6 +171,7 @@ namespace LeCollectionneur.VuesModeles
 						TitreMontantDroite = "Montant demandé: ";
 						VisibiliteItemsVideDroite = Visibility.Hidden;
 					}
+					_derniereTransactionSelectionnee = TransactionSelectionnee;
 				}
 				else
 				{
@@ -180,11 +182,15 @@ namespace LeCollectionneur.VuesModeles
 					ItemsDroite = new ObservableCollection<Item>();
 					MontantDroite = 0;
 					TitreDroite = "";
+					VisibiliteItemsVideDroite = Visibility.Hidden;
+					VisibiliteItemsVideGauche = Visibility.Hidden;
 				}
 
 				OnPropertyChanged("TransactionSelectionnee");
 			}
 		}
+
+		private Transaction _derniereTransactionSelectionnee;
 		#endregion
 
 		#region Propriétés Propositions
@@ -458,6 +464,17 @@ namespace LeCollectionneur.VuesModeles
 			cmdEnvoyerMessage = new Commande(cmdEnvMessage);
 			cmdTransactions = new Commande(cmdHistoriqueTransactions);
 			cmdRafraichirPropositions = new Commande(cmdRafraichir);
+
+			// On se désabonne de l'évènement, puis on s'abonne de nouveau pour ne recevoir le message qu'une seule fois (Puisque le constructeur est appelé dès qu'on entre dans l'onglet, mais n'est pas détruit)
+			EvenementSysteme.Desabonnement<EnvoyerThreadPropositionsMessage>(desactiverThread);
+			EvenementSysteme.Abonnement<EnvoyerThreadPropositionsMessage>(desactiverThread);
+
+			rafraichirPropositions();
+		}
+
+		~PropositionsRecuesEnvoyees_VM()
+		{
+			timer.Stop();
 		}
 
 		private BackgroundWorker worker = new BackgroundWorker();
@@ -480,27 +497,7 @@ namespace LeCollectionneur.VuesModeles
 
 		private void Worker_DoWorkTransactions(object sender, DoWorkEventArgs e)
 		{
-			using (Context context = new Context())
-			{
-				List<Transaction> lstTransactions = OutilEF.ctx.Transactions.Include("PropositionTrx.Proposeur")
-																					 .Include("PropositionTrx.AnnonceLiee.ListeItems.Condition")
-																					 .Include("PropositionTrx.AnnonceLiee.ListeItems.Type")
-																					 .Include("PropositionTrx.AnnonceLiee.Type")
-																					 .Include("PropositionTrx.AnnonceLiee.EtatAnnonce")
-																					 .Include("PropositionTrx.ItemsProposes.Type")
-																					 .Include("PropositionTrx.ItemsProposes.Condition")
-																					 .Include("PropositionTrx.EtatProposition")
-																					 .Include("PropositionTrx.AnnonceLiee.Annonceur")
-																					 .Where(t => (t.PropositionTrx.AnnonceLiee.Annonceur.Id == UtilisateurADO.utilisateur.Id) || (t.PropositionTrx.Proposeur.Id == UtilisateurADO.utilisateur.Id))
-																					 .OrderByDescending(t => t.Date)
-																					 .ToList();
-
-				ObservableCollection<Transaction> ocTransactions = changerListTransactionsEnOcTransaction(lstTransactions);
-
-				TransactionsAffichees = ocTransactions;
-				TransactionsAfficheesView = CollectionViewSource.GetDefaultView(TransactionsAffichees);
-				TransactionsAfficheesView.Filter += new Predicate<object>(filtreTransactionsAffichees);
-			}
+			chercherTransactions();
 		}
 
 		private void Worker_RunWorkerCompletedTransactions(object sender, RunWorkerCompletedEventArgs e)
@@ -615,56 +612,98 @@ namespace LeCollectionneur.VuesModeles
 
 		private void Worker_DoWorkRecues(object sender, DoWorkEventArgs e)
 		{
-			using (Context context = new Context())
-			{
-				List<Proposition> lstPropositions = context.Propositions.Include("Proposeur")
-																					 .Include("AnnonceLiee.ListeItems.Condition")
-																					 .Include("AnnonceLiee.ListeItems.Type")
-																					 .Include("AnnonceLiee.Type")
-																					 .Include("AnnonceLiee.EtatAnnonce")
-																					 .Include("ItemsProposes.Type")
-																					 .Include("ItemsProposes.Condition")
-																					 .Include("EtatProposition")
-																					 .Include("AnnonceLiee.Annonceur")
-																					 .AsNoTracking()
-																					 .Where(p => (p.AnnonceLiee.Annonceur.Id == UtilisateurADO.utilisateur.Id) && (p.EtatProposition.Nom != EtatsProposition.Acceptee))
-																					 .OrderByDescending(p => p.DateProposition)
-																					 .ToList();
-
-				ObservableCollection<Proposition> ocPropositions = changerListPropositionsEnOCProposition(lstPropositions);
-
-				if (RecuesSelectionnees)
-				{
-					PropositionsAffichees = ocPropositions;
-				}
-			}
+			chercherPropositionsRecues();
 		}
 
 		private void Worker_DoWorkEnvoyees(object sender, DoWorkEventArgs e)
 		{
-			using (Context context = new Context())
-			{
-				List<Proposition> lstPropositions = context.Propositions.Include("Proposeur")
-																					.Include("EtatProposition")
-																					.Include("AnnonceLiee.ListeItems.Condition")
-																					.Include("AnnonceLiee.ListeItems.Type")
-																					.Include("AnnonceLiee.Type")
-																					.Include("AnnonceLiee.EtatAnnonce")
-																					.Include("AnnonceLiee.Annonceur")
-																					.Include("ItemsProposes.Type")
-																					.Include("ItemsProposes.Condition")
-																					.AsNoTracking()
-																					.Where(p => (p.Proposeur.Id == UtilisateurADO.utilisateur.Id) && (p.EtatProposition.Nom != EtatsProposition.Acceptee))
-																					.OrderByDescending(p => p.DateProposition)
-																					.ToList();
+			chercherPropositionsEnvoyees();
+		}
+		#endregion
 
-				ObservableCollection<Proposition> ocPropositions = changerListPropositionsEnOCProposition(lstPropositions);
-				if (!RecuesSelectionnees)
-				{
-					PropositionsAffichees = ocPropositions;
-				}
+		#region Async Rafraichissement
+		private BackgroundWorker workerRafraichir = new BackgroundWorker();
+		private DispatcherTimer timer;
+
+		private void rafraichirPropositions()
+		{
+			timer = new DispatcherTimer();
+			timer.Interval = new TimeSpan(0, 0, 5);
+			timer.Tick += new EventHandler(rafraichirPropositionsMethode);
+			timer.Start();
+		}
+
+		private void rafraichirTransactions()
+		{
+			timer = new DispatcherTimer();
+			timer.Interval = new TimeSpan(0, 0, 5);
+			timer.Tick += new EventHandler(rafraichirTransactionsMethode);
+			timer.Start();
+		}
+
+		private void rafraichirPropositionsMethode(object sender, EventArgs e)
+		{
+			if (!workerRafraichir.IsBusy)
+			{
+				workerRafraichir = new BackgroundWorker();
+				workerRafraichir.RunWorkerCompleted += WorkerRafraichir_RunWorkerCompleted;
+				workerRafraichir.DoWork += WorkerRafraichir_DoWork;
+				workerRafraichir.RunWorkerAsync();
 			}
 		}
+
+		private void rafraichirTransactionsMethode(object sender, EventArgs e)
+		{
+			if (!workerRafraichir.IsBusy)
+			{
+				workerRafraichir = new BackgroundWorker();
+				workerRafraichir.RunWorkerCompleted += WorkerRafraichirTrx_RunWorkerCompleted;
+				workerRafraichir.DoWork += WorkerRafraichirTrx_DoWork;
+				workerRafraichir.RunWorkerAsync();
+			}
+		}
+
+		private void WorkerRafraichir_DoWork(object sender, DoWorkEventArgs e)
+		{
+			if (RecuesSelectionnees)
+			{
+				chercherPropositionsRecues();
+			}
+			else
+			{
+				chercherPropositionsEnvoyees();
+			}
+		}
+
+		private void WorkerRafraichirTrx_DoWork(object sender, DoWorkEventArgs e)
+		{
+			chercherTransactions();
+		}
+
+		private void WorkerRafraichir_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+		{
+			if (_dernierePropositionSelectionnee != null && TransactionSelectionnee == null && PropositionsAffichees.Count > 0 && PropositionsAffichees.Where(p => p.Id == _dernierePropositionSelectionnee.Id).First() != null)
+			{
+				PropositionSelectionnee = PropositionsAffichees.Where(p => p.Id == _dernierePropositionSelectionnee.Id).First();
+			}
+		}
+
+		private void WorkerRafraichirTrx_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+		{
+			if (_derniereTransactionSelectionnee != null && TransactionsAffichees.Count > 0 && TransactionsAffichees.Where(t => t.Id == _derniereTransactionSelectionnee.Id).First() != null && (FiltreAnnonceur || FiltreProposeur) )
+			{
+				TransactionSelectionnee = TransactionsAffichees.Where(p => p.Id == _derniereTransactionSelectionnee.Id).First();
+			}
+		}
+
+		private void desactiverThread(EnvoyerThreadPropositionsMessage message )
+		{
+			if (timer != null && timer.IsEnabled && message.desactiverThread)
+			{
+				timer.Stop();
+			}
+		}
+
 		#endregion
 
 		#region Implémentation des commandes
@@ -711,6 +750,7 @@ namespace LeCollectionneur.VuesModeles
 
 		private void cmdEnvoyees(object param)
 		{
+			
 			RecuesSelectionnees = false;
 			PropositionSelectionnee = null;
 			TransactionSelectionnee = null;
@@ -719,19 +759,29 @@ namespace LeCollectionneur.VuesModeles
 
 		private void cmdRecues(object param)
 		{
+			if (timer.IsEnabled)
+			{
+				timer.Stop();
+			}
 			RecuesSelectionnees = true;
 			PropositionSelectionnee = null;
 			TransactionSelectionnee = null;
 			chargerPropositionsRecues();
+			rafraichirPropositions();
 		}
 
 		private void cmdHistoriqueTransactions(object param)
 		{
+			if (timer.IsEnabled)
+			{
+				timer.Stop();
+			}
 			PropositionSelectionnee = null;
 			TransactionSelectionnee = null;
 			TransactionsAfficheesView = null;
 			_premiereLigneTransactions = true;
 			chargerTransactions();
+			rafraichirTransactions();
 		}
 
 		private void cmdDetailsItem(object param)
@@ -789,6 +839,78 @@ namespace LeCollectionneur.VuesModeles
 			cmdAccepterProposition = new Commande(cmdAccepter, BoutonsActifs);
 			cmdRefuserProposition = new Commande(cmdRefuser, BoutonsActifs);
 			cmdAnnulerProposition = new Commande(cmdAnnuler, BoutonsActifs);
+		}
+
+		private void chercherPropositionsRecues()
+		{
+			using (Context context = new Context())
+			{
+				List<Proposition> lstPropositions = context.Propositions.Include("Proposeur")
+																					 .Include("AnnonceLiee.ListeItems.Condition")
+																					 .Include("AnnonceLiee.ListeItems.Type")
+																					 .Include("AnnonceLiee.Type")
+																					 .Include("AnnonceLiee.EtatAnnonce")
+																					 .Include("ItemsProposes.Type")
+																					 .Include("ItemsProposes.Condition")
+																					 .Include("EtatProposition")
+																					 .Include("AnnonceLiee.Annonceur")
+																					 .AsNoTracking()
+																					 .Where(p => (p.AnnonceLiee.Annonceur.Id == UtilisateurADO.utilisateur.Id) && (p.EtatProposition.Nom != EtatsProposition.Acceptee))
+																					 .OrderByDescending(p => p.DateProposition)
+																					 .ToList();
+
+				ObservableCollection<Proposition> ocPropositions = changerListPropositionsEnOCProposition(lstPropositions);
+				PropositionsAffichees = ocPropositions;
+			}
+		}
+
+		private void chercherPropositionsEnvoyees()
+		{
+			using (Context context = new Context())
+			{
+				List<Proposition> lstPropositions = context.Propositions.Include("Proposeur")
+																					.Include("EtatProposition")
+																					.Include("AnnonceLiee.ListeItems.Condition")
+																					.Include("AnnonceLiee.ListeItems.Type")
+																					.Include("AnnonceLiee.Type")
+																					.Include("AnnonceLiee.EtatAnnonce")
+																					.Include("AnnonceLiee.Annonceur")
+																					.Include("ItemsProposes.Type")
+																					.Include("ItemsProposes.Condition")
+																					.AsNoTracking()
+																					.Where(p => (p.Proposeur.Id == UtilisateurADO.utilisateur.Id) && (p.EtatProposition.Nom != EtatsProposition.Acceptee))
+																					.OrderByDescending(p => p.DateProposition)
+																					.ToList();
+
+				ObservableCollection<Proposition> ocPropositions = changerListPropositionsEnOCProposition(lstPropositions);
+				PropositionsAffichees = ocPropositions;
+			}
+		}
+
+		private void chercherTransactions()
+		{
+			using (Context context = new Context())
+			{
+				List<Transaction> lstTransactions = OutilEF.ctx.Transactions.Include("PropositionTrx.Proposeur")
+																					 .Include("PropositionTrx.AnnonceLiee.ListeItems.Condition")
+																					 .Include("PropositionTrx.AnnonceLiee.ListeItems.Type")
+																					 .Include("PropositionTrx.AnnonceLiee.Type")
+																					 .Include("PropositionTrx.AnnonceLiee.EtatAnnonce")
+																					 .Include("PropositionTrx.ItemsProposes.Type")
+																					 .Include("PropositionTrx.ItemsProposes.Condition")
+																					 .Include("PropositionTrx.EtatProposition")
+																					 .Include("PropositionTrx.AnnonceLiee.Annonceur")
+																					 .AsNoTracking()
+																					 .Where(t => (t.PropositionTrx.AnnonceLiee.Annonceur.Id == UtilisateurADO.utilisateur.Id) || (t.PropositionTrx.Proposeur.Id == UtilisateurADO.utilisateur.Id))
+																					 .OrderByDescending(t => t.Date)
+																					 .ToList();
+
+				ObservableCollection<Transaction> ocTransactions = changerListTransactionsEnOcTransaction(lstTransactions);
+
+				TransactionsAffichees = ocTransactions;
+				TransactionsAfficheesView = CollectionViewSource.GetDefaultView(TransactionsAffichees);
+				TransactionsAfficheesView.Filter += new Predicate<object>(filtreTransactionsAffichees);
+			}
 		}
 
 		private ObservableCollection<Proposition> changerListPropositionsEnOCProposition(List<Proposition> lstPropositions)
