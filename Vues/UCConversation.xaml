@@ -3,10 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:LeCollectionneur.Vues"
+             xmlns:local="clr-namespace:LeCollectionneur.Vues" xmlns:emoji="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              mc:Ignorable="d" 
+             xmlns:clr="clr-namespace:System;assembly=mscorlib" xmlns:emoji1="clr-namespace:Emoji.Wpf;assembly=Emoji.Wpf"
              d:DesignHeight="700" d:DesignWidth="1000">
-    <UserControl.Resources>
+
+    <emoji:UserControl.Resources>
+        <clr:String x:Key="PickerEmoji">😁</clr:String>
         <DataTemplate x:Key="MessagesDataTemplate">
             <Border Name="MessageBorder" MinHeight="40" MinWidth="280" BorderThickness="1" Background="#EFEBE9" 
                     Margin="10,0,60,10" BorderBrush="#BCAAA4" CornerRadius="4" SnapsToDevicePixels="True"
@@ -23,24 +26,24 @@
                             <VisualBrush Visual="{Binding ElementName=ClipBorder}"/>
                         </Grid.OpacityMask>
                         <Border x:Name="ClipBorder" CornerRadius="3" Background="White"/>
-                       
+
                     </Grid>
-                    
-                    <TextBlock x:Name="MessageTxtBlock" Grid.Row="1" Margin="7,5,7,0" TextWrapping="Wrap" 
+
+                    <emoji:TextBlock x:Name="MessageTxtBlock" Grid.Row="1" Margin="7,5,7,0" TextWrapping="Wrap" 
                                VerticalAlignment="Stretch" HorizontalAlignment="Stretch" 
                                Text="{Binding Contenu}"/>
-                    <TextBlock Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Stretch"
+                    <emoji:TextBlock Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Stretch"
                                FontSize="10" Opacity="0.8"
                                Text="{Binding Date, StringFormat={}{0:yyyy-MM-dd HH':'mm':'ss}}"/>
                     <Button Content="Voir Item"  HorizontalAlignment="Right" VerticalAlignment="Stretch" Visibility="Hidden" Name="btnVoir" Click="btnVoir_Click" Tag="{Binding Contenu}" Height="30" Width="130"></Button>
-                    
+
                 </Grid>
             </Border>
             <DataTemplate.Triggers>
 
-                
+
                 <DataTrigger Binding="{Binding envoyuseractif}" Value="True">
-                    
+
                     <Setter TargetName="MessageBorder" Property="HorizontalAlignment" Value="Right"/>
                     <Setter TargetName="MessageBorder" Property="Margin" Value="60,0,10,10"/>
                     <Setter TargetName="MessageBorder" Property="Background" Value="#BBDEFB"/>
@@ -51,7 +54,7 @@
                     <Setter TargetName="MessageTxtBlock" Property="Text" Value=""/>
                     <Setter  TargetName="btnVoir" Property="Visibility" Value="Visible"/>
                 </DataTrigger>
-                
+
                 <DataTrigger Binding="{Binding Picture}" Value="{x:Null}">
                     <Setter TargetName="ImageMessageGrid" Property="Visibility" Value="Collapsed"/>
                 </DataTrigger>
@@ -71,7 +74,7 @@
                 </MultiDataTrigger>
             </DataTemplate.Triggers>
         </DataTemplate>
-    </UserControl.Resources>
+    </emoji:UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="3*"/>
@@ -87,7 +90,9 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1.2*"/>
             <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="0.3*"/>
             <ColumnDefinition/>
+
         </Grid.ColumnDefinitions>
 
 
@@ -110,13 +115,25 @@
         </ListView>
         <Button Content="Ajouter une Conversation" Grid.Row="4" Grid.RowSpan="2" Height="25" Width="200" Name="btnAjouterConversation" Command="{Binding cmdAjouterConversation}" Margin="16,13,17,47"/>
 
-        <GroupBox Grid.Row="3" Grid.Column="1" Header="Contenu message" FontWeight="Bold" Grid.RowSpan="3">
+        <GroupBox  Grid.ColumnSpan="1" Grid.Row="3" Grid.Column="1" Header="Contenu message" FontWeight="Bold" Grid.RowSpan="3">
             <Grid>
-                <TextBox IsEnabled="{Binding cv}" AcceptsReturn="True" IsReadOnly="{Binding AUneSelection}" Name="txbMessage" Text="{Binding messageContenu}" Margin="23,15,22,15"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="7*"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3*"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <emoji:TextBox  IsEnabled="{Binding cv}" AcceptsReturn="True" IsReadOnly="{Binding AUneSelection}" Name="txbMessage" Text="{Binding messageContenu}" HorizontalAlignment="Right" Width="425" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+                <Button Grid.Row="1" IsEnabled="{Binding cv}" Name="btnEmoji" Width="49" Grid.Column="1" Content="{StaticResource PickerEmoji}" 
+                Command="{Binding cmdEmoji}"  />
+
+
             </Grid>
         </GroupBox>
 
-        <GroupBox Grid.Row="3" Grid.Column="2" Header="Envoyer message" FontWeight="Bold" Grid.RowSpan="3">
+        <GroupBox Grid.ColumnSpan="2" Grid.Row="3" Grid.Column="2" Header="Envoyer message" FontWeight="Bold" Grid.RowSpan="3">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
@@ -126,22 +143,35 @@
                 <Button IsEnabled="{Binding cv}" Command="{Binding cmdEnvoyerItem}" Content="Envoyer Objet" Height="30" Grid.Row="1" Width="130"/>
             </Grid>
         </GroupBox>
-                
+
         <!--<TextBox Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" IsReadOnly="True"/>-->
-        <ItemsControl Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="2"
+        <emoji:ItemsControl Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="3"
                       ItemsSource="{Binding listMessage}"
                       ItemTemplate="{DynamicResource MessagesDataTemplate}"
                       ScrollViewer.VerticalScrollBarVisibility="Auto">
-            <ItemsControl.Template>
-                <ControlTemplate TargetType="ItemsControl">
-                    <ScrollViewer>
-                        <ItemsPresenter/>
-                    </ScrollViewer>
-                </ControlTemplate>
-            </ItemsControl.Template>
-        </ItemsControl>
+            <emoji:ItemsControl.Template>
+                <emoji:ControlTemplate TargetType="ItemsControl">
+                    <emoji:ScrollViewer>
+                        <emoji:ItemsPresenter/>
+                    </emoji:ScrollViewer>
+                </emoji:ControlTemplate>
+            </emoji:ItemsControl.Template>
+        </emoji:ItemsControl>
+
+        <!--<emoji:RichTextBox FontSize="24" Margin="5"></emoji:RichTextBox-->
         <Label Content="Liste des Conversation" Grid.Row="0" FontWeight="Bold"/>
         <Label Content="Conversation" Grid.Column="1"  FontWeight="Bold"/>
+
+
+        <emoji:ListBox Visibility="{Binding emojiVisible}" Name="lsbEmoji" Grid.Row="4" Grid.Column="2" Grid.RowSpan="2"
+                       SelectedItem="{Binding emoji}"  ItemsSource="{Binding emojiAll}" >
+            <emoji:ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Text}"></TextBlock>
+                </DataTemplate>
+            </emoji:ListBox.ItemTemplate>                
+        </emoji:ListBox>
+
     </Grid>
 </UserControl>
  

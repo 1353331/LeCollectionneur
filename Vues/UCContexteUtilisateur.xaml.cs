@@ -22,6 +22,7 @@ namespace LeCollectionneur.Vues
     /// </summary>
     public partial class UCContexteUtilisateur : UserControl
     {
+		public static bool onConversation = false;
         public UCContexteUtilisateur()
         {
             InitializeComponent();
@@ -31,36 +32,42 @@ namespace LeCollectionneur.Vues
 
 		private void btnCollections_Click(object sender, RoutedEventArgs e)
 		{
+			onConversation = false;
 			presenteurContenu.Content = new UCCollection();
 			modifierBackgroundBoutons(sender);
 		}
 
 		private void btnAnnonces_Click(object sender, RoutedEventArgs e)
 		{
+			onConversation = false;
 			presenteurContenu.Content = new UCAnnonce();
 			modifierBackgroundBoutons(sender);
 		}
 
 		private void btnPropositions_Click(object sender, RoutedEventArgs e)
 		{
+			onConversation = false;
 			presenteurContenu.Content = new UCPropositionsRecuesEnvoyees();
 			modifierBackgroundBoutons(sender);
 		}
 
 		private void btnTransactions_Click(object sender, RoutedEventArgs e)
 		{
+			onConversation = false;
 			presenteurContenu.Content = new UCTransactions();
 			modifierBackgroundBoutons(sender);
 		}
 
 		private void btnConversations_Click(object sender, RoutedEventArgs e)
 		{
+			onConversation = true;
 			presenteurContenu.Content = new UCConversation();
 			modifierBackgroundBoutons(sender);
 		}
 
 		private void btnDeconnexion_Click(object sender, RoutedEventArgs e)
 		{
+			onConversation = false;
 			UtilisateurADO gestionUser = new UtilisateurADO();
 			gestionUser.Deconnection();
 			// Restart de l'application permet de se login par MainWindow, ce qui permettra de se connecter en tant qu'admin si besoin.
@@ -70,6 +77,7 @@ namespace LeCollectionneur.Vues
 
 		private void btnParametres_Click(object sender, RoutedEventArgs e)
 		{
+			onConversation = false;
 			presenteurContenu.Content = new UCParametre();
 			modifierBackgroundBoutons(sender);
 		}

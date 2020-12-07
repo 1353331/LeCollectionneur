@@ -41,7 +41,7 @@ namespace LeCollectionneur.Modeles
 
             for (int i = 0; i < MessageConvo.Tables[0].Rows.Count; i++)
             {
-                temp.Add(new Message(MessageConvo.Tables[0].Rows[i]));
+                temp.Add(new Message(MessageConvo.Tables[0].Rows[i],true));
             }
             return temp;
         }
@@ -53,7 +53,7 @@ namespace LeCollectionneur.Modeles
 
             for (int i = 0; i < MessageConvo.Tables[0].Rows.Count; i++)
             {
-                temp.Add(new Message(MessageConvo.Tables[0].Rows[i]));
+                temp.Add(new Message(MessageConvo.Tables[0].Rows[i],true));
             }
             return temp;
         }
@@ -75,7 +75,7 @@ namespace LeCollectionneur.Modeles
                 
                 for (int i = 0; i < MessageConvo.Tables[0].Rows.Count; i++)
                 {
-                    temp.Add(new Message(MessageConvo.Tables[0].Rows[i]));
+                    temp.Add(new Message(MessageConvo.Tables[0].Rows[i],true));
                 }
                 Convo.ListMessage = temp;
 
@@ -136,7 +136,7 @@ namespace LeCollectionneur.Modeles
 
         public void EnvoyerMessage(string Contenu)
         {
-            Message message = new Message(Contenu, UtilisateurADO.utilisateur);
+            Message message = new Message(Contenu, UtilisateurADO.utilisateur,false);
             string req = "INSERT INTO `messages` (`Date`, `Message`, `Conversation_Id`, `utilisateur_Id`) VALUES ( '" + message.Date.ToString("yyyy-MM-dd hh:mm:ss")+"', '"+message.Contenu+"', '"+Convo.Id+"', '"+message.idUtilisateur+"');";
             BD.Commande(req);
             GetMessages();
@@ -144,7 +144,7 @@ namespace LeCollectionneur.Modeles
 
         public void EnvoyerMessage(string Contenu,int idConversation)
         {
-            Message message = new Message(Contenu, UtilisateurADO.utilisateur);
+            Message message = new Message(Contenu, UtilisateurADO.utilisateur,false);
             string req = "INSERT INTO `messages` (`Date`, `Message`, `Conversation_Id`, `utilisateur_Id`) VALUES ( '" + message.Date.ToString("yyyy-MM-dd hh:mm:ss") + "', '" + message.Contenu + "', '" + idConversation + "', '" + message.idUtilisateur + "');";
             BD.Commande(req);
             GetMessages();

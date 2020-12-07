@@ -13,6 +13,11 @@ using System.Windows.Input;
 using LeCollectionneur.VuesModeles;
 using System.Threading;
 using LeCollectionneur.Vues;
+using LeCollectionneur.EF;
+using System.Text.RegularExpressions;
+using Newtonsoft.Json.Linq;
+using System.IO;
+using System.Security.Cryptography;
 
 namespace LeCollectionneur.VuesModeles
 {
@@ -20,11 +25,48 @@ namespace LeCollectionneur.VuesModeles
     {
 
 
-
         #region Propriétés
         int id;
         Thread thread;
-        private bool stopThread = false;
+        
+        private string _emojiVisible;
+        public string emojiVisible
+        {
+            get { return _emojiVisible; }
+            set
+            {
+                _emojiVisible = value;
+                OnPropertyChanged("emojiVisible");
+            }
+        }
+
+        private bool stop;
+        private bool stopThread
+        {
+            get { return stop; }
+            set
+            {
+                stop = value;
+                OnPropertyChanged("stopThread");
+                if (value) { wait(); }
+
+            }
+        }
+        private Emoji.Wpf.EmojiData.Emoji _emoji;
+        public Emoji.Wpf.EmojiData.Emoji  emoji
+        {
+            get { return _emoji; }
+            set
+            {
+                _emoji = value;
+                messageContenu = messageContenu + value.Text;
+                
+                OnPropertyChanged("emoji");
+            }
+        }
+
+          
+        private bool threadEnCour = false;
         public Boolean _cv ;
         public Boolean cv
         {
@@ -57,6 +99,23 @@ namespace LeCollectionneur.VuesModeles
                 OnPropertyChanged("idItem");
             }
         }
+
+        
+
+        private ObservableCollection<Emoji.Wpf.EmojiData.Emoji> _emojiAll;
+        public ObservableCollection<Emoji.Wpf.EmojiData.Emoji> emojiAll
+        {
+            get
+            {
+                return _emojiAll;
+            }
+            set
+            {
+                _emojiAll = value;
+                OnPropertyChanged("EmojiAll");
+            }
+        }
+
         private Utilisateur utlisateurASelection;
         private Utilisateur _utilisateur;
         public Utilisateur utilisateur
@@ -122,6 +181,7 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 stopThread = true;
+                wait();
                 cv = true;
                 _conversationSelectionne = value;
                 
@@ -166,11 +226,23 @@ namespace LeCollectionneur.VuesModeles
         #endregion
 
         #region Commandes
+        private ICommand _cmdEmoji;
+        public ICommand cmdEmoji
+        {
+            get { return _cmdEmoji; }
+            set
+            {
+                _cmdEmoji = value;
+                OnPropertyChanged("cmdEmoji");
+            }
+        }
+
         private ICommand _cmdEnvoyerMessage;
         public ICommand cmdEnvoyerMessage
         {
             get
             {
+                
                 return _cmdEnvoyerMessage;
             }
 
@@ -209,6 +281,7 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 stopThread = true;
+                
                 _cmdAfficher = value;
                 stopThread = false;
                 OnPropertyChanged("cmdAfficher");
@@ -239,7 +312,11 @@ namespace LeCollectionneur.VuesModeles
                 return;
             }
             ConversationSelectionne.lastMessage = messageContenu;
-            conversationADO.EnvoyerMessage(messageContenu, id);
+            
+
+
+
+            conversationADO.EnvoyerMessage(transform(messageContenu), id);
             messageContenu = "";
             listMessage = ConversationADO.chercherMessage(_conversationSelectionne.UserAutre.Id);
             stopThread = false;
@@ -271,6 +348,16 @@ namespace LeCollectionneur.VuesModeles
             stopThread = false;
             OnPropertyChanged("MesConversation");
         }
+
+        public void cmdEmojiAjouter(object param)
+        {
+            if (emojiVisible == "Hidden")
+                emojiVisible = "Visible";
+            else
+                emojiVisible = "Hidden";
+            
+            OnPropertyChanged("lsbEmoji");
+        }
         #endregion
 
         #region Constructeur
@@ -281,32 +368,57 @@ namespace LeCollectionneur.VuesModeles
             cmdEnvoyerMessage = new Commande(cmdEnvoyerMessage_Message);
             cmdAjouterConversation = new Commande(cmdAjouter_Conversation);
             cmdEnvoyerItem = new Commande(cmdEnvoyerMessage_Item);
+            cmdEmoji = new Commande(cmdEmojiAjouter);
             GetConversations();
             thread = new Thread(RefreshMessage);
             thread.Name = "Fillon Principal";
             stopThread = false;
+            emojiVisible = "Hidden";
+            var e = new ObservableCollection<Emoji.Wpf.EmojiData.Emoji>();
+            foreach (var item in getEmojie())
+            {
+               e.Add(item);
+            }
+            emojiAll = e;
             thread.Start();
         }
-        ~Conversation_VM()
-        {
-            thread.Abort();
-        }
+       
 
 
         #endregion
 
         #region Méthodes
+        private ObservableCollection<Emoji.Wpf.EmojiData.Emoji> getEmojie()
+        {
+            var temp = new ObservableCollection<Emoji.Wpf.EmojiData.Emoji>();
+            var tempEmojie = Emoji.Wpf.EmojiData.AllEmoji.ToList();
+            var e = 0;
+            foreach (var item in tempEmojie)
+            {
 
+                temp.Add(item);
+                if (e == 25)
+                    break;
+                e++;
+            }
+            return temp;
+        }
+        private void wait()
+        {
+            while (threadEnCour) { 
+            }
+        }
         private void RefreshMessage()
         {
-            while (true)
+            //Valide que l'on est sur conversation
+            while (UCContexteUtilisateur.onConversation)
             {
                 if (_conversationSelectionne != null && !stopThread)
                 {
-
+                    threadEnCour = true;
                     listMessage = ConversationADO.chercherMessage(_conversationSelectionne.UserAutre.Id);
                     OnPropertyChanged("listMessage");
-
+                    threadEnCour = false;
                 }
 
 
@@ -317,12 +429,14 @@ namespace LeCollectionneur.VuesModeles
         {
 
             stopThread = true;
+            
             conversationADO.EnvoyerMessage(message.Contenu, id);
             stopThread = false;
         }
         private void GetConversations()
         {
             stopThread = true;
+           
             MesConversation = new ObservableCollection<Modeles.Conversation>();
 
             ConversationADO conversationADO = new ConversationADO();
@@ -354,6 +468,109 @@ namespace LeCollectionneur.VuesModeles
         {
             return !(ConversationSelectionne is null);
         }
+
+       
+        private int placement(string carac)
+        {
+            var iterateur = 0;
+            foreach (var item in getEmojie())
+            {
+                if(carac == item.Text)
+                {
+                    return iterateur; 
+                }
+                iterateur++;
+            }
+            return -1;
+        }
+        private string convert(char item)
+        {
+
+            return item.ToString();
+        }
+
+        private class emor
+        {
+
+            public int id;
+            public string emo;
+            public emor()
+            {
+
+            }
+           
+        }
+        private string transform(string message)
+       {
+            var envoyer = "";
+            var tempAll = getEmojie();
+            var tempAllGood = new List<emor>();
+            var i = 0;
+            foreach (var item in tempAll)
+            {
+                var e = new emor();
+                e.id = i;
+                e.emo = item.Text;
+                tempAllGood.Add(e);
+                i++;
+            }
+
+
+            for (int iterateur = 0; iterateur < message.Length; iterateur++)
+            {
+                try
+                {
+
+                bool z = true;
+                string sub = message.Substring(iterateur,2);
+                //Valide que les caratere sont un emoji
+                foreach (var item in tempAllGood)
+                {
+                    if(sub == item.emo)
+                    {
+                        z = false;
+                        if(item.id <10)
+                            envoyer += "{{0" + item.id +"}}";
+                        else
+                            envoyer += "{{" + item.id + "}}";
+                        iterateur++;
+                    }
+                }
+                if (z)
+                    envoyer += message[iterateur];
+                }
+                catch { }
+            }
+            return envoyer;
+       }
+        private string transformeur(string message)
+        {
+            var temp = "";
+            try
+            {
+
+                for (int e = 0; e < message.Length; e++)
+                {
+                    if (message[e] == '{' && message[e + 1] == '{')
+                    {
+                        var emo = getEmojie()[int.Parse(message[e + 2].ToString()) + int.Parse(message[e + 3].ToString())].Text;
+                        temp += emo;
+                        e += 5;
+                    }
+                    else
+                    {
+                        temp += message[e];
+                    }
+
+                }
+            }
+
+            catch { }
+
+
+            return temp;
+        }
         #endregion
     }
+    
 }
