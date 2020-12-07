@@ -21,7 +21,7 @@ namespace LeCollectionneur.Modeles
         public static void EnvoyerMessageStatic(Message message,Conversation convo)
         {
             //"INSERT INTO `messages` (`Date`, `Message`, `IdConversation`, `IdUtilisateur`) VALUES ( '" + message.Date.ToString("yyyy-MM-dd hh:mm:ss")+"', '"+message.Contenu+"', '"+Convo.Id+"', '"+message.idUtilisateur+"');";
-            string req = "INSERT INTO `messages` (`Date`,`Message`,`Covnersation_Id`,`item`,`image`,`emoji`,`utilisateur_Id`) " +
+            string req = "INSERT INTO `messages` (`Date`,`Message`,`Conversation_Id`,`item`,`image`,`emoji`,`utilisateur_Id`) " +
                 "VALUES('"+DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss") + "' , '"+message.Contenu+"',"+convo.Id+","+true+","+false+","+false+","+UtilisateurADO.utilisateur.Id+");";
             BD.Commande(req);
         }

@@ -1,4 +1,5 @@
-﻿using LeCollectionneur.Modeles;
+﻿using LeCollectionneur.EF;
+using LeCollectionneur.Modeles;
 using LeCollectionneur.Outils;
 using LeCollectionneur.Vues;
 using System;
@@ -8,6 +9,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -34,7 +36,7 @@ namespace LeCollectionneur.VuesModeles
             get { return _mesCollections; }
             set
             {
-                UtilisateurADO.collection = gestionnaireCollections.Recuperer(UtilisateurADO.utilisateur.Id);
+                UtilisateurADO.collection = value;
                 _mesCollections = UtilisateurADO.collection;
                 OnPropertyChanged("MesCollections");
             }
@@ -45,17 +47,30 @@ namespace LeCollectionneur.VuesModeles
         {
             get { return _collectionSelectionnee; }
             set
-            {   // Changer la liste des items.
+            {   
+                // Changer la liste des items.
                 _collectionSelectionnee = value;
                 if (_collectionSelectionnee is null)
                     ItemSelectionne = null;
+                
+                    
                cmdSupprimerCollection=new Commande(cmdSupprimer_Collection,CollectionEstSupprimable);
                cmdModifierCollection=new Commande(cmdModifier_Collection,UneCollectionSelectionnee);
                 cmdToggleAjouterItem= new Commande(cmdToggleAjouter_Item,UneCollectionSelectionnee); 
                 cmdDeplacerItem= new Commande(cmdDeplacer_Item, ()=> { return MesCollections.Count > 1; });    
                 OnPropertyChanged("CollectionSelectionnee");
-               
 
+                VisibiliteSectionDroite = Visibility.Collapsed;
+            }
+        }
+
+        private Collection _ancienneCollectionSelectionnee;
+        public Collection AncienneCollectionSelectionnee
+        {
+            get { return _ancienneCollectionSelectionnee; }
+            set 
+            { 
+                _ancienneCollectionSelectionnee = value;
             }
         }
 
@@ -76,7 +91,9 @@ namespace LeCollectionneur.VuesModeles
                 {
                     RemplirChamps();
                     ChangerContexte();
-                }
+                   
+                } 
+                
                 cmdSupprimerItem = new Commande(cmdSupprimer_Item,ItemEstSupprimable);
                  
                 cmdModifierItem = new Commande(cmdModifier_Item, UnItemSelectionne);
@@ -86,6 +103,17 @@ namespace LeCollectionneur.VuesModeles
                 OnPropertyChanged("ItemSelectionne");
             }
         }
+
+        private Item _ancienItemSelectionne;
+        public Item AncienItemSelectionne
+        {
+            get { return _ancienItemSelectionne; }
+            set
+            {
+                _ancienItemSelectionne = value;
+            }
+        }
+
         private string _titreContexte;
         public string TitreContexte
         {
@@ -219,6 +247,7 @@ namespace LeCollectionneur.VuesModeles
         public ObservableCollection<string> ConditionsPossibles { get; set; }
         public ObservableCollection<string> TypesPossibles { get; set; }
 
+        private bool Ajout = false;
         #region PropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
                 private void OnPropertyChanged(string nomPropriete)
@@ -227,6 +256,32 @@ namespace LeCollectionneur.VuesModeles
                         PropertyChanged(this, new PropertyChangedEventArgs(nomPropriete));
                 }
         #endregion
+        #endregion
+
+        #region Visibility
+        private Visibility _visibiliteSpinner;
+
+        public Visibility VisibiliteSpinner
+        {
+            get { return _visibiliteSpinner; }
+            set
+            {
+                _visibiliteSpinner = value;
+                OnPropertyChanged("VisibiliteSpinner");
+            }
+        }
+
+        private Visibility _visibiliteSectionDroite;
+        public Visibility VisibiliteSectionDroite
+        {
+            get { return _visibiliteSectionDroite; }
+            set
+            {
+                _visibiliteSectionDroite = value;
+                OnPropertyChanged("VisibiliteSectionDroite");
+            }
+        }
+
         #endregion
 
         #region Commandes
@@ -250,9 +305,16 @@ namespace LeCollectionneur.VuesModeles
             Window modale = new ModalAjoutCollection();
             
             modale.ShowDialog();
-            initialisationEcran(false);
-            if (avantModale < MesCollections.Count())
-                CollectionSelectionnee = MesCollections[MesCollections.Count() - 1];
+            if (avantModale < UtilisateurADO.collection.Count)
+            {
+                Ajout = true;
+                AncienneCollectionSelectionnee = null;
+                AncienItemSelectionne = null;
+                initialisationEcran(false);
+            }
+             
+            
+                
             
         }
         private ICommand _cmdModifierCollection;
@@ -275,8 +337,9 @@ namespace LeCollectionneur.VuesModeles
             Window modale = new ModalModifierCollection(CollectionSelectionnee);
 
             modale.ShowDialog();
+            AncienneCollectionSelectionnee = CollectionSelectionnee;
             initialisationEcran(false);
-            CollectionSelectionnee = ReselectionnerCollection(col);
+            //CollectionSelectionnee = ReselectionnerCollection(col);
 
         }
         private ICommand _cmdSupprimerCollection;
@@ -300,6 +363,10 @@ namespace LeCollectionneur.VuesModeles
             if (resultat==MessageBoxResult.Yes)
             {
                 gestionnaireCollections.Supprimer(CollectionSelectionnee.Id);
+                MesCollections.Remove(CollectionSelectionnee);
+                CollectionSelectionnee = null;
+                AncienneCollectionSelectionnee = null;
+                AncienItemSelectionne = null;
                 initialisationEcran(false);
             }
         }
@@ -416,10 +483,12 @@ namespace LeCollectionneur.VuesModeles
                 if (estInsere)
                 {
                     // Recharger l'écran
-                    Collection laCol  = CollectionSelectionnee;
+                    AncienneCollectionSelectionnee = CollectionSelectionnee;
+                    AncienItemSelectionne = neoItem;
                     initialisationEcran(false);
-                    CollectionSelectionnee = ReselectionnerCollection(laCol); 
-                    ItemSelectionne =TrouverItem(CollectionSelectionnee,neoItem) ;
+                   
+                    //CollectionSelectionnee = ReselectionnerCollection(laCol); 
+                    //ItemSelectionne =TrouverItem(CollectionSelectionnee,neoItem) ;
                 }
                  
             }
@@ -442,6 +511,8 @@ namespace LeCollectionneur.VuesModeles
         private void cmdAjouter_Image(object param)
         {
             NomFichier = Fichier.ImporterFichier();
+            ChangerImageItem();
+
         }
 
         private ICommand _cmdModifierItem;
@@ -481,14 +552,16 @@ namespace LeCollectionneur.VuesModeles
                         gestionnaireItems.AjouterCheminImage(ItemSelectionne.Id);
                     }
                     gestionnaireItems.Modifier(ItemSelectionne);
+                    AncienItemSelectionne = ItemSelectionne;
+                    AncienneCollectionSelectionnee = CollectionSelectionnee;
                     initialisationEcran(false);
-                    CollectionSelectionnee=ReselectionnerCollection(laCol);
-                    ItemSelectionne = CollectionSelectionnee.ItemsCollection[index];
+                    //CollectionSelectionnee=ReselectionnerCollection(laCol);
+                    //ItemSelectionne = CollectionSelectionnee.ItemsCollection[index];
                 
                 
                 
                 }
-                RemplirChamps();
+                //RemplirChamps();
             }
             else
             {
@@ -517,14 +590,20 @@ namespace LeCollectionneur.VuesModeles
                 modale.ShowDialog();
                 if (CollectionSelectionnee.ItemsCollection.Count!=gestionnaireCollections.RecupererUn(CollectionSelectionnee.Id).ItemsCollection.Count)
                 {
+                   
                     Item itemDeplace = ItemSelectionne;
+                AncienItemSelectionne = itemDeplace;
+                AncienneCollectionSelectionnee = null;
                     initialisationEcran(false);
-                    CollectionSelectionnee = ReselectionnerCollection(new Collection(gestionnaireItems.RecupererIdCollection(itemDeplace)));
-                    ItemSelectionne = TrouverItem(CollectionSelectionnee, itemDeplace);
-                }
-                    
-            
-           
+                //CollectionSelectionnee = ReselectionnerCollection(new Collection(gestionnaireItems.RecupererIdCollection(itemDeplace)));
+                //ItemSelectionne = TrouverItem(CollectionSelectionnee, itemDeplace);
+                
+                
+                
+            }
+
+
+
         }
         private ICommand _cmdSupprimerItem;
         public ICommand cmdSupprimerItem
@@ -545,10 +624,19 @@ namespace LeCollectionneur.VuesModeles
             if (resultat==MessageBoxResult.Yes)
             {
                 // Supprimer_Item enlève l'Item de la collection courante.
-                gestionnaireItems.Supprimer(ItemSelectionne.Id);
-                CollectionSelectionnee.ItemsCollection.Remove(ItemSelectionne);
-                ItemSelectionne = null;
-                CollectionSelectionnee = ReselectionnerCollection(CollectionSelectionnee);
+                
+                using (Context context= new Context())
+                {
+                    context.Items.Attach(ItemSelectionne);
+                    context.Items.Remove(ItemSelectionne);
+                    context.SaveChanges();
+                    ItemSelectionne = null;
+                    AncienItemSelectionne = null;
+                    AncienneCollectionSelectionnee = CollectionSelectionnee;
+                    initialisationEcran(false);
+                }
+                    
+                //CollectionSelectionnee = ReselectionnerCollection(CollectionSelectionnee);
              }
             
 
@@ -557,7 +645,7 @@ namespace LeCollectionneur.VuesModeles
 
         #region Constructeurs
         public Collection_VM()
-        {
+        {   
             cmdAjouterCollection = new Commande(cmdAjouter_Collection,()=> { return true; });
             cmdModifierCollection = new Commande(cmdModifier_Collection, UneCollectionSelectionnee);
             cmdSupprimerCollection = new Commande(cmdSupprimer_Collection, CollectionEstSupprimable);
@@ -565,25 +653,120 @@ namespace LeCollectionneur.VuesModeles
             cmdDeplacerItem = new Commande(cmdDeplacer_Item, ()=>{return MesCollections.Count > 1; });
             cmdSupprimerItem = new Commande(cmdSupprimer_Item, ItemEstSupprimable);
             cmdAjouterImage = new Commande(cmdAjouter_Image, UnItemSelectionne);
+           
             initialisationEcran();
+            
         }
-
-        private void initialisationEcran(bool estPremierChargement = true)
+      
+         private void initialisationEcran(bool estPremierChargement = true)
         {
-            // Récupère toutes les collections de l'utilisateur courant et les rempli avec leurs items respectifs.
+            // Récupère toutes les collections de l'utilisateur courant et les rempli avec leurs items respectifs.      
+            chargerCollections();
 
-            MesCollections = new ObservableCollection<Collection>();
             ChangerImageItem();
-            // Récupérer tous les états possibles d'items.
-            if (estPremierChargement)
-            {
-                ConditionsPossibles = gestionnaireItems.ConditionsPossibles;
-                TypesPossibles = gestionnaireItems.TypesPossibles;
-                ChangerContexte();
-            }
+                    // Récupérer tous les états possibles d'items.
+                if (estPremierChargement)
+                {
+                    ConditionsPossibles = gestionnaireItems.ConditionsPossibles;
+                    TypesPossibles = gestionnaireItems.TypesPossibles;
+                    ChangerContexte();
+                }
             
         }
         #endregion
+       
+        private BackgroundWorker worker = new BackgroundWorker();
+       
+        #region Async
+
+          private void chargerCollections()
+        {
+            MesCollections = new ObservableCollection<Collection>();            
+            VisibiliteSpinner = Visibility.Visible;
+            if (worker != null && !worker.IsBusy)
+            {
+                worker = new BackgroundWorker();
+                worker.DoWork += Worker_DoWorkCollections;
+                worker.RunWorkerCompleted += Worker_RunWorkerCompletedCollections;
+                worker.RunWorkerAsync();               
+            }
+            
+        }
+
+        private void Worker_DoWorkCollections(object sender, DoWorkEventArgs e)
+        {
+            using (Context context = new Context())
+            {
+                List<Collection> lstCollections = OutilEF.ctx.Collections.AsNoTracking()
+                                                                          .Include("ItemsCollectionListe")
+                                                                          .Include("ItemsCollectionListe.Condition")
+                                                                          .Include("ItemsCollectionListe.Type")
+                                                                          .Where((col) => col.Utilisateur.Id==UtilisateurADO.utilisateur.Id)
+                                                                          .ToList();
+
+                 MesCollections = changerListCollectionsEnOcCollections(lstCollections);
+                
+            }
+        }
+
+        private void Worker_RunWorkerCompletedCollections(object sender, RunWorkerCompletedEventArgs e)
+        {
+            
+            if (AncienneCollectionSelectionnee != null)
+                CollectionSelectionnee=ReselectionnerCollection(AncienneCollectionSelectionnee);
+            if (CollectionSelectionnee != null && AncienItemSelectionne != null)
+            {
+                ItemSelectionne=TrouverItem(CollectionSelectionnee, AncienItemSelectionne);
+                RemplirChamps();
+            }
+            if (AncienItemSelectionne!=null && CollectionSelectionnee==null)
+            {// Cas de déplacement d'item.
+                
+                CollectionSelectionnee = ReselectionnerCollection(new Collection(gestionnaireItems.RecupererIdCollection(AncienItemSelectionne)));
+                ItemSelectionne = TrouverItem(CollectionSelectionnee, AncienItemSelectionne);
+                VisibiliteSpinner = Visibility.Collapsed;
+                MessageBox.Show($"L'item: {ItemSelectionne.Nom} a été déplacé dans la collection: {CollectionSelectionnee.Nom}");
+            }
+            if (CollectionSelectionnee==null && Ajout)
+            {
+                Ajout = false;
+                CollectionSelectionnee = MesCollections[MesCollections.Count - 1];
+            }
+            VisibiliteSpinner = Visibility.Collapsed;
+        }
+
+        private ObservableCollection<Collection> changerListCollectionsEnOcCollections(List<Collection> lstCollections)
+        {
+            ObservableCollection<Collection> collections = new ObservableCollection<Collection>();
+            foreach (Collection col in lstCollections)
+            {
+                col.ItemsCollection = new ObservableCollection<Item>();
+                foreach (Item item in col.ItemsCollectionListe)
+                {
+                    col.ItemsCollection.Add(item);
+                    if (!String.IsNullOrWhiteSpace(item.CheminImage))
+                    {
+                        item.BmImage = Fichier.TransformerBitmapEnBitmapImage(Fichier.RecupererImageServeur(item.CheminImage));
+                        if (item.BmImage is null)
+                        {
+                            ItemADO gestionItem = new ItemADO();
+                            item.CheminImage = null;
+                            gestionItem.EnleverCheminImage(item.Id);
+                        }
+                    }
+                }
+
+               
+
+                collections.Add(col);
+            }
+
+            return collections;
+        }
+
+        
+        #endregion
+
 
         #region Méthodes
         public bool UnItemSelectionne()
@@ -658,21 +841,30 @@ namespace LeCollectionneur.VuesModeles
         }
         private void ChangerImageItem()
         {
-            if (!(ItemSelectionne is null) && !(ItemSelectionne.BmImage==null))
+            if (NomFichier!=null)
+            {
+                ImageItemSelectionne = new BitmapImage();
+                ImageItemSelectionne.BeginInit();
+                ImageItemSelectionne.UriSource = new Uri(NomFichier,UriKind.Absolute);
+
+                ImageItemSelectionne.EndInit();
+            }
+            else if (!(ItemSelectionne is null) && !(ItemSelectionne.BmImage==null))
             {
                 ImageItemSelectionne = ItemSelectionne.BmImage;
             }
             else
             {
                 ImageItemSelectionne = new BitmapImage();
-                ImageItemSelectionne.BeginInit();
-                ImageItemSelectionne.UriSource = new Uri("pack://application:,,,/LeCollectionneur;component/images/noimage.png",UriKind.Absolute);
+                //ImageItemSelectionne.BeginInit();
+                //ImageItemSelectionne.UriSource = new Uri("pack://application:,,,/LeCollectionneur;component/images/noimage.png",UriKind.Absolute);
                 
-                ImageItemSelectionne.EndInit();
+                //ImageItemSelectionne.EndInit();
             }
                
             
         }
+
 
         private void ChangerContexte(bool estAjout=false)
         {
@@ -682,6 +874,14 @@ namespace LeCollectionneur.VuesModeles
                 TitreContexte = TITRE_MODIF;
                 TexteBoutonContexte = CONTENU_BTN_MODIF;
                 CmdOperationItem = new Commande(cmdModifier_Item,UnItemSelectionne);
+                if (!(ItemSelectionne is null))
+                {
+                    VisibiliteSectionDroite = Visibility.Visible;
+                }
+                else
+                {
+                    VisibiliteSectionDroite = Visibility.Collapsed;
+                }
             }
             else
             {
@@ -689,6 +889,7 @@ namespace LeCollectionneur.VuesModeles
                 TexteBoutonContexte = CONTENU_BTN_AJOUT;
                 CmdOperationItem = new Commande(cmdAjouter_Item, UneCollectionSelectionnee);
                 cmdAjouterImage = new Commande(cmdAjouter_Image, ()=> { return true; });
+                VisibiliteSectionDroite = Visibility.Visible;
             }
         }
         #endregion

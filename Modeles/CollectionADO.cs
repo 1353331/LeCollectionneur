@@ -19,7 +19,8 @@ namespace LeCollectionneur.Modeles
         #endregion
 
         #region Retrieve
-        public ObservableCollection<Collection> Recuperer(int idUtilisateur)
+        
+         public ObservableCollection<Collection> Recuperer(int idUtilisateur)
         {
             ObservableCollection<Collection> lesCollections = new ObservableCollection<Collection>();
             string sel = $"select * from Collections where Utilisateur_Id = {idUtilisateur}";

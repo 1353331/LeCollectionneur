@@ -11,8 +11,8 @@
         TextElement.FontWeight="Medium"
         TextElement.FontSize="14"
         FontFamily="{materialDesign:MaterialDesignFont}"
-        MinHeight="900" MinWidth="1500"
-        Title="{Binding NomUtilisateur}" Height="700" Width="1500">
+        MinHeight="900" MinWidth="1550"
+        Title="{Binding NomUtilisateur}" Height="700" Width="1550">
     <Grid>
       
         <!-- Présenter le contexte approprié (utilisateur ou admin)-->

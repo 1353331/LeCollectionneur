@@ -32,7 +32,7 @@
         <Label Grid.Row="6" Content="Pas de compte? Inscrivez-vous ici!" Grid.ColumnSpan="3" HorizontalContentAlignment="Center"/>
         <Button Height="35" Grid.Row="7" Grid.ColumnSpan="3" Width="100" HorizontalContentAlignment="Center" Content="S'inscrire" Margin="85,0,77,0" Click="ButtonInscription"/>
         <TextBox Name="User" Grid.Row="3" Grid.Column="1" Width="250" Height="25" Grid.ColumnSpan="2"/>
-        <TextBox  Name="MDP" Grid.Row="4" Grid.Column="1" Width="250" Height="25" Grid.ColumnSpan="2"/>
+        <PasswordBox  Name="MDP" Grid.Row="4" Grid.Column="1" Width="250" Height="25" Grid.ColumnSpan="2"/>
         <Button Grid.Column="0" Grid.ColumnSpan="2" Margin="25,0,100,0" Grid.Row="8" Height="25" Content= "Connexion Prof 1" Name="btnConnectionProf" Click="btnConnectionProf_Click"/>
         <Button Grid.Column="1" Grid.ColumnSpan="2" Margin="100,0,25,0" Grid.Row="8" Height="25" Content="Connexion Prof 2" Name="btnConnectionProf2" Click="btnConnectionProf2_Click"/>
         <Button Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="9" Height="25" MaxWidth="200" Content="Prof Admin" Name="btnConnectionAdmin" Click="btnConnectionAdmin_Click"/>

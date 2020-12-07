@@ -186,7 +186,7 @@ namespace LeCollectionneur.Modeles
         //Method d'ajout de compte
         private void AjoutCompte(string User, string MP, string Courriel)
         {
-            string req = "INSERT INTO `utilisateurs` (NomUtilisateur, MotDePasse, Courriel) VALUES('" + User+"','"+MP+"' ,'"+Courriel+"' )";
+            string req = "INSERT INTO `utilisateurs` (NomUtilisateur, MotDePasse, Courriel,Role) VALUES('" + User+"','"+MP+"' ,'"+Courriel+"','Utilisateur' )";
             BD.Commande(req);
         }
 
@@ -251,17 +251,30 @@ namespace LeCollectionneur.Modeles
             string retour = ((Int64)(table.Rows[0]["COUNT(Id)"])).ToString();
             return int.Parse(retour);
         }
-        public int CompterTransactions(Utilisateur utilisateur)
+        public int CompterPropositionsRecues(Utilisateur utilisateur)
         {
-            string req = $"SELECT COUNT(t.Id) FROM Transactions t INNER JOIN Propositions p ON p.id = propositionTrx_Id   WHERE p.Proposeur_ID = {utilisateur.Id}";
+            string req = $"SELECT COUNT(p.Id) FROM Propositions p INNER JOIN Annonces a ON a.Id=p.AnnonceLiee_Id   WHERE a.Annonceur_ID = {utilisateur.Id}";
             DataSet data = BD.Selection(req);
             DataTable table = data.Tables[0];
-            string retourProposeur = ((Int64)(table.Rows[0]["COUNT(t.Id)"])).ToString();
-            string req2 = $"SELECT COUNT(t.Id) FROM Transactions t INNER JOIN Propositions p ON p.id = propositionTrx_Id INNER JOIN Annonces a ON a.Id=p.AnnonceLiee_Id WHERE a.Annonceur_Id = {utilisateur.Id}";
-            DataSet data2 = BD.Selection(req);
-            DataTable table2 = data2.Tables[0];
-            string retourAnnonceur = ((Int64)(table2.Rows[0]["COUNT(t.Id)"])).ToString();
-            return int.Parse(retourProposeur)+int.Parse(retourAnnonceur);
+            string retour = ((Int64)(table.Rows[0]["COUNT(p.Id)"])).ToString();
+            return int.Parse(retour);
+        }
+        public int CompterTransactions(Utilisateur utilisateur,bool estAnnonceur)
+        {
+            string retour;
+            string req;
+            if (!estAnnonceur)
+            {
+                req = $"SELECT COUNT(t.Id) FROM Transactions t INNER JOIN Propositions p ON p.id = propositionTrx_Id   WHERE p.Proposeur_ID = {utilisateur.Id}";               
+            }
+            else
+            {
+                req = $"SELECT COUNT(t.Id) FROM Transactions t INNER JOIN Propositions p ON p.id = propositionTrx_Id INNER JOIN Annonces a ON a.Id=p.AnnonceLiee_Id WHERE a.Annonceur_Id = {utilisateur.Id}";
+            } 
+                DataSet data = BD.Selection(req);
+                DataTable table = data.Tables[0];
+                retour = ((Int64)(table.Rows[0]["COUNT(t.Id)"])).ToString();
+            return int.Parse(retour);
         }
 
         public void ModifierEstActif(Utilisateur utilisateur)

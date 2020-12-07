@@ -51,7 +51,7 @@ namespace LeCollectionneur.Vues
         {
             UtilisateurADO temp = new UtilisateurADO();
             UtilisateurADO.connectionProf = false;
-            if (temp.Connection(User.Text, MDP.Text))
+            if (temp.Connection(User.Text, MDP.Password))
                 this.Close();
             else if (UtilisateurADO.utilisateur==null)
                 MessageBox.Show("Champs invalide");

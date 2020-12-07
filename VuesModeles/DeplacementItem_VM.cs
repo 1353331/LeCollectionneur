@@ -55,7 +55,6 @@ namespace LeCollectionneur.VuesModeles
             IFenetreFermeable fenetre = param as IFenetreFermeable;
             gestionnaireItems.TransfererItem(CollectionSelectionnee, ItemDeplace);
             fenetre.Fermer();
-            MessageBox.Show($"L'item: {ItemDeplace.Nom} a été déplacé dans la collection: {CollectionSelectionnee.Nom}");
 
         }
         private ICommand _cmdAnnuler;

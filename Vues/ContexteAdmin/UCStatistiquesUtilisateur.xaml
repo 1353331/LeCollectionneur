@@ -9,12 +9,14 @@
     <Grid>
 
         <GroupBox Header="{Binding Titre}" Margin="10,10">
-            <StackPanel HorizontalAlignment="Left" Width="300">
+            <StackPanel HorizontalAlignment="Left" Width="700">
                 <Label Content="{Binding TxtNbCollections}" Margin="10,15" Height="25"/>
                 <Label Content="{Binding TxtNbItems}" Margin="10,15" Height="25"/>
                 <Label Content="{Binding TxtNbAnnonces}" Margin="10,15" Height="25"/>
                 <Label Content="{Binding TxtNbPropositions}" Margin="10,15" Height="25"/>
-                <Label Content="{Binding TxtNbTransactions}" Margin="10,15" Height="25"/>
+                <Label Content="{Binding TxtNbPropositionsRecues}" Margin="10,15" Height="25"/>
+                <Label Content="{Binding TxtNbTransactionsAnnonceur}" Margin="10,15" Height="25"/>
+                <Label Content="{Binding TxtNbTransactionsProposeur}" Margin="10,15" Height="25"/>
             </StackPanel>
         </GroupBox>
     </Grid>

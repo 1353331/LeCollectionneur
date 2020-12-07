@@ -18,8 +18,11 @@ namespace LeCollectionneur.Modeles
         public string Nom { get; set; }
         public DateTime DateCreation { get; set; }
         
+        public Utilisateur Utilisateur { get; set; } 
         
-        public ObservableCollection<Item> ItemsCollection { get; set; }
+        public List<Item> ItemsCollectionListe { get; set; }
+        [NotMapped]
+        public virtual ObservableCollection<Item> ItemsCollection { get; set; }
         #endregion
 
         #region Constructeurs

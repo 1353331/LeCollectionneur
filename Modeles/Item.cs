@@ -27,6 +27,10 @@ namespace LeCollectionneur.Modeles
         public ObservableCollection<Annonce> Annonces { get; set; }
         //public int Quantite { get; set; }
         public string Description { get; set; }
+
+
+        [NotMapped]
+        public Collection collectionItem { get; set; }
         [NotMapped]
         public BitmapImage BmImage { get; set; }
         #endregion
@@ -36,7 +40,10 @@ namespace LeCollectionneur.Modeles
         {
 
         }
-
+        public Item(int id)
+        {
+            Id = id;
+        }
         public Item(DataRow drItem, bool estDansCollection=true)
         {
             

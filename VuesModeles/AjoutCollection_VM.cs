@@ -43,6 +43,7 @@ namespace LeCollectionneur.VuesModeles
                 Collection neoCollection = new Collection();
                 neoCollection.Nom = Validateur.Echappement(NomNeoCollection.Trim());
                 gestionnaireCollections.Ajouter(neoCollection, UtilisateurADO.utilisateur.Id);
+                UtilisateurADO.collection.Add(neoCollection);
                 // Fermer la fenêtre après l'ajout.
                 fenetre.Fermer();
             }

@@ -53,16 +53,38 @@ namespace LeCollectionneur.VuesModeles.ContexteAdmin
                 OnPropertyChanged("TxtNbPropositions");
             }
         }
-        private string _txtNbTransactions;
-        public string TxtNbTransactions
+        private string _txtNbPropositionsRecues;
+        public string TxtNbPropositionsRecues
         {
-            get { return _txtNbTransactions; }
+            get { return _txtNbPropositionsRecues; }
             set
             {
-                _txtNbTransactions = value;
-                OnPropertyChanged("TxtNbTransactions");
+                _txtNbPropositionsRecues = value;
+                OnPropertyChanged("TxtNbPropositionsRecues");
             }
         }
+
+        private string _txtNbTransactionsAnnonceur;
+        public string TxtNbTransactionsAnnonceur
+        {
+            get { return _txtNbTransactionsAnnonceur; }
+            set
+            {
+                _txtNbTransactionsAnnonceur = value;
+                OnPropertyChanged("TxtNbTransactionsAnnonceur");
+            }
+        }
+        private string _txtNbTransactionsProposeur;
+        public string TxtNbTransactionsProposeur
+        {
+            get { return _txtNbTransactionsProposeur; }
+            set
+            {
+                _txtNbTransactionsProposeur = value;
+                OnPropertyChanged("TxtNbTransactionsProposeur");
+            }
+        }
+
         private string _titre;
         public string Titre
         {
@@ -84,13 +106,16 @@ namespace LeCollectionneur.VuesModeles.ContexteAdmin
 			int nbItems = utilisateurADO.CompterItems(utilisateur);
 			int nbAnnonces = utilisateurADO.CompterAnnonces(utilisateur);
 			int nbPropositions = utilisateurADO.CompterPropositions(utilisateur);
-			int nbTransactions = utilisateurADO.CompterTransactions(utilisateur);
-
+            int nbPropositionsRecues = utilisateurADO.CompterPropositionsRecues(utilisateur);
+			int nbTransactionsAnnonceur = utilisateurADO.CompterTransactions(utilisateur,true);
+            int nbTransactionsProposeur = utilisateurADO.CompterTransactions(utilisateur, false);
             TxtNbCollections = $"Collections possédées: {nbCollections}";
             TxtNbItems = $"Items possédés: {nbItems}";
             TxtNbAnnonces=$"Annonces publiées: {nbAnnonces}";
             TxtNbPropositions=$"Propositions envoyées: {nbPropositions}";
-            TxtNbTransactions=$"Transactions complétées: {nbTransactions}";
+            TxtNbPropositionsRecues=$"Propositions reçues: {nbPropositionsRecues}";
+            TxtNbTransactionsAnnonceur =$"Transactions complétées en tant qu'annonceur: {nbTransactionsAnnonceur}";
+            TxtNbTransactionsProposeur=$"Transactions complétées en tant que proposeur: {nbTransactionsProposeur}";
             Titre = $"Statistiques de {utilisateur.NomUtilisateur}";
         }
 
