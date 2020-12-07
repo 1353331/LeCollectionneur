@@ -1,11 +1,13 @@
 ﻿using LeCollectionneur.Modeles;
 using LeCollectionneur.Outils;
 using LeCollectionneur.Outils.Messages;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace LeCollectionneur.VuesModeles
 {
@@ -13,6 +15,7 @@ namespace LeCollectionneur.VuesModeles
     {
 
         public List<Item> ItemsAjoutes { get; set; }
+
         //Variables pour l'item sélectionné
         private ItemAjout _itemSelectionne;
         public ItemAjout ItemSelectionne
@@ -21,6 +24,21 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _itemSelectionne = value;
+                
+                if(_itemSelectionne != null)
+                {
+                    if (_itemSelectionne.BmImage is null)
+                    {
+                        ImageItem = new BitmapImage();
+                        ImageItem.BeginInit();
+                        ImageItem.UriSource = new Uri("pack://application:,,,/LeCollectionneur;component/images/noimage.png", UriKind.Absolute);
+                        ImageItem.EndInit();
+                    }
+                    else
+                    {
+                        ImageItem = _itemSelectionne.BmImage;
+                    }
+                }
                 OnPropertyChanged("ItemSelectionne");
 
                 //Puisqu'il y a un item de sélectionné, alors on veut pouvoir exécuter la commande d'ajout d'un item
@@ -53,6 +71,20 @@ namespace LeCollectionneur.VuesModeles
             {
                 _contentAjouter = value;
                 OnPropertyChanged("ContentAjouter");
+            }
+        }
+
+        private BitmapImage _imageItem;
+        public BitmapImage ImageItem
+        {
+            get
+            {
+                return _imageItem;
+            }
+            set
+            {
+                _imageItem = value;
+                OnPropertyChanged("ImageItem");
             }
         }
 

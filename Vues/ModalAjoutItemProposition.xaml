@@ -59,7 +59,7 @@
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
 
-                <Image Name="imgItem" Source="/images/noimage.png" Grid.Column="0" Grid.RowSpan="3" Stretch="Fill" Margin="10,10,5,10" />
+                <Image Name="imgItem" Source="{Binding ImageItem}" Stretch="UniformToFill" Grid.Column="0" Grid.RowSpan="3" Margin="10,10,5,10" />
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="5,5,5,0">
                     <Label>Nom:</Label>
                     <TextBox Text="{Binding ItemSelectionne.Nom}" Name="txtNomItem"  Height="23" Width="141" Margin="0,4" IsEnabled="False"></TextBox>

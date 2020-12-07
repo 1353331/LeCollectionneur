@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using LeCollectionneur.Modeles;
 using LeCollectionneur.Outils;
 using LeCollectionneur.Outils.Messages;
@@ -25,6 +26,20 @@ namespace LeCollectionneur.VuesModeles
 			set 
 			{ 
 				_itemSelectionne = value;
+				if (_itemSelectionne != null)
+				{
+					if (_itemSelectionne.BmImage is null)
+					{
+						ImageItem = new BitmapImage();
+						ImageItem.BeginInit();
+						ImageItem.UriSource = new Uri("pack://application:,,,/LeCollectionneur;component/images/noimage.png", UriKind.Absolute);
+						ImageItem.EndInit();
+					}
+					else
+					{
+						ImageItem = _itemSelectionne.BmImage;
+					}
+				}
 				cmdAjouter_Item = new Commande(cmdAjouter, boutonAjouterActif);
 				OnPropertyChanged("ItemSelectionne");
 			}
@@ -79,6 +94,19 @@ namespace LeCollectionneur.VuesModeles
 			}
 		}
 
+		private BitmapImage _imageItem;
+		public BitmapImage ImageItem
+		{
+			get
+			{
+				return _imageItem;
+			}
+			set
+			{
+				_imageItem = value;
+				OnPropertyChanged("ImageItem");
+			}
+		}
 
 		public ModalAjoutItem_VM(IEnumerable<Item> items)
 		{

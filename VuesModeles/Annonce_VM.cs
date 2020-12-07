@@ -22,6 +22,8 @@ namespace LeCollectionneur.VuesModeles
 {
     class Annonce_VM : INotifyPropertyChanged
     {
+        #region Variable Annonce_VM
+
         private const string FILTRE_NULL = "Aucune sélection";
         private const string PROPOSER = "Proposer une offre";
         private const string MODIFIER = "Modifier mon annonce";
@@ -30,6 +32,7 @@ namespace LeCollectionneur.VuesModeles
 
         private readonly BackgroundWorker worker = new BackgroundWorker();
         private readonly BackgroundWorker worker_update = new BackgroundWorker();
+        private readonly BackgroundWorker worker_filtre = new BackgroundWorker();
         private AnnonceADO annonceADO = new AnnonceADO();
 
         private bool onInitialise = false;
@@ -37,11 +40,16 @@ namespace LeCollectionneur.VuesModeles
         private bool onModifieAnnonce = false;
         private int idAnnonceMod;
         private bool onSupprimeAnnonce = false;
+        private bool onFiltre = false;
 
         public ICommand cmdAjouterAnnonce_Annonce { get; set; }
         public ICommand cmdFiltrerMesAnnonces_Annonce { get; set; }
         public ICommand cmdEnvoyerMessage_Annonce{ get; set; }
         public ICommand cmdAfficherTout_Annonce { get; set; }
+
+        #endregion
+
+        #region Contructeur
 
         public Annonce_VM()
         {
@@ -56,7 +64,7 @@ namespace LeCollectionneur.VuesModeles
 
             ProposerOuModifier = PROPOSER;
 
-            //On indique que l'on initialise (Pour le filtre des dates, cela est nécessaire)
+            //On indique que l'on initialise (Pour le filtres, cela est nécessaire, sinon boucle infinie)
             onInitialise = true;
 
             //On initialise la liste des annonces
@@ -66,6 +74,7 @@ namespace LeCollectionneur.VuesModeles
             chargerAnnonces();
         }
 
+        #endregion
 
         #region Variables de la liste des annonces
 
@@ -454,6 +463,7 @@ namespace LeCollectionneur.VuesModeles
                                                                 .Include("Type")
                                                                 .Include("ListeItems.Type")
                                                                 .Include("ListeItems.Condition")
+                                                                .AsNoTracking()
                                                                 .Where(a => a.EtatAnnonce.Id == 2)
                                                                 .ToList();
 
@@ -560,6 +570,7 @@ namespace LeCollectionneur.VuesModeles
                                                                 .Include("Type")
                                                                 .Include("ListeItems.Type")
                                                                 .Include("ListeItems.Condition")
+                                                                .AsNoTracking()
                                                                 .Where(a => a.EtatAnnonce.Id == 2)
                                                                 .ToList();
 
@@ -588,6 +599,10 @@ namespace LeCollectionneur.VuesModeles
             if (onModifieAnnonce)
             {
                 AnnonceSelectionnee = LesAnnonces.Single(a => a.Id == idAnnonceMod);
+            }
+            if (onFiltre)
+            {
+                FiltrerAnnonce();
             }
 
             onSupprimeAnnonce = false;
@@ -701,20 +716,59 @@ namespace LeCollectionneur.VuesModeles
 
         private void cmdFiltrer(object param)
         {
-            // TODO: Changer le chargerAnnonces()
+            onFiltre = true;
             UpdateAnnonce();
+        }
 
-            if (TypeAnnonceFiltre != null && TypeAnnonceFiltre != FILTRE_NULL)
-                LesAnnonces = FiltrerParTypeAnnonce();
+        private void FiltrerAnnonce()
+        {
+            //On affiche le spinner de chargement
+            VisibiliteSpinner = Visibility.Visible;
 
-            if (TypeItemFiltre != null && TypeItemFiltre != FILTRE_NULL)
-                LesAnnonces = FiltrerParTypeItem();
+            //On s'assure que le worker n'est pas occupé
+            if (!worker_filtre.IsBusy)
+            {
+                //Ce qu'il doit faire
+                worker_filtre.DoWork += Worker_DoWork_Filtrer;
 
-            if (DateDebutFiltre != null && DateFinFiltre != null)
-                LesAnnonces = FiltrerParDate();
+                //Ce qu'il doit faire lorsqu'il a fini sa tâche
+                worker_filtre.RunWorkerCompleted += WorkerEnvoyees_RunWorkerCompleted_Filtrer;
 
-            if (RechercheTextuelle != null && RechercheTextuelle != "" && (FiltrerParNomAnnonceur || FiltrerParTitreAnnonce || FiltrerParNomItem))
-                LesAnnonces = FiltrerParRechercheTextuelle();
+                //On fait la tâche en Async
+                worker_filtre.RunWorkerAsync();
+            }
+        }
+
+        private void Worker_DoWork_Filtrer(object sender, DoWorkEventArgs e)
+        {
+            using (Context context = new Context())
+            {
+                if (TypeAnnonceFiltre != null && TypeAnnonceFiltre != FILTRE_NULL)
+                    LesAnnonces = FiltrerParTypeAnnonce();
+
+                if (TypeItemFiltre != null && TypeItemFiltre != FILTRE_NULL)
+                    LesAnnonces = FiltrerParTypeItem();
+
+                if (DateDebutFiltre != null && DateFinFiltre != null)
+                    LesAnnonces = FiltrerParDate();
+
+                if (RechercheTextuelle != null && RechercheTextuelle != "" && (FiltrerParNomAnnonceur || FiltrerParTitreAnnonce || FiltrerParNomItem))
+                    LesAnnonces = FiltrerParRechercheTextuelle();
+            }
+        }
+
+        private void WorkerEnvoyees_RunWorkerCompleted_Filtrer(object sender, RunWorkerCompletedEventArgs e)
+        {
+            onFiltre = false;
+
+            //On enlève le spinner de chargement
+            VisibiliteSpinner = Visibility.Collapsed;
+
+            //Ce qu'il doit faire
+            worker_filtre.DoWork -= Worker_DoWork_Filtrer;
+
+            //Ce qu'il doit faire lorsqu'il a fini sa tâche
+            worker_filtre.RunWorkerCompleted -= WorkerEnvoyees_RunWorkerCompleted_Filtrer;
         }
 
         private ObservableCollection<Annonce> FiltrerParTypeAnnonce()
@@ -757,11 +811,11 @@ namespace LeCollectionneur.VuesModeles
         {
             if (FiltrerParMesAnnonces)
             {
+                // TODO: EF
                 LesAnnonces = annonceADO.RecupererParUtilisateurConnecte();
             }
             else
             {
-                // TODO: Changer le chargerAnnonces()
                 UpdateAnnonce();
             }
         }
@@ -823,12 +877,13 @@ namespace LeCollectionneur.VuesModeles
         }
         #endregion
 
+        #region PropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string nomPropriete)
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(nomPropriete));
         }
-        
+        #endregion#
     }
 }
