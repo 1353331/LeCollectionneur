@@ -332,8 +332,9 @@ namespace LeCollectionneur.VuesModeles
         }
         private void cmdModifier_Collection(object param)
         {
-            Collection col =new Collection( CollectionSelectionnee.Id);
+           
             // Modifier_Collection permet de modifier le nom de la collection dans un pop-up.
+            // Permet maintenant la modification de la date de création de la collection.
             Window modale = new ModalModifierCollection(CollectionSelectionnee);
 
             modale.ShowDialog();
@@ -358,6 +359,7 @@ namespace LeCollectionneur.VuesModeles
         private void cmdSupprimer_Collection(object param)
         {
             //Supprimer_Collection permet de supprimer cette collection de l'utilisateur en question, cela entraine également la suppression des objets de la collection
+            // Une collection ne peut être supprimée que si les items de la collection ne sont tous pas dans une annonce ou une proposition.
             MessageBoxResult resultat;
             resultat=MessageBox.Show($"Voulez vous vraiment supprimer la collection: {CollectionSelectionnee.Nom}?\n Cela entrainera la suppression de ses {CollectionSelectionnee.ItemsCollection.Count} items. ", $"Attention", MessageBoxButton.YesNo);
             if (resultat==MessageBoxResult.Yes)
@@ -841,7 +843,7 @@ namespace LeCollectionneur.VuesModeles
         }
         private void ChangerImageItem()
         {
-            if (NomFichier!=null)
+            if (NomFichier!=null && NomFichier.Length>0)
             {
                 ImageItemSelectionne = new BitmapImage();
                 ImageItemSelectionne.BeginInit();
