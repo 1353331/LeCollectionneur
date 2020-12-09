@@ -1,5 +1,7 @@
-﻿using LeCollectionneur.Modeles;
+﻿using LeCollectionneur.EF;
+using LeCollectionneur.Modeles;
 using LeCollectionneur.Outils;
+using LeCollectionneur.Outils.Enumerations;
 using LeCollectionneur.Outils.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -8,19 +10,21 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace LeCollectionneur.VuesModeles.ContexteAdmin
 {
     class AnnonceAdmin_VM : INotifyPropertyChanged
     {
+        private readonly BackgroundWorker worker = new BackgroundWorker();
         public ICommand cmdSupprimer_Annonce { get; set; }
 
         public AnnonceAdmin_VM()
         {
             cmdSupprimer_Annonce = new Commande(cmdSupprimer);
             cmdDetails_Annonce = new Commande(cmdDetails);
-            initAnnonces();
+            chargerAnnonces();
         }
 
         private ObservableCollection<Annonce> _lesAnnonces;
@@ -150,6 +154,17 @@ namespace LeCollectionneur.VuesModeles.ContexteAdmin
             }
         }
 
+        private Visibility _visibiliteSpinner;
+        public Visibility VisibiliteSpinner
+        {
+            get { return _visibiliteSpinner; }
+            set
+            {
+                _visibiliteSpinner = value;
+                OnPropertyChanged("VisibiliteSpinner");
+            }
+        }
+
         private ICommand _cmdDetails_Annonce;
         public ICommand cmdDetails_Annonce
         {
@@ -161,17 +176,97 @@ namespace LeCollectionneur.VuesModeles.ContexteAdmin
             }
         }
 
-        private void initAnnonces()
+        private void chargerAnnonces()
         {
-            LesAnnonces = new ObservableCollection<Annonce>();
-            LesAnnonces = annonceADO.Recuperer();
+            //On affiche le spinner de chargement
+            VisibiliteSpinner = Visibility.Visible;
+
+            //On s'assure que le worker n'est pas occupé
+            if (!worker.IsBusy)
+            {
+                //Ce qu'il doit faire
+                worker.DoWork += Worker_DoWork;
+
+                //Ce qu'il doit faire lorsqu'il a fini sa tâche
+                worker.RunWorkerCompleted += WorkerEnvoyees_RunWorkerCompleted;
+
+                //On fait la tâche en Async
+                worker.RunWorkerAsync();
+            }
+        }
+
+        private void Worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            using (Context context = new Context())
+            {
+                //On va récupérer tous les annonces et tous leurs informations
+                List<Annonce> lstAnnonces = context.Annonces.Include("Annonceur")
+                                                                .Include("EtatAnnonce")
+                                                                .Include("Type")
+                                                                .Include("ListeItems.Type")
+                                                                .Include("ListeItems.Condition")
+                                                                .AsNoTracking()
+                                                                .Where(a => a.EtatAnnonce.Id == 2)
+                                                                .ToList();
+
+                //On change la liste d'annonces en ObservableCollection
+                ObservableCollection<Annonce> ocAnnonces = changerListAnnoncesEnOCAnnonces(lstAnnonces);
+
+                //On initialise LesAnnonces
+                LesAnnonces = ocAnnonces;
+            }
+        }
+
+        private void WorkerEnvoyees_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            //On sélectionne la première annonce de présente dans la OC
+            if (LesAnnonces.Count > 0)
+            {
+                AnnonceSelectionnee = LesAnnonces.First();
+            }
+
+            //On enlève le spinner de chargement
+            VisibiliteSpinner = Visibility.Collapsed;
+
+            //Ce qu'il doit faire
+            worker.DoWork -= Worker_DoWork;
+
+            //Ce qu'il doit faire lorsqu'il a fini sa tâche
+            worker.RunWorkerCompleted -= WorkerEnvoyees_RunWorkerCompleted;
+        }
+
+        private ObservableCollection<Annonce> changerListAnnoncesEnOCAnnonces(List<Annonce> lstAnnonces)
+        {
+            ObservableCollection<Annonce> ocAnnonces = new ObservableCollection<Annonce>();
+            foreach (Annonce annonce in lstAnnonces)
+            {
+                foreach (Item item in annonce.ListeItems)
+                {
+                    if (!String.IsNullOrWhiteSpace(item.CheminImage))
+                    {
+                        item.BmImage = Fichier.TransformerBitmapEnBitmapImage(Fichier.RecupererImageServeur(item.CheminImage));
+                        if (item.BmImage is null)
+                        {
+                            ItemADO gestionItem = new ItemADO();
+                            item.CheminImage = null;
+                            gestionItem.EnleverCheminImage(item.Id);
+                        }
+                    }
+                }
+                ocAnnonces.Add(annonce);
+            }
+
+            return ocAnnonces;
         }
 
         private void cmdSupprimer(object param)
         {
-            annonceADO.Supprimer(AnnonceSelectionnee);
-            LesAnnonces = annonceADO.Recuperer();
-            AnnonceSelectionnee = null;
+            if (AnnonceSelectionnee != null)
+            {
+                AnnonceSelectionnee.EtatAnnonce = new EtatAnnonce(EtatsAnnonce.Annulee);
+                annonceADO.Modifier(AnnonceSelectionnee);
+                chargerAnnonces();
+            }
         }
 
         private void cmdDetails(object param)

@@ -4,29 +4,32 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
              xmlns:local="clr-namespace:LeCollectionneur.Vues.ContexteAdmin"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="450"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="333.4"></ColumnDefinition>
-            <ColumnDefinition Width="333.4"></ColumnDefinition>
-            <ColumnDefinition Width="166.6"></ColumnDefinition>
-            <ColumnDefinition Width="166.6"></ColumnDefinition>
+            <ColumnDefinition Width="2*"></ColumnDefinition>
+            <ColumnDefinition Width="2*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
         <!-- Listes des annonces-->
         <DataGrid ItemsSource="{Binding LesAnnonces}" SelectedItem="{Binding AnnonceSelectionnee}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" IsReadOnly="True" Grid.ColumnSpan="2"  Margin="7,10,0,0">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Path=Titre}" Header="Titre" Width="250"></DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Path=Annonceur.NomUtilisateur}" Header="Annonceur" Width="150"></DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Path=DatePublication, StringFormat=yyyy-MM-dd}" Header="Date" Width="100"></DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Path=Type}" Header="Type d'annonce" Width="152"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=Titre}" Header="Titre" Width="4*"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=Annonceur.NomUtilisateur}" Header="Annonceur" Width="2*"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=DatePublication, StringFormat=yyyy-MM-dd}" Header="Date" Width="1.4*"></DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Path=Type.Nom}" Header="Type d'annonce" Width="2*"></DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
+        <fa:ImageAwesome Icon="CircleOutlineNotch" Spin="True" Grid.Row="0" Grid.ColumnSpan="2" Margin="85" MaxHeight="50" MaxWidth="50" Visibility="{Binding VisibiliteSpinner}"></fa:ImageAwesome>
+
 
         <!--GroupBox pour l'affichage d'une annonce-->
         <GroupBox Header="Détails de l'annonce" Grid.Column="2" Grid.ColumnSpan="2"  Margin="7,10,17,0">
@@ -67,9 +70,10 @@
                 <Label Content="Items annoncés" Grid.Row="4" ></Label>
                 <DataGrid ItemsSource="{Binding LesItems}" SelectedItem="{Binding ItemSelectionne}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" Grid.Row="5" Grid.ColumnSpan="2" IsReadOnly="True">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Binding="{Binding Path=Nom}" Header="Nom" Width="100"></DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding Path=Condition}" Header="Condition" Width="100"></DataGridTextColumn>
-                        <DataGridTemplateColumn Header="Détails" Width="90">
+                        <DataGridTextColumn Binding="{Binding Path=Nom}" Header="Nom" Width="3*"></DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=Type.Nom}" Header="Type" Width="2*"></DataGridTextColumn>
+                        <DataGridTextColumn Binding="{Binding Path=Condition.Nom}" Header="Condition" Width="2*"></DataGridTextColumn>
+                        <DataGridTemplateColumn Header="Détails" Width="2*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Button Name="btnDetails" Command="{Binding Path=DataContext.cmdDetails_Annonce, ElementName=UCVueAnnonceAdmin}" CommandParameter="{Binding ElementName=UCVueAnnonceAdmin}">Détails</Button>

@@ -1,5 +1,6 @@
 ﻿using LeCollectionneur.Modeles;
 using LeCollectionneur.Outils;
+using LeCollectionneur.Outils.Enumerations;
 using LeCollectionneur.Outils.Interfaces;
 using LeCollectionneur.Outils.Messages;
 using System;
@@ -17,12 +18,14 @@ namespace LeCollectionneur.VuesModeles
     class ModalModifierAnnonce_VM : INotifyPropertyChanged
     {
         public ICommand cmdAjouterItem_Annonce { get; set; }
+        private AnnonceADO annonceADO = new AnnonceADO();
 
         #region Constructeur
         public ModalModifierAnnonce_VM(Annonce annonceLiee)
         {
             //on initialise les commandes utiles au VM
             cmdModifier_Annonce = new Commande(cmdModifier, champsRemplis);
+            cmdSupprimer_Annonce = new Commande(cmdSupprimer);
             cmdAjouterItem_Annonce = new Commande(cmdAjouterItem);
             cmdSupprimerItem_Annonce = new Commande(cmdSupprimerItem, presenceItem);
             cmdDetails_Annonce = new Commande(cmdDetails);
@@ -157,7 +160,7 @@ namespace LeCollectionneur.VuesModeles
             }
         }
 
-        //La commande de publication de la nouvelle annonce 
+        //La commande de modification d'annonce 
         private ICommand _cmdModifier_Annonce;
         public ICommand cmdModifier_Annonce
         {
@@ -166,6 +169,17 @@ namespace LeCollectionneur.VuesModeles
             {
                 _cmdModifier_Annonce = value;
                 OnPropertyChanged("cmdModifier_Annonce");
+            }
+        }
+
+        private ICommand _cmdSupprimer_Annonce;
+        public ICommand cmdSupprimer_Annonce
+        {
+            get { return _cmdSupprimer_Annonce; }
+            set
+            {
+                _cmdSupprimer_Annonce = value;
+                OnPropertyChanged("cmdSupprimer_Annonce");
             }
         }
 
@@ -242,7 +256,6 @@ namespace LeCollectionneur.VuesModeles
             AnnonceAMod.ListeItems = LesItemsMod;
 
             //On modifie l'annonce en BD
-            AnnonceADO annonceADO = new AnnonceADO();
             annonceADO.Modifier(AnnonceAMod);
 
             //Puis on ferme la fenêtre
@@ -251,6 +264,30 @@ namespace LeCollectionneur.VuesModeles
             {
                 //On confirme que l'utilisateur veut bien fermer la fenêtre
                 fenetre.Fermer();
+            }
+        }
+
+        private void cmdSupprimer(object param)
+        {
+            if (AnnonceAMod != null)
+            {
+                //On affiche le message de confirmation
+                MessageBoxResult resultat = MessageBox.Show($"Voulez-vous vraiment supprimer votre annonce?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                //Si l'utilisateur veut bel et bien supprimer son annonce, alors on supprime l'annonce
+                if (resultat == MessageBoxResult.Yes)
+                {
+                    AnnonceAMod.EtatAnnonce = new EtatAnnonce(EtatsAnnonce.Annulee);
+                    annonceADO.Modifier(AnnonceAMod);
+
+                    //Puis on ferme la fenêtre
+                    IFenetreFermeable fenetre = param as IFenetreFermeable;
+                    if (fenetre != null)
+                    {
+                        //On confirme que l'utilisateur veut bien fermer la fenêtre
+                        fenetre.Fermer();
+                    }
+                }                
             }
         }
 

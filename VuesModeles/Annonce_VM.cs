@@ -1,6 +1,7 @@
 ﻿using LeCollectionneur.EF;
 using LeCollectionneur.Modeles;
 using LeCollectionneur.Outils;
+using LeCollectionneur.Outils.Enumerations;
 using LeCollectionneur.Outils.Interfaces;
 using LeCollectionneur.Vues;
 using System;
@@ -379,6 +380,11 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _rechercheTextuelle = value;
+                //Si on initialise, on ne veut pas appliquer la commande de filtrage
+                if (!onInitialise)
+                {
+                    cmdFiltrer_Annonce.Execute(null);
+                }
                 OnPropertyChanged("RechercheTextuel");
             }
         }
@@ -391,6 +397,12 @@ namespace LeCollectionneur.VuesModeles
             {
                 _filtrerParNomAnnonceur = value;
                 cmdFiltrer_Annonce = new Commande(cmdFiltrer, UneColonneCochee);
+
+                //Si on initialise, on ne veut pas appliquer la commande de filtrage
+                if (!onInitialise)
+                {
+                    cmdFiltrer_Annonce.Execute(null);
+                }
                 OnPropertyChanged("FiltrerParNomAnnonceur");
             }
         }
@@ -403,6 +415,12 @@ namespace LeCollectionneur.VuesModeles
             {
                 _filtrerParNomItem = value;
                 cmdFiltrer_Annonce = new Commande(cmdFiltrer, UneColonneCochee);
+
+                //Si on initialise, on ne veut pas appliquer la commande de filtrage
+                if (!onInitialise)
+                {
+                    cmdFiltrer_Annonce.Execute(null);
+                }
                 OnPropertyChanged("FiltrerParNomItem");
             }
         }
@@ -415,6 +433,12 @@ namespace LeCollectionneur.VuesModeles
             {
                 _filtrerParTitreAnnonce = value;
                 cmdFiltrer_Annonce = new Commande(cmdFiltrer, UneColonneCochee);
+
+                //Si on initialise, on ne veut pas appliquer la commande de filtrage
+                if (!onInitialise)
+                {
+                    cmdFiltrer_Annonce.Execute(null);
+                }
                 OnPropertyChanged("FiltrerParTitreAnnonce");
             }
         }
@@ -673,7 +697,15 @@ namespace LeCollectionneur.VuesModeles
                 Annonce AnnonceTEMP = AnnonceSelectionnee;
                 modal.OuvrirModal(AnnonceSelectionnee, nomModal);
 
-                onModifieAnnonce = true;
+                if(annonceADO.RecupererUn(AnnonceTEMP.Id).EtatAnnonce.Nom == EtatsAnnonce.Annulee)
+                {
+                    onSupprimeAnnonce = true;
+                }
+                else
+                {
+                    onModifieAnnonce = true;
+                }
+                
                 idAnnonceMod = AnnonceTEMP.Id;
                 UpdateAnnonce();
             }
