@@ -29,6 +29,17 @@ namespace LeCollectionneur.Modeles
 			EtatProposition = new EtatProposition(EtatsProposition.EnAttente);
 		}
 
+		public Proposition(Proposition prop)
+		{
+			Id = prop.Id;
+			AnnonceLiee = prop.AnnonceLiee;
+			Proposeur = prop.Proposeur;
+			Montant = prop.Montant;
+			DateProposition = prop.DateProposition;
+			EtatProposition = prop.EtatProposition;
+			ItemsProposes = prop.ItemsProposes;
+		}
+
 		public Proposition(DataRow dr)
 		{
 			AnnonceADO annonceADO = new AnnonceADO();

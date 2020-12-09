@@ -22,7 +22,7 @@ namespace LeCollectionneur.Vues
 	/// <summary>
 	/// Logique d'interaction pour UCProposition.xaml
 	/// </summary>
-	public partial class UCPropositionsRecuesEnvoyees : UserControl, IOuvreModalAvecParametre<Item>, IOuvreModalAvecParametre<Utilisateur>
+	public partial class UCPropositionsRecuesEnvoyees : UserControl, IOuvreModalAvecParametre<Item>, IOuvreModalAvecParametre<Utilisateur>, IOuvreModalAvecParametre<Proposition>
 	{
 		public UCPropositionsRecuesEnvoyees()
 		{
@@ -36,11 +36,12 @@ namespace LeCollectionneur.Vues
 			if (btnRefuserProposition != null)
 			{
 				btnRefuserProposition.Visibility = Visibility.Visible;
-				btnAccepterProposition.Visibility = Visibility.Visible;;
+				btnAccepterProposition.Visibility = Visibility.Visible;
 
 				lblEtatProposition.Visibility = Visibility.Hidden;
 				txbEtatProposition.Visibility = Visibility.Hidden;
 				btnAnnulerProposition.Visibility = Visibility.Hidden;
+				btnProposerDeNouveau.Visibility = Visibility.Hidden;
 
 				dpPropositions.Visibility = Visibility.Visible;
 				dpTransactions.Visibility = Visibility.Collapsed;
@@ -58,6 +59,7 @@ namespace LeCollectionneur.Vues
 			lblEtatProposition.Visibility = Visibility.Visible;
 			txbEtatProposition.Visibility = Visibility.Visible;
 			btnAnnulerProposition.Visibility = Visibility.Visible;
+			btnProposerDeNouveau.Visibility = Visibility.Visible;
 
 			dpPropositions.Visibility = Visibility.Visible;
 			dpTransactions.Visibility = Visibility.Collapsed;
@@ -69,6 +71,7 @@ namespace LeCollectionneur.Vues
 			lblEtatProposition.Visibility = Visibility.Hidden;
 			txbEtatProposition.Visibility = Visibility.Hidden;
 			btnAnnulerProposition.Visibility = Visibility.Hidden;
+			btnProposerDeNouveau.Visibility = Visibility.Hidden;
 			dpPropositions.Visibility = Visibility.Hidden;
 			gbTypePropositions.Visibility = Visibility.Hidden;
 
@@ -85,6 +88,7 @@ namespace LeCollectionneur.Vues
 			lblEtatProposition.Visibility = Visibility.Hidden;
 			txbEtatProposition.Visibility = Visibility.Hidden;
 			btnAnnulerProposition.Visibility = Visibility.Hidden;
+			btnProposerDeNouveau.Visibility = Visibility.Hidden;
 
 			dpPropositions.Visibility = Visibility.Visible;
 			dpTransactions.Visibility = Visibility.Collapsed;
@@ -113,5 +117,11 @@ namespace LeCollectionneur.Vues
 			modalMessage.ShowDialog();
 		}
 
+		public void OuvrirModal(Proposition prop)
+		{
+			ModalNouvelleProposition viewProp = new ModalNouvelleProposition(prop);
+			viewProp.Owner = Window.GetWindow(this);
+			viewProp.ShowDialog();
+		}
 	}
 }

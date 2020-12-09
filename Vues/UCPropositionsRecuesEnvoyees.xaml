@@ -191,7 +191,7 @@
                 </GroupBox>
 
                 <!-- Propositions reçues -->
-                <Button Name="btnRefuserProposition" Grid.RowSpan="2" Grid.Row="1" Grid.Column="0"  HorizontalAlignment="Stretch" Margin="25,10,25,10" Visibility="Visible" Content="Refuser" Command="{Binding cmdRefuserProposition}" MaxWidth="125" MaxHeight="50">
+                <Button Name="btnRefuserProposition" Grid.RowSpan="2" Grid.Row="1" Grid.Column="0"  HorizontalAlignment="Stretch" Margin="25,10,25,10" Visibility="Visible" Content="Refuser" Command="{Binding cmdRefuserProposition}" MaxWidth="225" MaxHeight="50">
                     <!-- Sert à arrondir les coins du bouton -->
                     <Button.Resources>
                         <Style TargetType="Border">
@@ -199,7 +199,7 @@
                         </Style>
                     </Button.Resources>
                 </Button>
-                <Button Name="btnAccepterProposition" Grid.RowSpan="2" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="25,10,25,10" Visibility="Visible" Content="Accepter" Command="{Binding cmdAccepterProposition}" MaxWidth="120" MaxHeight="50">
+                <Button Name="btnAccepterProposition" Grid.RowSpan="2" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="25,10,25,10" Visibility="Visible" Content="Accepter" Command="{Binding cmdAccepterProposition}" MaxWidth="225" MaxHeight="50">
                     <!-- Sert à arrondir les coins du bouton -->
                     <Button.Resources>
                         <Style TargetType="Border">
@@ -211,7 +211,16 @@
                 <!-- Propositions envoyées -->
                 <Label Name="lblEtatProposition" Grid.Row="1" Grid.Column="0"  HorizontalAlignment="Right" Visibility="Hidden" VerticalAlignment="Center">État de la proposition: </Label>
                 <TextBox Text="{Binding PropositionSelectionnee.EtatProposition.Nom}" FontWeight="Bold" Name="txbEtatProposition" Grid.Row="1" Grid.Column="1"  HorizontalAlignment="Left" Visibility="Hidden" VerticalAlignment="Center" IsReadOnly="True"></TextBox>
-                <Button Name="btnAnnulerProposition" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="0,5,0,0" Visibility="Hidden" Content="Annuler proposition" Command="{Binding cmdAnnulerProposition}">
+                <Button Name="btnAnnulerProposition" Grid.RowSpan="2" Grid.Row="1" Grid.Column="0"  HorizontalAlignment="Stretch" Margin="25,10,25,10" Visibility="Hidden"  MaxWidth="225" MaxHeight="50" Content="Annuler proposition" Command="{Binding cmdAnnulerProposition}">
+                    <!-- Sert à arrondir les coins du bouton -->
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="3"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+
+                <Button Name="btnProposerDeNouveau" Grid.RowSpan="2" Grid.Row="1" Grid.Column="1"  HorizontalAlignment="Stretch" Margin="25,10,25,10" Visibility="Hidden" MaxWidth="225" MaxHeight="50" Content="Proposer de nouveau" Command="{Binding cmdProposerDeNouveau}" CommandParameter="{Binding ElementName=UCPropositions}">
                     <!-- Sert à arrondir les coins du bouton -->
                     <Button.Resources>
                         <Style TargetType="Border">
