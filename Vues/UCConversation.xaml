@@ -10,6 +10,7 @@
 
     <emoji:UserControl.Resources>
         <clr:String x:Key="PickerEmoji">😁</clr:String>
+        <clr:String x:Key="ImageEmoji">🖼️</clr:String>
         <DataTemplate x:Key="MessagesDataTemplate">
             <Border Name="MessageBorder" MinHeight="40" MinWidth="280" BorderThickness="1" Background="#EFEBE9" 
                     Margin="10,0,60,10" BorderBrush="#BCAAA4" CornerRadius="4" SnapsToDevicePixels="True"
@@ -23,7 +24,7 @@
                     </Grid.RowDefinitions>
                     <Grid x:Name="ImageMessageGrid" Margin="6,6,6,5">
                         <Grid.OpacityMask>
-                            <VisualBrush Visual="{Binding ElementName=ClipBorder}"/>
+                            <VisualBrush Visual="{Binding ElementName=imgMessage}"/>
                         </Grid.OpacityMask>
                         <Border x:Name="ClipBorder" CornerRadius="3" Background="White"/>
 
@@ -55,8 +56,9 @@
                     <Setter  TargetName="btnVoir" Property="Visibility" Value="Visible"/>
                 </DataTrigger>
 
-                <DataTrigger Binding="{Binding Picture}" Value="{x:Null}">
+                <DataTrigger Binding="{Binding image}" Value="{x:Null}">
                     <Setter TargetName="ImageMessageGrid" Property="Visibility" Value="Collapsed"/>
+                    <Setter TargetName="MessageBorder" Property="BorderBrush" Value="#510"/>
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Contenu}" Value="{x:Null}">
                     <Setter TargetName="MessageTxtBlock" Property="Visibility" Value="Collapsed"/>
@@ -125,10 +127,9 @@
                     <RowDefinition Height="3*"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <emoji:TextBox  IsEnabled="{Binding cv}" AcceptsReturn="True" IsReadOnly="{Binding AUneSelection}" Name="txbMessage" Text="{Binding messageContenu}" HorizontalAlignment="Right" Width="425" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+                <emoji:TextBox  IsEnabled="{Binding cv}" AcceptsReturn="True" IsReadOnly="{Binding AUneSelection}" Name="txbMessage" Text="{Binding messageContenu}" HorizontalAlignment="Right" Width="650" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
                 <Button Grid.Row="1" IsEnabled="{Binding cv}" Name="btnEmoji" Width="49" Grid.Column="1" Content="{StaticResource PickerEmoji}" 
                 Command="{Binding cmdEmoji}"  />
-
 
             </Grid>
         </GroupBox>
@@ -138,9 +139,11 @@
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
                     <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
                 <Button IsEnabled="{Binding cv}" Command="{Binding cmdEnvoyerMessage}" Content="Envoyer" Name="btnEnvoyer" Grid.Row="0" Height="30" Width="130" />
                 <Button IsEnabled="{Binding cv}" Command="{Binding cmdEnvoyerItem}" Content="Envoyer Objet" Height="30" Grid.Row="1" Width="130"/>
+                <Button IsEnabled="{Binding cv}" Command="{Binding cmdImage}" Content="Envoyer Image" Height="30" Grid.Row="2" Width="130"/>
             </Grid>
         </GroupBox>
 
@@ -169,7 +172,7 @@
                 <DataTemplate>
                     <TextBlock Text="{Binding Text}"></TextBlock>
                 </DataTemplate>
-            </emoji:ListBox.ItemTemplate>                
+            </emoji:ListBox.ItemTemplate>
         </emoji:ListBox>
 
     </Grid>

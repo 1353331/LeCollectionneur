@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Ubiety.Dns.Core.Records;
 
@@ -15,6 +16,18 @@ namespace LeCollectionneur.VuesModeles
     class Parametre_VM : INotifyPropertyChanged
     {
         #region Propriétés
+        private bool _aModif;
+        public bool aModif
+        {
+            get { return _aModif; }
+            set
+            {
+                _aModif = value;
+
+                OnPropertyChanged("aModif");
+            }
+        }
+
 
         private string _nouvNom;
         public string nouvNom
@@ -23,6 +36,11 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _nouvNom = value;
+                try
+                {
+                    aModif = (nouvNom != UtilisateurADO.utilisateur.NomUtilisateur || nouvCourriel != UtilisateurADO.utilisateur.Courriel || mpNouv != "" || mpNouvConf != "");
+                }
+                catch { aModif = false; }
                 OnPropertyChanged("nouvNom");
             }
         }
@@ -34,6 +52,11 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _nouvCourriel = value;
+                try
+                {
+                    aModif = (nouvNom != UtilisateurADO.utilisateur.NomUtilisateur || nouvCourriel != UtilisateurADO.utilisateur.Courriel || mpNouv != "" || mpNouvConf != "");
+                }
+                catch { aModif = false; }
                 OnPropertyChanged("nouvCourriel");
             }
         }
@@ -45,6 +68,11 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _mpActuel = value;
+                try
+                {
+                    aModif = (nouvNom != UtilisateurADO.utilisateur.NomUtilisateur || nouvCourriel != UtilisateurADO.utilisateur.Courriel || mpNouv != "" || mpNouvConf != "");
+                }
+                catch { aModif = false; }
                 OnPropertyChanged("mpActuel");
             }
         }
@@ -56,6 +84,11 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _mpNouv = value;
+                try
+                {
+                    aModif = (nouvNom != UtilisateurADO.utilisateur.NomUtilisateur || nouvCourriel != UtilisateurADO.utilisateur.Courriel || mpNouv != "" || mpNouvConf != "");
+                }
+                catch { aModif = false; }
                 OnPropertyChanged("mpNouv");
             }
         }
@@ -67,6 +100,11 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 _mpNouvConf = value;
+                try
+                {
+                    aModif = (nouvNom != UtilisateurADO.utilisateur.NomUtilisateur || nouvCourriel != UtilisateurADO.utilisateur.Courriel || mpNouv != "" || mpNouvConf != "");
+                }
+                catch { aModif = false; }
                 OnPropertyChanged("mpNouvConf");
             }
         }
@@ -75,6 +113,7 @@ namespace LeCollectionneur.VuesModeles
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string nomPropriete)
         {
+
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(nomPropriete));
         }
@@ -94,78 +133,87 @@ namespace LeCollectionneur.VuesModeles
         private void cmdModifierCompte_Compte(object param)
         {
 
-            if ((mpNouv == ""|| mpNouv==null) && (mpNouvConf == ""||mpNouvConf==null) && (nouvCourriel == UtilisateurADO.utilisateur.Courriel ||nouvCourriel =="" || nouvCourriel==null)&& (nouvNom ==UtilisateurADO.utilisateur.NomUtilisateur||nouvNom==""||nouvNom==null))
+            if ((mpNouv == "" || mpNouv == null) && (mpNouvConf == "" || mpNouvConf == null) && (nouvCourriel == UtilisateurADO.utilisateur.Courriel || nouvCourriel == "" || nouvCourriel == null) && (nouvNom == UtilisateurADO.utilisateur.NomUtilisateur || nouvNom == "" || nouvNom == null))
             {
                 MessageBox.Show("Aucune Modifcation à faire");
             }
             //Valide que le mot de passe est valide
-            else if(mpActuel!=null)
+            else if (mpActuel != null)
             {
                 if (getMP(mpActuel))
                 {
-                    string deBase = "UPDATE `utilisateurs` SET";
-                    string req = deBase;
-                    //string req = "UPDATE `utilisateurs` SET `NomUtilisateur` = 'co', `Courriel` = 'col4@outlook.com' WHERE `utilisateurs`.`Id` = 4;";
-                    
-                    //Valide que les nouveau mot de passe sont valide et non vide
-                    if (mpNouv == mpNouvConf && mpNouv!="")
-                        req = req + " `MotDePasse` = '"+mpNouv+"',";
-                    else if(mpNouvConf!=mpNouv && (mpNouv!=""||mpNouv!=null ||mpNouvConf!=""||mpNouvConf!=null))
-                        MessageBox.Show("Les nouveaux mot de passe ne sont pas identique");
-                    if (nouvNom != UtilisateurADO.utilisateur.NomUtilisateur&&(nouvNom != "" &&!(new UtilisateurADO().CheckSiUserEstPrit(nouvNom))))
-                    { 
-                            req = req + "`NomUtilisateur` = '" + nouvNom + "',";
-                    }
-                    else if (nouvNom != "" || nouvNom == null)
-                        MessageBox.Show("Le nouveaux nom utilisateur n'est pas valide");
-                        
-
-                    if (!(new UtilisateurADO().ValideCourriel(nouvCourriel)))
-                        req = req + "`Courriel` = '"+nouvCourriel+"',";
-                    else if(nouvCourriel !="")
-                        MessageBox.Show("Le nouveaux courriel n'est pas valide");
-
-                    if (req != deBase)
-                    {
-                        if (req.Last() == ',')
-                        {
-                            req = req.Remove(req.Length - 1);
-                        }
-                        req = req + "WHERE `utilisateurs`.`Id` = " + UtilisateurADO.utilisateur.Id + "; ";
-
-                        string t = "Les valeur Suivantes on été mit à jour:";
-                        if (nouvNom != "" && !(new UtilisateurADO().CheckSiUserEstPrit(nouvNom)))
-                        {
-                            t = t + "\nNouveau User = " + nouvNom;
-                            UtilisateurADO.utilisateur.NomUtilisateur= nouvNom;
-                            
-                        }
-                        new BdBase().Commande(req);
-                        if (!(new UtilisateurADO().ValideCourriel(nouvCourriel)))
-                        {
-                            t = t + "\nNouveau Courriel = " + nouvCourriel;
-                            UtilisateurADO.utilisateur.Courriel = nouvCourriel;
-                            
-                        }
-                        if (mpNouv == mpNouvConf && mpNouv != "")
-                        {
-                            t = t + "\nNouveau Mot De Passe = " + mpNouv;
-                            mpNouv = "";
-                            mpNouvConf = "";
-                        }
-                        
-                        mpActuel = "";
-
-                        MessageBox.Show(t);
-                    }
+                    if (validationInfo())
+                        updateInfo();
                 }
                 else
-                    MessageBox.Show("Votre Mot de Passe Actuel est invalide");
+                {
+                    mpActuel = "";
+                    MessageBox.Show("Mot de passe Actuel Invalide");
+                }
+                
             }
         }
         #endregion
 
         #region Contructeur
+        private void updateInfo()
+        {
+            string req="";
+            if (mpNouv!="")
+                 req= "UPDATE `utilisateurs` SET `NomUtilisateur` = '"+nouvNom+"', `Courriel` = '"+nouvCourriel+ "',`MotDePasse` = '" + mpNouv + "'  WHERE `utilisateurs`.`Id` = " + UtilisateurADO.utilisateur.Id+";";
+            else
+                req = "UPDATE `utilisateurs` SET `NomUtilisateur` = '"+nouvNom+"', `Courriel` = '"+nouvCourriel+ "'  WHERE `utilisateurs`.`Id` = " + UtilisateurADO.utilisateur.Id+";";
+
+            new BdBase().Commande(req);
+            affichageModification();
+            new UtilisateurADO().connectionParId(UtilisateurADO.utilisateur.Id);
+            mpNouv = "";
+            mpNouvConf = "";
+            mpActuel = "";
+        }
+        private void affichageModification()
+        {
+            string temp = "";
+            if (nouvNom != UtilisateurADO.utilisateur.NomUtilisateur)
+                temp += "Nouveau Nom : "+nouvNom+"\n";
+            if (nouvCourriel != UtilisateurADO.utilisateur.Courriel)
+                temp += "Nouveau Courriel : "+nouvCourriel+"\n";
+            if (mpNouv != "")
+                temp += "Nouveau Mot de Passe : "+mpNouv;
+            MessageBox.Show(temp);
+        }
+        private bool validationInfo()
+        {
+            string MessageErreur="";
+
+            //Valide NouvUser
+            if (nouvNom != UtilisateurADO.utilisateur.NomUtilisateur && (nouvNom == "" || new UtilisateurADO().CheckSiUserEstPrit(nouvNom)))
+            {
+                MessageErreur += "Erreur : Nom Utilisateur Invalide\n";
+            }
+            //Valide Courriel
+            if (nouvCourriel != UtilisateurADO.utilisateur.Courriel && (new UtilisateurADO().ValideCourriel(nouvCourriel)))
+            {
+                if(MessageErreur =="")
+                    MessageErreur += "Erreur : Courriel Invalide\n";
+                else
+                    MessageErreur += "       : Courriel Invalide\n"; 
+            }
+            if(mpNouv != mpNouvConf && mpNouv !="")
+            {
+                if (MessageErreur == "")
+                    MessageErreur += "Erreur : Nouveau Mot de passe Invalide\n";
+                else
+                    MessageErreur += "       : Nouveau Mot de passe";
+            }
+            if (MessageErreur == "")
+                return true;
+            else
+            {
+                MessageBox.Show(MessageErreur);
+                return false;
+            }    
+        }
         public Parametre_VM()
         {
             mpNouv = "";
@@ -174,10 +222,15 @@ namespace LeCollectionneur.VuesModeles
             nouvCourriel = UtilisateurADO.utilisateur.Courriel;
             nouvNom = UtilisateurADO.utilisateur.NomUtilisateur;
             cmdModifierCompte = new Commande(cmdModifierCompte_Compte);
+            aModif =false;
         }
         #endregion
 
         #region Method
+        private void textChangedEventHandler(object sender)
+        {
+            aModif = (nouvNom == UtilisateurADO.utilisateur.NomUtilisateur && nouvCourriel == UtilisateurADO.utilisateur.Courriel && mpNouv == "" && mpNouvConf == "");        
+        }
         private bool getMP(string mp)
         {
             string req = "SELECT `Id` FROM `utilisateurs` WHERE Id ="+UtilisateurADO.utilisateur.Id+" AND `MotDePasse` = '"+mp+"'";

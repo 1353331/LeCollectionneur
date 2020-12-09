@@ -56,6 +56,39 @@ namespace LeCollectionneur.Outils
             }
             return nomFichier;
         }
+        public static string ImporterFichierJPGPNGConversation()
+        {
+            string nomFichier = "";
+            Stream checkStream = null;
+
+            // Fenêtre d'explorateur de fichiers.
+            Microsoft.Win32.OpenFileDialog explorateurFichier = new Microsoft.Win32.OpenFileDialog();
+            // Options de la fenêtre
+            explorateurFichier.Multiselect = false;
+            explorateurFichier.Filter = "All Image Files | *.png;*.jpg";
+            // Ouverture de la fenêtre.
+            bool? resultat = explorateurFichier.ShowDialog();
+            if (resultat.GetValueOrDefault()) // Default = false, alors si resultat est null, ce sera tout de même false.
+            {
+                try
+                {
+                    if ((checkStream = explorateurFichier.OpenFile()) != null)
+                    {
+                        FileInfo info = new FileInfo(explorateurFichier.FileName);
+                        if (info.Length <= 5242880)
+                            nomFichier = explorateurFichier.FileName;
+                        else
+                            MessageBox.Show("Image Trop Volumineuse");
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                }
+            }
+            
+            return nomFichier;
+        }
         #endregion
 
         #region Ftp
@@ -87,7 +120,36 @@ namespace LeCollectionneur.Outils
             //    telechargement.Abort();
             
         }
+        public static string TeleverserFichierFTPConversation(string cheminPhysique)
+        {
+            // Thread telechargement = new Thread(() => {
+            string cheminFtp = urlImages + $"Conversation{DateTime.Now.Year}{DateTime.Now.Month}{DateTime.Now.Day}{DateTime.Now.Hour}{DateTime.Now.Minute}{DateTime.Now.Second}{DateTime.Now.Millisecond}.jpg";
+            ManualResetEvent objetAttendu;
+            exceptionAttrappee = null;
+            operationComplete = new ManualResetEvent(false);
+            Object Statut = new object();
+            nomFichier = cheminPhysique;
+            FtpWebRequest requete = (FtpWebRequest)WebRequest.Create(cheminFtp);
+            requete.Method = WebRequestMethods.Ftp.UploadFile;
+            requete.Credentials = new NetworkCredential(nomUtilisateur, motDePasse);
+            _requete = requete;
+            //_requete.EnableSsl = true;
+            _requete.BeginGetRequestStream(new AsyncCallback(EndGetRequestCallBack), Statut);
+            objetAttendu = operationComplete;
+            objetAttendu.WaitOne();
+            if (!(exceptionAttrappee is null))
+            {
+                MessageBox.Show("Téléchargement de l'image raté.");
+                return "";
+            }
 
+            return cheminFtp;
+            //});
+            //    telechargement.Start();
+            //if (true)
+            //    telechargement.Abort();
+
+        }
         private static void EndGetRequestCallBack(IAsyncResult asyncResult)
         {
             Object Statut = asyncResult.AsyncState;

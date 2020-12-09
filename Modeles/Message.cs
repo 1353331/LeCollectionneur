@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LeCollectionneur.Outils;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace LeCollectionneur.Modeles
 {
@@ -30,6 +32,8 @@ namespace LeCollectionneur.Modeles
 		public bool image { get; set; }
 		public bool emoji { get; set; }
 		public bool vue { get; set; }
+		public static int nbrEmoji =25;
+		public System.Drawing.Bitmap imgMessage;
 		#endregion
 
 		#region Constructeur
@@ -45,6 +49,10 @@ namespace LeCollectionneur.Modeles
 			utilisateur = UtilisateurActif;
 			this.envoyuseractif = idUtilisateur == UtilisateurADO.utilisateur.Id;
 			this.item = this.image = this.emoji = false;
+			if(item)
+            {
+				imgMessage=	Fichier.RecupererImageServeur(Contenu);
+            }
 		}
 		public Message(DataSet Data,bool Send)
 		{
@@ -68,6 +76,10 @@ namespace LeCollectionneur.Modeles
 			{
 				this.item = this.image = this.emoji = false;
 
+			}
+			if (item)
+			{
+				imgMessage = Fichier.RecupererImageServeur(Contenu);
 			}
 		}
 		public Message(DataRow Data,bool Send)
@@ -94,6 +106,10 @@ namespace LeCollectionneur.Modeles
 				this.item = this.image = this.emoji = false;
 
 			}
+			if (item)
+			{
+				imgMessage = Fichier.RecupererImageServeur(Contenu);
+			}
 		}
 		public Message(DataSet Data, bool Empty, bool Send)
 		{
@@ -107,6 +123,10 @@ namespace LeCollectionneur.Modeles
 			this.user = new UtilisateurADO().RechercherUtilisateurById(idUtilisateur).NomUtilisateur;
 			this.envoyuseractif = idUtilisateur == UtilisateurADO.utilisateur.Id;
 			this.item = this.image = this.emoji = false;
+			if (item)
+			{
+				imgMessage = Fichier.RecupererImageServeur(Contenu);
+			}
 		}
 		public Message(DataRow Data, bool Empty, bool Send)
 		{
@@ -120,6 +140,10 @@ namespace LeCollectionneur.Modeles
 			this.user = new UtilisateurADO().RechercherUtilisateurById(idUtilisateur).NomUtilisateur;
 			this.envoyuseractif = idUtilisateur == UtilisateurADO.utilisateur.Id;
 			this.item = this.image = this.emoji = false;
+			if (item)
+			{
+				imgMessage = Fichier.RecupererImageServeur(Contenu);
+			}
 		}
 		public Message() { }
 		#endregion
@@ -165,7 +189,7 @@ namespace LeCollectionneur.Modeles
 			{
 
 				temp.Add(item);
-				if (e == 3)
+				if (e == nbrEmoji)
 					break;
 				e++;
 			}

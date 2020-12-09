@@ -226,6 +226,17 @@ namespace LeCollectionneur.VuesModeles
         #endregion
 
         #region Commandes
+
+        private ICommand _cmdImage;
+        public ICommand cmdImage
+        {
+            get { return _cmdImage; }
+            set
+            {
+                _cmdImage = value;
+                OnPropertyChanged("cmdImage");
+            }
+        }
         private ICommand _cmdEmoji;
         public ICommand cmdEmoji
         {
@@ -358,6 +369,29 @@ namespace LeCollectionneur.VuesModeles
             
             OnPropertyChanged("lsbEmoji");
         }
+        public void cmdEnvoyImage(object param)
+        {
+            var e = Fichier.ImporterFichierJPGPNGConversation();
+            if(e !="")
+            {
+            var message =new Message();
+                message.Contenu = e;
+                message.Date = DateTime.Now;
+                message.image = true;
+                message.idUtilisateur = UtilisateurADO.utilisateur.Id;
+                message.emoji = false;
+                message.vue = false;
+                message.item = false;
+            var modal = new modalEnvoyerImage(e);
+            modal.ShowDialog();
+            string adresseFichier = "";
+            if(modal.OKButtonClicked)
+                {
+                    adresseFichier=Fichier.TeleverserFichierFTPConversation(e);
+                    ConversationADO.EnvoyerMessageStatic2(message,ConversationSelectionne);
+                }
+            }
+        }
         #endregion
 
         #region Constructeur
@@ -369,6 +403,7 @@ namespace LeCollectionneur.VuesModeles
             cmdAjouterConversation = new Commande(cmdAjouter_Conversation);
             cmdEnvoyerItem = new Commande(cmdEnvoyerMessage_Item);
             cmdEmoji = new Commande(cmdEmojiAjouter);
+            cmdImage = new Commande(cmdEnvoyImage);
             GetConversations();
             thread = new Thread(RefreshMessage);
             thread.Name = "Fillon Principal";
@@ -397,7 +432,7 @@ namespace LeCollectionneur.VuesModeles
             {
 
                 temp.Add(item);
-                if (e == 25)
+                if (e == Message.nbrEmoji)
                     break;
                 e++;
             }
@@ -417,6 +452,7 @@ namespace LeCollectionneur.VuesModeles
                 {
                     threadEnCour = true;
                     listMessage = ConversationADO.chercherMessage(_conversationSelectionne.UserAutre.Id);
+                    
                     OnPropertyChanged("listMessage");
                     threadEnCour = false;
                 }

@@ -247,6 +247,9 @@
     <Compile Include="Vues\Conversation.xaml.cs">
       <DependentUpon>Conversation.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Vues\modalEnvoyerImage.xaml.cs">
+      <DependentUpon>ModalEnvoyerImage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Vues\ModalEnvoyerItemConversation.xaml.cs">
       <DependentUpon>ModalEnvoyerItemConversation.xaml</DependentUpon>
     </Compile>
@@ -337,6 +340,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Vues\Conversation.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Vues\ModalEnvoyerImage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

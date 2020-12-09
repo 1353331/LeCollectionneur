@@ -29,21 +29,21 @@
 
         <StackPanel Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2">
             <Label Content="Nouveau nom d'utilisateur" Margin="0"/>
-            <TextBox Height="25" Name="tbNouvUser" Text="{Binding nouvNom}"/>
+            <TextBox Height="25" Name="tbNouvUser" Text="{Binding nouvNom, UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
 
         <StackPanel Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2">
             <Label  Content="Nouveau Courriel" />
-            <TextBox Height="25" Name="tbNouvCourriel" Text="{Binding nouvCourriel}"/>
+            <TextBox  Height="25" Name="tbNouvCourriel" Text="{Binding nouvCourriel ,UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
 
         <StackPanel Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2">
             <Label Content="Nouveau mot de passe"/>
-            <TextBox Height="25" Name="tbNouvMP" Text="{Binding mpNouv}"/>
+            <TextBox  Height="25" Name="tbNouvMP" Text="{Binding mpNouv ,UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
         <StackPanel  Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="2">
             <Label Content="Confirmation du nouveau mot de passe"/>
-            <TextBox Height="25" Name="tbCNovConfMP" Text="{Binding mpNouvConf}"/>
+            <TextBox  Height="25" Name="tbCNovConfMP" Text="{Binding mpNouvConf ,UpdateSourceTrigger=PropertyChanged}"/>
         </StackPanel>
 
         <StackPanel Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2">
@@ -51,7 +51,7 @@
             <TextBox Height="25" Name="tbAncienMP" Text="{Binding mpActuel}"/>
         </StackPanel>
         
-        <Button Content="Modifier le Compte" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="4" Height="50" Width="200" Command="{Binding cmdModifierCompte}"/>
+        <Button IsEnabled="{Binding aModif}" Content="Modifier le Compte" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="4" Height="50" Width="200" Command="{Binding cmdModifierCompte}"/>
         
     </Grid>
 </UserControl>

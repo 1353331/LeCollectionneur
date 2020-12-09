@@ -1,4 +1,5 @@
 ﻿using LeCollectionneur.Modeles;
+using LeCollectionneur.Outils;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -23,6 +24,7 @@ namespace LeCollectionneur.Vues
     {
         public ajouterConversation()
         {
+            
             InitializeComponent();
             miseAJour();
         }
@@ -34,10 +36,13 @@ namespace LeCollectionneur.Vues
         private void miseAJour()
         {
             lstUser.Items.Clear();
-            var temp = UtilisateurADO.getAllUtilisateur();
-            foreach (var item in temp)
+            var AllUser = UtilisateurADO.getAllUtilisateur();
+            var AllConvo = new ConversationADO().RecupererConversationUtilisateur();
+            var e = UtilisateurADO.utilisateur.Id;
+            foreach (var user in AllUser)
             {
-                lstUser.Items.Add(new Utilisateur(item.Id, item.NomUtilisateur, item.Courriel));
+                if(!ConversationADO.HasConversation(user.Id))
+                    lstUser.Items.Add(new Utilisateur(user.Id, user.NomUtilisateur, user.Courriel));
             }
         }
         private void miseAJour(List<Utilisateur> temp)
@@ -45,6 +50,7 @@ namespace LeCollectionneur.Vues
             lstUser.Items.Clear();
             foreach (var item in temp)
             {
+                
                 lstUser.Items.Add(new Utilisateur(item.Id,item.NomUtilisateur,item.Courriel));
             }
         }
@@ -54,5 +60,8 @@ namespace LeCollectionneur.Vues
             ConversationADO.ChercherIdConversation(UtilisateurADO.utilisateur, utlisateur);
             this.Close();   
         }
+        
+        
+        //SELECT * FROM `conversations` WHERE (Utilisateur1_Id = 1 OR Utilisateur2_Id =1) AND NOT(Utilisateur1_Id = 2 )AND NOT(Utilisateur2_Id = 3)
     }
 }
