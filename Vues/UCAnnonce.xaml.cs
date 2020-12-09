@@ -44,7 +44,7 @@ namespace LeCollectionneur.Vues
                 case "proposition":
                     ModalNouvelleProposition viewProp = new ModalNouvelleProposition(annonce);
                     viewProp.Owner = Window.GetWindow(this);
-                    viewProp.Show();
+                    viewProp.ShowDialog();
                     break;
 
                 case "modifier":

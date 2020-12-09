@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -33,6 +34,14 @@ namespace LeCollectionneur.Vues
 			InitializeComponent();
 			//Passer le paramètre au ViewModel
 		   ModalNouvelleProposition_VM VM = new ModalNouvelleProposition_VM(annonceLiee);
+			DataContext = VM;
+			Closing += VM.cmdFermer;
+		}
+
+		public ModalNouvelleProposition(Proposition proposition)
+		{
+			InitializeComponent();
+			ModalNouvelleProposition_VM VM = new ModalNouvelleProposition_VM(proposition);
 			DataContext = VM;
 			Closing += VM.cmdFermer;
 		}

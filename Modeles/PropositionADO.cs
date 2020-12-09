@@ -27,7 +27,7 @@ namespace LeCollectionneur.Modeles
 			string requete = $@"
 			INSERT INTO Propositions (AnnonceLiee_Id, Proposeur_Id, Montant, DateProposition, EtatProposition_Id)
 			VALUES
-			({prop.AnnonceLiee.Id}, {prop.Proposeur.Id}, {prop.Montant}, '{prop.DateProposition}', (SELECT Id FROM EtatsProposition WHERE Nom = '{prop.EtatProposition.Nom}'));
+			({prop.AnnonceLiee.Id}, {prop.Proposeur.Id}, {prop.Montant}, '{prop.DateProposition:yyyy-MM-dd HH:mm:ss}', (SELECT Id FROM EtatsProposition WHERE Nom = '{prop.EtatProposition.Nom}'));
 			SELECT LAST_INSERT_ID();
 			";
 			prop.Id = MaBd.CommandeCreationAvecRetourId(requete);

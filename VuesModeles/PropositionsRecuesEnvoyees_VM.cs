@@ -58,6 +58,19 @@ namespace LeCollectionneur.VuesModeles
 			}
 		}
 
+		private ICommand _cmdProposerDeNouveau;
+
+		public ICommand cmdProposerDeNouveau
+		{
+			get { return _cmdProposerDeNouveau; }
+			set 
+			{ 
+				_cmdProposerDeNouveau = value;
+				OnPropertyChanged("cmdProposerDeNouveau");
+			}
+		}
+
+
 		public ICommand cmdDetails_Item { get; set; }
 
 		public ICommand cmdPropositionsRecues { get; set; }
@@ -189,6 +202,8 @@ namespace LeCollectionneur.VuesModeles
 				OnPropertyChanged("TransactionSelectionnee");
 			}
 		}
+
+		private bool TransactionsActives { get; set; }
 
 		private Transaction _derniereTransactionSelectionnee;
 		#endregion
@@ -682,7 +697,7 @@ namespace LeCollectionneur.VuesModeles
 
 		private void WorkerRafraichir_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
-			if (_dernierePropositionSelectionnee != null && TransactionSelectionnee == null && PropositionsAffichees.Count > 0 && PropositionsAffichees.Where(p => p.Id == _dernierePropositionSelectionnee.Id).First() != null)
+			if (_dernierePropositionSelectionnee != null && TransactionSelectionnee == null && PropositionsAffichees.Count() > 0 && PropositionsAffichees.Any(p => p.Id == _dernierePropositionSelectionnee.Id) && (RecuesSelectionnees || EnvoyeesSelectionnees))
 			{
 				PropositionSelectionnee = PropositionsAffichees.Where(p => p.Id == _dernierePropositionSelectionnee.Id).First();
 			}
@@ -690,7 +705,7 @@ namespace LeCollectionneur.VuesModeles
 
 		private void WorkerRafraichirTrx_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
-			if (_derniereTransactionSelectionnee != null && TransactionsAffichees.Count > 0 && TransactionsAffichees.Where(t => t.Id == _derniereTransactionSelectionnee.Id).First() != null && (FiltreAnnonceur || FiltreProposeur) )
+			if (_derniereTransactionSelectionnee != null && TransactionsAffichees.Count > 0 && TransactionsAffichees.Any(t => t.Id == _derniereTransactionSelectionnee.Id) && (FiltreAnnonceur || FiltreProposeur) && TransactionsActives)
 			{
 				TransactionSelectionnee = TransactionsAffichees.Where(p => p.Id == _derniereTransactionSelectionnee.Id).First();
 			}
@@ -734,6 +749,7 @@ namespace LeCollectionneur.VuesModeles
 				PropositionSelectionnee.EtatProposition = new EtatProposition(EtatsProposition.Refusee);
 				propADO.Modifier(PropositionSelectionnee);
 
+				MessageBox.Show($"Vous avez refusé la proposition", "Proposition refusée", MessageBoxButton.OK, MessageBoxImage.Information);
 				chargerPropositionsRecues();
 			}
 		}
@@ -743,14 +759,23 @@ namespace LeCollectionneur.VuesModeles
 			if (PropositionSelectionnee != null)
 			{
 				PropositionSelectionnee.EtatProposition = new EtatProposition(EtatsProposition.Annulee);
-				propADO.Modifier(PropositionSelectionnee);
+				new PropositionADO().Modifier(PropositionSelectionnee);
+				MessageBox.Show($"Vous avez annulé votre proposition", "Proposition annulée", MessageBoxButton.OK, MessageBoxImage.Information);
 				chargerPropositionsEnvoyees();
+			}
+		}
+
+		private void cmdProposerDeNouveau_Methode(object param)
+		{
+			if (PropositionSelectionnee != null)
+			{
+				IOuvreModalAvecParametre<Proposition> fenetre = param as IOuvreModalAvecParametre<Proposition>;
+				fenetre.OuvrirModal(PropositionSelectionnee);
 			}
 		}
 
 		private void cmdEnvoyees(object param)
 		{
-			
 			RecuesSelectionnees = false;
 			PropositionSelectionnee = null;
 			TransactionSelectionnee = null;
@@ -759,6 +784,7 @@ namespace LeCollectionneur.VuesModeles
 
 		private void cmdRecues(object param)
 		{
+			TransactionsActives = false;
 			if (timer.IsEnabled)
 			{
 				timer.Stop();
@@ -772,6 +798,9 @@ namespace LeCollectionneur.VuesModeles
 
 		private void cmdHistoriqueTransactions(object param)
 		{
+			RecuesSelectionnees = false;
+			EnvoyeesSelectionnees = false;
+			TransactionsActives = true;
 			if (timer.IsEnabled)
 			{
 				timer.Stop();
@@ -834,11 +863,17 @@ namespace LeCollectionneur.VuesModeles
 			return (UnePropositionSelectionnee() && PropositionSelectionnee.EtatProposition.Nom == EtatsProposition.EnAttente);
 		}
 
+		private bool BoutonProposerDeNouveau()
+		{
+			return (UnePropositionSelectionnee() && PropositionSelectionnee.AnnonceLiee.EtatAnnonce.Nom == EtatsAnnonce.Active && PropositionSelectionnee.EtatProposition.Nom == EtatsProposition.Refusee);
+		}
+
 		private void changementVisibiliteCommandes()
 		{
 			cmdAccepterProposition = new Commande(cmdAccepter, BoutonsActifs);
 			cmdRefuserProposition = new Commande(cmdRefuser, BoutonsActifs);
 			cmdAnnulerProposition = new Commande(cmdAnnuler, BoutonsActifs);
+			cmdProposerDeNouveau = new Commande(cmdProposerDeNouveau_Methode, BoutonProposerDeNouveau);
 		}
 
 		private void chercherPropositionsRecues()
@@ -855,12 +890,16 @@ namespace LeCollectionneur.VuesModeles
 																					 .Include("EtatProposition")
 																					 .Include("AnnonceLiee.Annonceur")
 																					 .AsNoTracking()
-																					 .Where(p => (p.AnnonceLiee.Annonceur.Id == UtilisateurADO.utilisateur.Id) && (p.EtatProposition.Nom != EtatsProposition.Acceptee))
+																					 .Where(p => (p.AnnonceLiee.Annonceur.Id == UtilisateurADO.utilisateur.Id))
 																					 .OrderByDescending(p => p.DateProposition)
 																					 .ToList();
 
 				ObservableCollection<Proposition> ocPropositions = changerListPropositionsEnOCProposition(lstPropositions);
-				PropositionsAffichees = ocPropositions;
+
+				if (RecuesSelectionnees)
+				{
+					PropositionsAffichees = ocPropositions;
+				}
 			}
 		}
 
@@ -878,12 +917,16 @@ namespace LeCollectionneur.VuesModeles
 																					.Include("ItemsProposes.Type")
 																					.Include("ItemsProposes.Condition")
 																					.AsNoTracking()
-																					.Where(p => (p.Proposeur.Id == UtilisateurADO.utilisateur.Id) && (p.EtatProposition.Nom != EtatsProposition.Acceptee))
+																					.Where(p => (p.Proposeur.Id == UtilisateurADO.utilisateur.Id))
 																					.OrderByDescending(p => p.DateProposition)
 																					.ToList();
 
 				ObservableCollection<Proposition> ocPropositions = changerListPropositionsEnOCProposition(lstPropositions);
-				PropositionsAffichees = ocPropositions;
+
+				if (EnvoyeesSelectionnees)
+				{
+					PropositionsAffichees = ocPropositions;
+				}
 			}
 		}
 

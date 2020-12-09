@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using LeCollectionneur.EF;
 using LeCollectionneur.Modeles;
 using LeCollectionneur.Outils;
 using LeCollectionneur.Outils.Interfaces;
@@ -135,6 +136,54 @@ namespace LeCollectionneur.VuesModeles
 			TitreEncadreProposition = $"Proposition sur {annonce.Titre}";
 
 			if (annonce.Type.Nom == "Vente")
+			{
+				ControlesActifs = false;
+			}
+			else
+			{
+				ControlesActifs = true;
+			}
+
+			//Abonnement à l'évènement Ajout d'un item à une proposition
+			EvenementSysteme.Abonnement<EnvoyerItemsMessage>(ajouterItemsMessage);
+		}
+
+		public ModalNouvelleProposition_VM(Proposition proposition)
+		{
+			// Initialiser les commandes
+			cmdAnnuler_Proposition = new Commande(cmdAnnuler);
+			cmdDetails_Item = new Commande(cmdDetailsItem);
+			cmdProposer_Proposition = new Commande(cmdProposer, boutonProposerActif);
+			cmdAjouterItem_Proposition = new Commande(cmdAjouterItem);
+			cmdSupprimerItem_Proposition = new Commande(cmdSupprimerItem);
+			cmdEnvoyerMessage = new Commande(cmdEnvMessage);
+
+			//Initialiser la nouvelle proposition avec les informations qui ne changeront pas
+			nouvelleProposition = new Proposition();
+			nouvelleProposition.AnnonceLiee = proposition.AnnonceLiee;
+			nouvelleProposition.Proposeur = UtilisateurADO.utilisateur;
+
+			ItemsProposition = new ObservableCollection<Item>();
+			List<Collection> CollectionsUtilisateur = new List<Collection>();
+			using (Context context = new Context())
+			{
+				CollectionsUtilisateur = context.Collections.Include("Utilisateur").Include("ItemsCollectionListe").Where(c => c.Utilisateur.Id == UtilisateurADO.utilisateur.Id).ToList();	
+			}
+
+			foreach (Item item in proposition.ItemsProposes)
+			{
+				if (CollectionsUtilisateur.Any(coll => coll.ItemsCollectionListe.Any(i => i.Id == item.Id)))
+				{
+					ItemsProposition.Add(item);
+				}
+			}
+
+			MontantProposition = proposition.Montant;
+			MontantDemande = proposition.AnnonceLiee.Montant;
+			ItemsAnnonce = proposition.AnnonceLiee.ListeItems;
+			TitreEncadreProposition = $"Proposition sur {proposition.AnnonceLiee.Titre}";
+
+			if (proposition.AnnonceLiee.Type.Nom == "Vente")
 			{
 				ControlesActifs = false;
 			}
