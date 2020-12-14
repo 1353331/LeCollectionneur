@@ -144,15 +144,34 @@ namespace LeCollectionneur.Modeles
         //Créé un compte en BD, retourne false si le compte na pas pu être créé
         public bool CreerCompte(string User, string MP, string MPConfirme, string Courriel)
         {
+            if(User =="")
+            {
+                MessageBox.Show("Le nom d'utilisateurne peut pas être vide");
+                return false;
+            }
+            if(MP == "")
+            {
+                MessageBox.Show("Le mot de passe ne peut pas être vide");
+                return false;
+            }
             //1. Valide que les mot de passe sont pareil
             if (MP != MPConfirme)
+            {
+                MessageBox.Show("Les mot de passe sont non équivalent");
                 return false;
+            }
             //2. Valide que le nom d'utilisateur n'est pas prit
             if (CheckSiUserEstPrit(User))
+            {
+                MessageBox.Show("Le nom d'utilisateur est prit");
                 return false;
+            }
             //3. Valide le format du Courriel
             if (ValideCourriel(Courriel))
+            {
+                MessageBox.Show("Le couriel est invalide");
                 return false;
+            }
             //4. On créé le compte et on se connecte
             AjoutCompte(User,MP,Courriel);
             Connection(User,MP);
