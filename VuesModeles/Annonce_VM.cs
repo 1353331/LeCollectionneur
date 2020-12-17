@@ -62,6 +62,7 @@ namespace LeCollectionneur.VuesModeles
             cmdDetails_Annonce = new Commande(cmdDetails);
             cmdEnvoyerMessage_Annonce = new Commande(cmdEnvMessage);
             cmdAfficherTout_Annonce = new Commande(cmdAfficherTout);
+            cmdSupprimer_Annonce = new Commande(cmdSupprimer);
 
             ProposerOuModifier = PROPOSER;
 
@@ -114,10 +115,7 @@ namespace LeCollectionneur.VuesModeles
                 {
                     //Si l'annonce appartient à l'utilisateur connecté, il peut la modifier
                     ProposerOuModifier = MODIFIER;
-                    cmdProposerOuModifier_Annonce = new Commande(cmdModifier, UneAnnonceSelectionnee);
-
-                    // TODO : Pouvoir supprimer sa propre Annonce
-                    
+                    cmdProposerOuModifier_Annonce = new Commande(cmdModifier, UneAnnonceSelectionnee);                    
                 }
                 else
                 {
@@ -243,6 +241,17 @@ namespace LeCollectionneur.VuesModeles
             {
                 _cmdProposerOuModifier_Annonce = value;
                 OnPropertyChanged("cmdProposerOuModifier_Annonce");
+            }
+        }
+
+        private ICommand _cmdSupprimer_Annonce;
+        public ICommand cmdSupprimer_Annonce
+        {
+            get { return _cmdSupprimer_Annonce; }
+            set
+            {
+                _cmdSupprimer_Annonce = value;
+                OnPropertyChanged("cmdSupprimer_Annonce");
             }
         }
 
@@ -615,6 +624,8 @@ namespace LeCollectionneur.VuesModeles
                 {
                     AnnonceSelectionnee = LesAnnonces.First();
                 }
+                if (FiltrerParMesAnnonces)
+                    FiltrerParMesAnnonces = false;
             }
             if (onAjouteAnnonce)
             {
@@ -711,6 +722,24 @@ namespace LeCollectionneur.VuesModeles
             }
         }
 
+        private void cmdSupprimer(object param)
+        {
+            if (AnnonceSelectionnee != null)
+            {
+                onSupprimeAnnonce = true;
+                //On affiche le message de confirmation
+                MessageBoxResult resultat = MessageBox.Show($"Voulez-vous vraiment supprimer votre annonce?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                //Si l'utilisateur veut bel et bien supprimer son annonce, alors on supprime l'annonce
+                if (resultat == MessageBoxResult.Yes)
+                {
+                    AnnonceSelectionnee.EtatAnnonce = new EtatAnnonce(EtatsAnnonce.Annulee);
+                    annonceADO.Modifier(AnnonceSelectionnee);
+                }
+                UpdateAnnonce();
+            }
+        }
+
         private void cmdDetails(object param)
         {
             IOuvreModalAvecParametre<Item> modal = param as IOuvreModalAvecParametre<Item>;
@@ -786,6 +815,9 @@ namespace LeCollectionneur.VuesModeles
 
                 if (RechercheTextuelle != null && RechercheTextuelle != "" && (FiltrerParNomAnnonceur || FiltrerParTitreAnnonce || FiltrerParNomItem))
                     LesAnnonces = FiltrerParRechercheTextuelle();
+
+                if (FiltrerParMesAnnonces)
+                    LesAnnonces = FiltrerMesAnnonces();
             }
         }
 
@@ -806,6 +838,12 @@ namespace LeCollectionneur.VuesModeles
         private ObservableCollection<Annonce> FiltrerParTypeAnnonce()
         {
             ObservableCollection<Annonce> LesAnnoncesFiltrees = new ObservableCollection<Annonce>(LesAnnonces.Where(a => a.Type.Nom == TypeAnnonceFiltre).ToList());
+            return LesAnnoncesFiltrees;
+        }
+
+        private ObservableCollection<Annonce> FiltrerMesAnnonces()
+        {
+            ObservableCollection<Annonce> LesAnnoncesFiltrees = new ObservableCollection<Annonce>(LesAnnonces.Where(a => a.Annonceur.Id == UtilisateurADO.utilisateur.Id).ToList());
             return LesAnnoncesFiltrees;
         }
 
@@ -843,8 +881,8 @@ namespace LeCollectionneur.VuesModeles
         {
             if (FiltrerParMesAnnonces)
             {
-                // TODO: EF
-                LesAnnonces = annonceADO.RecupererParUtilisateurConnecte();
+                onFiltre = true;
+                UpdateAnnonce();
             }
             else
             {
@@ -905,7 +943,11 @@ namespace LeCollectionneur.VuesModeles
         private DateTime PlusVieilleAnnonce()
         {
            ObservableCollection<Annonce> temp =  new ObservableCollection<Annonce>(LesAnnonces.OrderBy(a => a.DatePublication));
-           return temp.First().DatePublication;
+           if(temp.Count > 0)
+                return temp.First().DatePublication;
+
+
+           return new DateTime(0001, 01, 01);
         }
         #endregion
 

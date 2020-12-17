@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using LeCollectionneur.Outils.Enumerations;
 
 namespace LeCollectionneur.Modeles
@@ -25,17 +26,30 @@ namespace LeCollectionneur.Modeles
         public string Description { get; set; }
         public ObservableCollection<Item> ListeItems { get; set; }
         public double Montant { get; set; }
-		  public EtatAnnonce EtatAnnonce { get; set; }
-		#endregion
+		public EtatAnnonce EtatAnnonce { get; set; }
 
-		#region Constructeur
-		public Annonce()
+        [NotMapped]
+        public bool aAfficher
+        { get { return MonAnnonce(); }
+            set { aAfficher = value; } }
+
+        [NotMapped]
+        public Visibility Visible
+        {
+            get { return EstVisible(); }
+            set { Visible = value; }
+        }
+        #endregion
+
+        #region Constructeur
+        public Annonce()
         {
             UtilisateurADO UtilisateurConnecte = new UtilisateurADO();
             ListeItems = new ObservableCollection<Item>();
             Annonceur = UtilisateurConnecte.RetourUtilisateurActif();
             DatePublication = DateTime.Now.Date;
             EtatAnnonce = new EtatAnnonce(EtatsAnnonce.Active);
+            
         }
 
         public Annonce(DataRow dr)
@@ -65,6 +79,24 @@ namespace LeCollectionneur.Modeles
         {
             AnnonceADO annonceADO = new AnnonceADO();
             ListeItems = annonceADO.RecupererListeItems(Id);
+        }
+
+        public bool MonAnnonce()
+        {
+            if (Annonceur.Id == UtilisateurADO.utilisateur.Id)
+            {
+                return true;
+            }
+            return false;  
+        }
+
+        public Visibility EstVisible()
+        {
+            if (Annonceur.Id == UtilisateurADO.utilisateur.Id)
+            {
+                return Visibility.Visible;
+            }
+            return Visibility.Hidden;
         }
         #endregion
 

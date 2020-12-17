@@ -73,5 +73,10 @@ namespace LeCollectionneur.Vues
         {
 
         }
+
+        private void DataGrid_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }
