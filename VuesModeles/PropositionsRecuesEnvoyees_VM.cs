@@ -212,6 +212,19 @@ namespace LeCollectionneur.VuesModeles
 
 		private PropositionADO propADO = new PropositionADO();
 
+		private bool _stylePropositionSelectionnee;
+
+		public bool StylePropositionSelectionnee
+		{
+			get { return _stylePropositionSelectionnee; }
+			set 
+			{	
+				_stylePropositionSelectionnee = value;
+				OnPropertyChanged("StylePropositionSelectionnee");
+			}
+		}
+
+
 		private ObservableCollection<Proposition> _propositionsAffichees;
 
 		public ObservableCollection<Proposition> PropositionsAffichees
@@ -248,6 +261,12 @@ namespace LeCollectionneur.VuesModeles
 						TitreDroite = $"Proposition de {PropositionSelectionnee.Proposeur.NomUtilisateur}";
 						TitreMontantDroite = "Montant proposé: ";
 						VisibiliteItemsVideDroite = PropositionSelectionnee.ItemsProposes.Count == 0 ? Visibility.Visible : Visibility.Hidden;
+
+						if (!PropositionSelectionnee.estVue)
+						{
+							PropositionSelectionnee.estAfficheeNotif = false;
+							new PropositionADO().MettrePropositionVue(PropositionSelectionnee.Id);
+						}
 					}
 					else
 					{
@@ -643,7 +662,7 @@ namespace LeCollectionneur.VuesModeles
 		private void rafraichirPropositions()
 		{
 			timer = new DispatcherTimer();
-			timer.Interval = new TimeSpan(0, 0, 5);
+			timer.Interval = new TimeSpan(0, 0, 1);
 			timer.Tick += new EventHandler(rafraichirPropositionsMethode);
 			timer.Start();
 		}
@@ -658,7 +677,7 @@ namespace LeCollectionneur.VuesModeles
 
 		private void rafraichirPropositionsMethode(object sender, EventArgs e)
 		{
-			if (!workerRafraichir.IsBusy)
+			if (!workerRafraichir.IsBusy && !worker.IsBusy)
 			{
 				workerRafraichir = new BackgroundWorker();
 				workerRafraichir.RunWorkerCompleted += WorkerRafraichir_RunWorkerCompleted;
@@ -896,6 +915,11 @@ namespace LeCollectionneur.VuesModeles
 
 				ObservableCollection<Proposition> ocPropositions = changerListPropositionsEnOCProposition(lstPropositions);
 
+				foreach (Proposition prop in ocPropositions)
+				{
+					prop.estAfficheeNotif = !prop.estVue;
+				}
+
 				if (RecuesSelectionnees)
 				{
 					PropositionsAffichees = ocPropositions;
@@ -922,6 +946,11 @@ namespace LeCollectionneur.VuesModeles
 																					.ToList();
 
 				ObservableCollection<Proposition> ocPropositions = changerListPropositionsEnOCProposition(lstPropositions);
+
+				foreach (Proposition prop in ocPropositions)
+				{
+					prop.estAfficheeNotif = false;
+				}
 
 				if (EnvoyeesSelectionnees)
 				{

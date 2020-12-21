@@ -196,9 +196,11 @@ namespace LeCollectionneur.VuesModeles
                 utilisateur = _conversationSelectionne.UserAutre;
                 utlisateurASelection = utilisateur;
                 listMessage = ConversationADO.chercherMessage(_conversationSelectionne.UserAutre.Id);
+               new ConversationADO().MettreMessagesVus(ConversationSelectionne.Id);
 
                 stopThread = false;
                 conversationStatic = _conversationSelectionne;
+               
                 OnPropertyChanged("ConversationSelectionne");
             }
         }

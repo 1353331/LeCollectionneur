@@ -265,6 +265,7 @@ namespace LeCollectionneur.VuesModeles.ContexteAdmin
             {
                 AnnonceSelectionnee.EtatAnnonce = new EtatAnnonce(EtatsAnnonce.Annulee);
                 annonceADO.Modifier(AnnonceSelectionnee);
+                new PropositionADO().AnnulerPropositionsActivesSurAnnonce(AnnonceSelectionnee.Id);
                 chargerAnnonces();
             }
         }

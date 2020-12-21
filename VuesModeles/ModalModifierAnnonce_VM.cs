@@ -279,9 +279,10 @@ namespace LeCollectionneur.VuesModeles
                 {
                     AnnonceAMod.EtatAnnonce = new EtatAnnonce(EtatsAnnonce.Annulee);
                     annonceADO.Modifier(AnnonceAMod);
+                    new PropositionADO().AnnulerPropositionsActivesSurAnnonce(AnnonceAMod.Id);
 
-                    //Puis on ferme la fenêtre
-                    IFenetreFermeable fenetre = param as IFenetreFermeable;
+               //Puis on ferme la fenêtre
+               IFenetreFermeable fenetre = param as IFenetreFermeable;
                     if (fenetre != null)
                     {
                         //On confirme que l'utilisateur veut bien fermer la fenêtre

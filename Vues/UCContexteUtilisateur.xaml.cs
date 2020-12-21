@@ -1,7 +1,9 @@
-﻿using LeCollectionneur.Modeles;
+﻿using LeCollectionneur.EF;
+using LeCollectionneur.Modeles;
 using LeCollectionneur.Outils.Messages;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -15,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace LeCollectionneur.Vues
 {
@@ -23,13 +26,20 @@ namespace LeCollectionneur.Vues
     /// </summary>
     public partial class UCContexteUtilisateur : UserControl
     {
-		public static bool onConversation = false;
+			public static bool onConversation = false;
+
         public UCContexteUtilisateur()
         {
             InitializeComponent();
-			presenteurContenu.Content = new UCCollection();
-			modifierBackgroundBoutons(btnCollections);
-        }
+				presenteurContenu.Content = new UCCollection();
+				modifierBackgroundBoutons(btnCollections);
+				rafraichirNotifications();
+		  }
+
+		  ~UCContexteUtilisateur()
+		  {
+				timer.Stop();
+		  }
 
 		private void btnCollections_Click(object sender, RoutedEventArgs e)
 		{
@@ -86,7 +96,7 @@ namespace LeCollectionneur.Vues
 		{
 			Grid laGrid=(Grid)this.Content;
 			Grid deuxiemeGrid = (Grid)laGrid.Children[0];
-			foreach (Control control in deuxiemeGrid.Children )
+			foreach (Object control in deuxiemeGrid.Children )
 			{
 				if (control is Button)
 				{
@@ -107,6 +117,78 @@ namespace LeCollectionneur.Vues
 			}
 		}
 
-		
+		#region Notifications
+		DispatcherTimer timer = new DispatcherTimer();
+		BackgroundWorker workerNotifications = new BackgroundWorker();
+		private int nbPropositionNotif = 0;
+		private int nbMessagesNotif = 0;
+
+		private void rafraichirNotifications()
+		{
+			timer.Interval = new TimeSpan(0, 0, 1);
+			timer.Tick += new EventHandler(rafraichirNotificationsThread);
+			timer.Start();
+		}
+
+		private void rafraichirNotificationsThread(object sender, EventArgs e)
+		{
+			if (!workerNotifications.IsBusy)
+			{
+				workerNotifications = new BackgroundWorker();
+				workerNotifications.RunWorkerCompleted += WorkerNotifications_RunWorkerCompleted;
+				workerNotifications.DoWork += WorkerNotifications_DoWork;
+				workerNotifications.RunWorkerAsync();
+			}
+		}
+
+		private void WorkerNotifications_DoWork(object sender, DoWorkEventArgs e)
+		{
+			using (Context context = new Context())
+			{
+				nbPropositionNotif = context.Propositions.Include("AnnonceLiee.Annonceur")
+																						.AsNoTracking()
+																						.Where(p => !p.estVue && p.AnnonceLiee.Annonceur.Id == UtilisateurADO.utilisateur.Id)
+																						.Count();
+
+				List<Modeles.Conversation> conversations = context.Conversations.Include("Utilisateur1")
+																						  .Include("Utilisateur2")
+																						  .Include("ListMessage.Utilisateur")
+																						  .AsNoTracking()
+																						  .Where(c => c.Utilisateur1.Id == UtilisateurADO.utilisateur.Id || c.Utilisateur2.Id == UtilisateurADO.utilisateur.Id)
+																						  .ToList();
+
+				nbMessagesNotif = 0;
+
+				foreach (Modeles.Conversation convo in conversations)
+				{
+					nbMessagesNotif += convo.ListMessage.Where(m => !m.vue && m.utilisateur.Id != UtilisateurADO.utilisateur.Id).Count();
+				}
+			}
+		}
+
+		private void WorkerNotifications_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+		{
+			if (nbPropositionNotif > 0)
+			{
+				txbNotifProp.Text = nbPropositionNotif.ToString();
+				brdNotifProp.Visibility = Visibility.Visible;
+			}
+			else
+			{
+				brdNotifProp.Visibility = Visibility.Hidden;
+			}
+
+			if (nbMessagesNotif > 0)
+			{
+				txbNotifMessages.Text = nbMessagesNotif.ToString();
+				brdNotifMessages.Visibility = Visibility.Visible;
+			}
+			else
+			{
+				brdNotifMessages.Visibility = Visibility.Hidden;
+			}
+		}
+		#endregion
+
 	}
 }

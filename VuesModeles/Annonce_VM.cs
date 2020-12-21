@@ -735,7 +735,8 @@ namespace LeCollectionneur.VuesModeles
                 {
                     AnnonceSelectionnee.EtatAnnonce = new EtatAnnonce(EtatsAnnonce.Annulee);
                     annonceADO.Modifier(AnnonceSelectionnee);
-                }
+                    new PropositionADO().AnnulerPropositionsActivesSurAnnonce(AnnonceSelectionnee.Id);
+            }
                 UpdateAnnonce();
             }
         }
