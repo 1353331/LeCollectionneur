@@ -34,6 +34,7 @@ namespace LeCollectionneur.Modeles
 		public bool vue { get; set; }
 		public static int nbrEmoji =25;
 		public System.Drawing.Bitmap imgMessage;
+		public static ObservableCollection<Emoji.Wpf.EmojiData.Emoji> lstEmoji = getEmojie();
 		#endregion
 
 		#region Constructeur
@@ -156,6 +157,7 @@ namespace LeCollectionneur.Modeles
 		private string transform(string message)
         {
 		var temp = "";
+		var emo = "";
 		try
 		{
 
@@ -163,7 +165,8 @@ namespace LeCollectionneur.Modeles
 			{
 				if (message[e] == '{' && message[e + 1] == '{')
 				{
-					var emo = getEmojie()[int.Parse(message[e + 2].ToString()) + int.Parse(message[e + 3].ToString())].Text;
+					emo = lstEmoji[int.Parse(message[e + 2].ToString())*10 + int.Parse(message[e + 3].ToString())].Text;
+				
 					temp += emo;		
 					e += 5;
 				}
@@ -180,7 +183,7 @@ namespace LeCollectionneur.Modeles
 			
 				return temp;
 			}
-		private ObservableCollection<Emoji.Wpf.EmojiData.Emoji> getEmojie()
+		public static ObservableCollection<Emoji.Wpf.EmojiData.Emoji> getEmojie()
 		{
 			var temp = new ObservableCollection<Emoji.Wpf.EmojiData.Emoji>();
 			var tempEmojie = Emoji.Wpf.EmojiData.AllEmoji.ToList();

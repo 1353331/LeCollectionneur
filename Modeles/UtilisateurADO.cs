@@ -146,7 +146,7 @@ namespace LeCollectionneur.Modeles
         {
             if(User =="")
             {
-                MessageBox.Show("Le nom d'utilisateurne peut pas être vide");
+                MessageBox.Show("Le nom d'utilisateur ne peut pas être vide");
                 return false;
             }
             if(MP == "")
