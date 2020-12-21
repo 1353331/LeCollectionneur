@@ -80,9 +80,9 @@
                     </Style>
                 </DataGrid.RowStyle>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Binding="{Binding Path=AnnonceLiee.Titre}" Header="Annonce Concernée" Width="1.8*"></DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding Path=EtatProposition.Nom}" Header="État" Width="*"></DataGridTextColumn>
-                    <DataGridTextColumn Binding="{Binding Path=DateProposition, StringFormat={}\{0:yyyy-MM-dd\}}" Header="Date" Width="*" SortDirection="Descending"></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Path=AnnonceLiee.Titre}" Header="Annonce Concernée" Width="1.8*" Foreground="Black"></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Path=EtatProposition.Nom}" Header="État" Width="*" Foreground="Black"></DataGridTextColumn>
+                    <DataGridTextColumn Binding="{Binding Path=DateProposition, StringFormat={}\{0:yyyy-MM-dd\}}" Header="Date" Width="*" SortDirection="Descending" Foreground="Black"></DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </DockPanel>

@@ -184,6 +184,10 @@
     <Compile Include="Migrations\202012210234520_AjoutVueProposition.designer.cs">
       <DependentUpon>202012210234520_AjoutVueProposition.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202012211547429_V2.cs" />
+    <Compile Include="Migrations\202012211547429_V2.designer.cs">
+      <DependentUpon>202012211547429_V2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Modeles\Annonce.cs" />
     <Compile Include="Modeles\AnnonceADO.cs" />
@@ -467,6 +471,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202012210234520_AjoutVueProposition.resx">
       <DependentUpon>202012210234520_AjoutVueProposition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202012211547429_V2.resx">
+      <DependentUpon>202012211547429_V2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
