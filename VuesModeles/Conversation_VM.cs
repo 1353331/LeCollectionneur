@@ -28,7 +28,7 @@ namespace LeCollectionneur.VuesModeles
         #region Propriétés
         int id;
         Thread thread;
-        
+       
         private string _emojiVisible;
         public string emojiVisible
         {
@@ -48,7 +48,7 @@ namespace LeCollectionneur.VuesModeles
             {
                 stop = value;
                 OnPropertyChanged("stopThread");
-                if (value) { wait(); }
+                if (value) {  wait();  }
 
             }
         }
@@ -181,6 +181,7 @@ namespace LeCollectionneur.VuesModeles
             set
             {
                 stopThread = true;
+               
                 wait();
                 cv = true;
                 _conversationSelectionne = value;
@@ -409,12 +410,8 @@ namespace LeCollectionneur.VuesModeles
             thread.Name = "Fillon Principal";
             stopThread = false;
             emojiVisible = "Hidden";
-            var e = new ObservableCollection<Emoji.Wpf.EmojiData.Emoji>();
-            foreach (var item in getEmojie())
-            {
-               e.Add(item);
-            }
-            emojiAll = e;
+            
+            emojiAll =Message.lstEmoji;
             thread.Start();
         }
        
@@ -425,23 +422,14 @@ namespace LeCollectionneur.VuesModeles
         #region Méthodes
         private ObservableCollection<Emoji.Wpf.EmojiData.Emoji> getEmojie()
         {
-            var temp = new ObservableCollection<Emoji.Wpf.EmojiData.Emoji>();
-            var tempEmojie = Emoji.Wpf.EmojiData.AllEmoji.ToList();
-            var e = 0;
-            foreach (var item in tempEmojie)
-            {
-
-                temp.Add(item);
-                if (e == Message.nbrEmoji)
-                    break;
-                e++;
-            }
-            return temp;
+            return emojiAll;
         }
         private void wait()
         {
+            
             while (threadEnCour) { 
             }
+            
         }
         private void RefreshMessage()
         {
@@ -500,31 +488,9 @@ namespace LeCollectionneur.VuesModeles
             OnPropertyChanged("MesConversation");
 
         }
-        private bool UneConversationSelectionne()
-        {
-            return !(ConversationSelectionne is null);
-        }
 
        
-        private int placement(string carac)
-        {
-            var iterateur = 0;
-            foreach (var item in getEmojie())
-            {
-                if(carac == item.Text)
-                {
-                    return iterateur; 
-                }
-                iterateur++;
-            }
-            return -1;
-        }
-        private string convert(char item)
-        {
-
-            return item.ToString();
-        }
-
+      
         private class emor
         {
 
@@ -550,15 +516,16 @@ namespace LeCollectionneur.VuesModeles
                 tempAllGood.Add(e);
                 i++;
             }
-
-
+            string sub = "";
+            bool z = true;
             for (int iterateur = 0; iterateur < message.Length; iterateur++)
             {
                 try
                 {
 
-                bool z = true;
-                string sub = message.Substring(iterateur,2);
+                    z = true;
+                if(message.Length -iterateur >=2)
+                    sub = message.Substring(iterateur,2);
                 //Valide que les caratere sont un emoji
                 foreach (var item in tempAllGood)
                 {
@@ -566,46 +533,27 @@ namespace LeCollectionneur.VuesModeles
                     {
                         z = false;
                         if(item.id <10)
+                        {
                             envoyer += "{{0" + item.id +"}}";
+                            iterateur++;
+                        }
                         else
+                        {
                             envoyer += "{{" + item.id + "}}";
-                        iterateur++;
+                            iterateur++;
+                        }
                     }
                 }
                 if (z)
                     envoyer += message[iterateur];
                 }
-                catch { }
+                catch 
+                { 
+                }
             }
             return envoyer;
        }
-        private string transformeur(string message)
-        {
-            var temp = "";
-            try
-            {
-
-                for (int e = 0; e < message.Length; e++)
-                {
-                    if (message[e] == '{' && message[e + 1] == '{')
-                    {
-                        var emo = getEmojie()[int.Parse(message[e + 2].ToString()) + int.Parse(message[e + 3].ToString())].Text;
-                        temp += emo;
-                        e += 5;
-                    }
-                    else
-                    {
-                        temp += message[e];
-                    }
-
-                }
-            }
-
-            catch { }
-
-
-            return temp;
-        }
+        
         #endregion
     }
     
