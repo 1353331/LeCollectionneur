@@ -20,8 +20,10 @@ namespace LeCollectionneur.Modeles
 		public double Montant { get; set; }
 		public DateTime DateProposition{ get; set; }
 		public EtatProposition EtatProposition{ get; set; }
-
+		public bool estVue{ get; set; }
 		public ObservableCollection<Item> ItemsProposes { get; set; }
+		[NotMapped]
+		public bool estAfficheeNotif{ get; set; }
 
 		public Proposition()
 		{

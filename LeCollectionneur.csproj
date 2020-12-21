@@ -180,6 +180,10 @@
     <Compile Include="Migrations\202012181625167_utilisateursDarkMode.designer.cs">
       <DependentUpon>202012181625167_utilisateursDarkMode.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202012210234520_AjoutVueProposition.cs" />
+    <Compile Include="Migrations\202012210234520_AjoutVueProposition.designer.cs">
+      <DependentUpon>202012210234520_AjoutVueProposition.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Modeles\Annonce.cs" />
     <Compile Include="Modeles\AnnonceADO.cs" />
@@ -460,6 +464,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202012181625167_utilisateursDarkMode.resx">
       <DependentUpon>202012181625167_utilisateursDarkMode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202012210234520_AjoutVueProposition.resx">
+      <DependentUpon>202012210234520_AjoutVueProposition.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

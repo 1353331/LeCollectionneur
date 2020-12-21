@@ -195,6 +195,17 @@ namespace LeCollectionneur.Modeles
             }
             return ListConversation;
         }
+
+        public void MettreMessagesVus(int idConversation)
+        {
+            string requete = $@"
+               UPDATE Messages
+               SET Vue = 1
+               WHERE Vue = 0 && Conversation_Id = {idConversation} && utilisateur_Id != {UtilisateurADO.utilisateur.Id}
+               ;";
+
+            BD.Commande(requete);
+		  }
     }
 
 }

@@ -68,7 +68,17 @@
         <DockPanel LastChildFill="True" Grid.Row="1" Margin="5,10,5,10" Name="dpPropositions">
             <TextBlock Text="Mes Propositions" FontWeight="DemiBold" DockPanel.Dock="Top" TextAlignment="Center" />
 
-            <DataGrid Name="dgPropositions" ItemsSource="{Binding PropositionsAffichees}" SelectedItem="{Binding PropositionSelectionnee}" IsHitTestVisible="{Binding ControlesActifs}" HorizontalScrollBarVisibility="Auto" AutoGenerateColumns="False" IsReadOnly="True" Margin="7,10,0,0">
+            <DataGrid Name="dgPropositions" ItemsSource="{Binding PropositionsAffichees}" SelectedItem="{Binding PropositionSelectionnee}" IsHitTestVisible="{Binding ControlesActifs}" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" AutoGenerateColumns="False" IsReadOnly="True" Margin="7,10,0,0">
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding estAfficheeNotif}" Value="true">
+                                <Setter Property="Background" Value="DarkGray"></Setter>
+                                <Setter Property="Foreground" Value="Black"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Path=AnnonceLiee.Titre}" Header="Annonce Concernée" Width="1.8*"></DataGridTextColumn>
                     <DataGridTextColumn Binding="{Binding Path=EtatProposition.Nom}" Header="État" Width="*"></DataGridTextColumn>

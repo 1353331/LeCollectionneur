@@ -199,6 +199,31 @@ namespace LeCollectionneur.Modeles
 			MaBd.Commande(requete);
 		}
 
+		public void AnnulerPropositionsActivesSurAnnonce(int idAnnonce)
+		{
+			string requete = $@"
+				UPDATE Propositions
+				SET
+				EtatProposition_Id = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.Annulee}')
+				WHERE EtatProposition_Id = (SELECT Id FROM EtatsProposition WHERE Nom = '{EtatsProposition.EnAttente}')
+						AND AnnonceLiee_Id = {idAnnonce}
+				;";
+
+			MaBd.Commande(requete);
+		}
+
+		public void MettrePropositionVue(int idProposition)
+		{
+			string requete = $@"
+				UPDATE Propositions
+				SET
+				estVue = 1
+				WHERE Id = {idProposition}
+				;";
+
+			MaBd.Commande(requete);
+		}
+
 		#endregion
 
 		#region DELETE
