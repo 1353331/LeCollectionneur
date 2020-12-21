@@ -176,9 +176,9 @@
     <Compile Include="Migrations\202011250248554_CollMigration.designer.cs">
       <DependentUpon>202011250248554_CollMigration.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202012021824572_UtilisateursRole.cs" />
-    <Compile Include="Migrations\202012021824572_UtilisateursRole.designer.cs">
-      <DependentUpon>202012021824572_UtilisateursRole.cs</DependentUpon>
+    <Compile Include="Migrations\202012181625167_utilisateursDarkMode.cs" />
+    <Compile Include="Migrations\202012181625167_utilisateursDarkMode.designer.cs">
+      <DependentUpon>202012181625167_utilisateursDarkMode.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Modeles\Annonce.cs" />
@@ -458,8 +458,8 @@
     <EmbeddedResource Include="Migrations\202011250248554_CollMigration.resx">
       <DependentUpon>202011250248554_CollMigration.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202012021824572_UtilisateursRole.resx">
-      <DependentUpon>202012021824572_UtilisateursRole.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202012181625167_utilisateursDarkMode.resx">
+      <DependentUpon>202012181625167_utilisateursDarkMode.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -513,6 +513,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="images\Icones\poubelle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\Icones\theme.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets" Condition="Exists('packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets')" />

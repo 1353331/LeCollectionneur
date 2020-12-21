@@ -5,6 +5,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="{materialDesign:MaterialDesignFont}"
         ResizeMode="NoResize"
         Title="Ajouter votre annonce" Height="660" Width="520">
     <Grid>
@@ -29,7 +35,7 @@
         <!--<Label Content="Type d'annonce" Grid.Row="1"  HorizontalAlignment="left" VerticalAlignment="Center" Margin="10,0,0,0"></Label>
         <ComboBox Name="cmbType" Grid.Row="1" Grid.Column="1" Margin="0,20,0,20" Grid.ColumnSpan="2" ItemsSource="{Binding Path=LesTypesAnnonce}" SelectedItem="{Binding Path=Type}" />-->
         <Label Content="Voulez-vous accepter les échanges?" Grid.Row="1" Grid.ColumnSpan="2"  HorizontalAlignment="left" VerticalAlignment="Center" Margin="10,0,0,0"></Label>
-        <CheckBox Grid.Row="1" VerticalAlignment="Center" Grid.Column="1" IsChecked="{Binding Path=TypeAnnonce, Mode=TwoWay}" Grid.ColumnSpan="2" Margin="100.8,25.6,149.4,27.6"></CheckBox>
+        <CheckBox Grid.Row="1" VerticalAlignment="Center" Grid.Column="1" IsChecked="{Binding Path=TypeAnnonce, Mode=TwoWay}" Grid.ColumnSpan="2" Margin="130.8,25.6,124.4,27.6"></CheckBox>
         <!--Description-->
         <Label Content="Description" Grid.Row="2"  HorizontalAlignment="left" VerticalAlignment="Top" Margin="10,0,0,0"></Label>
         <TextBox x:Name="txtDescription" Grid.Column="1" Grid.Row="2" Margin="0,0,0,20" Grid.ColumnSpan="2" TextWrapping="Wrap" Text="{Binding Description}"></TextBox>

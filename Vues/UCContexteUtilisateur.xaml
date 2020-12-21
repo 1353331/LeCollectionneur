@@ -15,6 +15,7 @@
         <Image x:Key="imgAnnonce" Source="/Images/Icones/annonce.png"></Image>
         <Image x:Key="imgProposition" Source="/Images/Icones/proposition.png"></Image>
         <Image x:Key="imgCollection" Source="/Images/Icones/collections.png"></Image>
+        <Image x:Key="imgTheme" Source="/Images/Icones/theme.png"></Image>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -29,6 +30,7 @@
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
             <Button Name="btnCollections" Grid.Column="0" Click="btnCollections_Click" Content="{StaticResource imgCollection}" ToolTip="Collections"></Button>
@@ -36,7 +38,8 @@
             <Button Name="btnPropositions" Grid.Column="2" Click="btnPropositions_Click" Content="{StaticResource imgTransaction}" ToolTip="Propositions"></Button>
             <Button Name="btnConversations" Grid.Column="3" Click="btnConversations_Click" Content="{StaticResource imgConversations}" ToolTip="Conversations" ></Button>
             <Button Name="btnParametres" Grid.Column="4" Click="btnParametres_Click" Content="{StaticResource imgParametres}" ToolTip="Paramètres du compte"></Button>
-            <Button Name="btnDeconnexion" Grid.Column="5" Click="btnDeconnexion_Click" Content="{StaticResource imgDeconnexion}" ToolTip="Déconnexion"></Button>
+            <Button Name="btnChangerTheme" Grid.Column="5" Click="btnChangerTheme_Click" Content="{StaticResource imgTheme}" ToolTip="Changer le thème de couleurs de l'application"></Button>
+            <Button Name="btnDeconnexion" Grid.Column="6" Click="btnDeconnexion_Click" Content="{StaticResource imgDeconnexion}" ToolTip="Déconnexion"></Button>
 
         </Grid>
 

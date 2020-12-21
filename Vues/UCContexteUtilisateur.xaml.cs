@@ -107,6 +107,11 @@ namespace LeCollectionneur.Vues
 			}
 		}
 
-		
+		private void btnChangerTheme_Click(object sender, RoutedEventArgs e)
+		{
+			UtilisateurADO.utilisateur.DarkMode = !(UtilisateurADO.utilisateur.DarkMode);
+			UtilisateurADO.sauvegarderPreferenceTheme();
+			((App)Application.Current).ChangementTheme();
+		}
 	}
 }

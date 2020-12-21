@@ -21,6 +21,8 @@ namespace LeCollectionneur.Modeles
         public string Role { get; set; }
         public bool EstActif { get; set; }
 
+        public bool DarkMode { get; set; }
+
         public ObservableCollection<Collection> MesCollections { get; set; }
         #endregion
 
@@ -43,6 +45,9 @@ namespace LeCollectionneur.Modeles
             //VC Ajout des colonnes EstActif et Role
             EstActif = (bool)Compte.Tables[0].Rows[0]["EstActif"];
             Role = Compte.Tables[0].Rows[0]["Role"].ToString();
+
+            // Ajout DarkMode
+            DarkMode = (bool)Compte.Tables[0].Rows[0]["DarkMode"];
         }
         //Contrusteur par DataRow
         public Utilisateur(DataRow Compte)

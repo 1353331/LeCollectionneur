@@ -38,14 +38,22 @@ namespace LeCollectionneur
 			DataContext = this;
 		login.ShowDialog();
 			if (UtilisateurADO.utilisateur != null)
+			{					
+				NomUtilisateur = $"Le Collectionneur - { UtilisateurADO.utilisateur.NomUtilisateur}";
+				if (UtilisateurADO.utilisateur.DarkMode)
+				{
+					((App)Application.Current).ChangementTheme();	
+
+				}
 				if (!UtilisateurADO.admin)
 				{
 					
-					NomUtilisateur = $"Le Collectionneur - { UtilisateurADO.utilisateur.NomUtilisateur}";
 					presenteurContenu.Content = new UCContexteUtilisateur();
 				}
 				else
 					presenteurContenu.Content = new UCContexteAdmin();
+
+			}
 			else
 				this.Close();
 		}

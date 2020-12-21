@@ -148,7 +148,7 @@
         </GroupBox>
 
         <!--<TextBox Grid.Row="0" Grid.Column="2" Grid.ColumnSpan="2" IsReadOnly="True"/>-->
-        <emoji:ItemsControl Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="3"
+        <emoji:ItemsControl Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="3" Foreground="Black"
                       ItemsSource="{Binding listMessage}"
                       ItemTemplate="{DynamicResource MessagesDataTemplate}"
                       ScrollViewer.VerticalScrollBarVisibility="Auto">

@@ -14,6 +14,7 @@ namespace LeCollectionneur.EF
 			try
 			{
 				ctx = new Context();
+				
 			}
 			catch (Exception e)
 			{

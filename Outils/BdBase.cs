@@ -52,12 +52,13 @@ namespace LeCollectionneur.Outils
             }
             catch (MySqlException e)
             {
-                MessageBox.Show("Erreur:" + e.Message);
-                throw;
+                if (e.Message != "There is already an open DataReader associated with this Connection which must be closed first.")
+                    MessageBox.Show("Erreur:" + e.Message);
+                //throw;
             }
             finally
             {
-                Fermer();
+                //Fermer();
             }
 
             return null;
@@ -76,8 +77,9 @@ namespace LeCollectionneur.Outils
             }
             catch (MySqlException e)
             {
+                if (e.Message!="There is already an open DataReader associated with this Connection which must be closed first.")
                 MessageBox.Show("Erreur dans la commande :" + e.Message);
-                throw;
+                //throw;
             }
             finally
             {

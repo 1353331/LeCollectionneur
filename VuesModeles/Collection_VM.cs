@@ -699,6 +699,7 @@ namespace LeCollectionneur.VuesModeles
         {
             using (Context context = new Context())
             {
+                
                 List<Collection> lstCollections = OutilEF.ctx.Collections.AsNoTracking()
                                                                           .Include("ItemsCollectionListe")
                                                                           .Include("ItemsCollectionListe.Condition")
@@ -706,7 +707,8 @@ namespace LeCollectionneur.VuesModeles
                                                                           .Where((col) => col.Utilisateur.Id==UtilisateurADO.utilisateur.Id)
                                                                           .ToList();
 
-                 MesCollections = changerListCollectionsEnOcCollections(lstCollections);
+                    MesCollections = changerListCollectionsEnOcCollections(lstCollections);              
+                 
                 
             }
         }

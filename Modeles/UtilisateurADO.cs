@@ -301,6 +301,11 @@ namespace LeCollectionneur.Modeles
             string req = $"UPDATE Utilisateurs SET EstActif={utilisateur.EstActif} WHERE Id ={utilisateur.Id}";
             BD.Commande(req);
         }
+        public static void sauvegarderPreferenceTheme()
+        {
+            string req = $"UPDATE Utilisateurs SET DarkMode={utilisateur.DarkMode} WHERE Id ={utilisateur.Id}";
+            BD.Commande(req);
+        }
         #endregion
     }
 }

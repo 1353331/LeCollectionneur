@@ -7,13 +7,13 @@ namespace LeCollectionneur.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
-    public sealed partial class UtilisateursRole : IMigrationMetadata
+    public sealed partial class utilisateursDarkMode : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(UtilisateursRole));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(utilisateursDarkMode));
         
         string IMigrationMetadata.Id
         {
-            get { return "202012021824572_UtilisateursRole"; }
+            get { return "202012181625167_utilisateursDarkMode"; }
         }
         
         string IMigrationMetadata.Source

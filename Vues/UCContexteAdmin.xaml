@@ -6,8 +6,10 @@
              xmlns:local="clr-namespace:LeCollectionneur.Vues"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+        <UserControl.Resources>
+        <Image x:Key="imgTheme" Source="/Images/Icones/theme.png"></Image>
+    </UserControl.Resources>
     <Grid>
-        
             <Grid.RowDefinitions>
                 <RowDefinition Height="45"></RowDefinition>
                 <RowDefinition Height="10*"></RowDefinition>
@@ -16,12 +18,14 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                </Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
 
                 <Button Name="btnUtilisateurs" Grid.Column="0" Click="btnUtilisateurs_Click" Content="Utilisateurs"></Button>
-                <Button Name="btnAnnonces" Grid.Column="1" Click="btnAnnonces_Click" Content="Annonces"></Button>
-                <Button Name="btnDeconnexion" Grid.Column="5" Click="btnDeconnexion_Click" Content="Déconnexion"></Button>
+            <Button Name="btnAnnonces" Grid.Column="1" Click="btnAnnonces_Click" Content="Annonces"></Button>
+            <Button Name="btnChangementTheme" Grid.Column="2" Click="btnChangementTheme_Click" Content="{StaticResource imgTheme}"></Button>
+            <Button Name="btnDeconnexion" Grid.Column="5" Click="btnDeconnexion_Click" Content="Déconnexion"></Button>
             </Grid>
 
             <Border Grid.Row="0" VerticalAlignment="Bottom" BorderThickness="1" BorderBrush="Black"></Border>

@@ -6,6 +6,12 @@
         xmlns:local="clr-namespace:LeCollectionneur.Vues"
         xmlns:local2="clr-namespace:LeCollectionneur.Outils"
         mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="{materialDesign:MaterialDesignFont}"
         ResizeMode="NoResize"
         Title="Ajouter des items" Height="500" Width="1000">
     <Grid>
@@ -42,9 +48,24 @@
                 </Style>
             </DataGrid.RowStyle>
             <local2:CustomDataGrid.Columns>
-                <DataGridTextColumn Header="Nom" Binding="{Binding Nom}" Width="1.5*" />
-                <DataGridTextColumn Header="Type" Binding="{Binding Type.Nom}"  Width="*"  />
-                <DataGridTextColumn Header="Condition" Binding="{Binding Condition.Nom}"  Width="*"  />
+                <DataGridTextColumn  Header="Nom" Binding="{Binding Nom}"  Width="1.5*" >
+                    <DataGridTextColumn.HeaderStyle>
+                        <Style TargetType="DataGridColumnHeader"> <Setter Property="Foreground" Value="Black" /></Style></DataGridTextColumn.HeaderStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Type" Binding="{Binding Type.Nom}"   Width="*"  >
+                    <DataGridTextColumn.HeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Foreground" Value="Black" />
+                        </Style>
+                    </DataGridTextColumn.HeaderStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Condition" Binding="{Binding Condition.Nom}"   Width="*"  >
+                    <DataGridTextColumn.HeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Foreground" Value="Black" />
+                        </Style>
+                    </DataGridTextColumn.HeaderStyle>
+                </DataGridTextColumn>
             </local2:CustomDataGrid.Columns>
         </local2:CustomDataGrid>
 
