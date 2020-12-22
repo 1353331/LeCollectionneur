@@ -12,7 +12,7 @@
         TextElement.FontWeight="Medium"
         TextElement.FontSize="14"
         FontFamily="{materialDesign:MaterialDesignFont}"
-        Title="Modifier une collection" Height="175" Width="400">
+        Title="Modifier une collection" Height="185" Width="400">
     <Grid>
         <StackPanel Margin="20,15,20,15">
             <StackPanel Orientation="Horizontal">
