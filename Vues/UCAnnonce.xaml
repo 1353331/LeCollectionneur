@@ -164,7 +164,7 @@
 
                 <!--Affichage des items de l'annonce-->
                 <Label FontWeight="Bold" Content="Items annoncés" Grid.Row="4" VerticalContentAlignment="Bottom"></Label>
-                <Button Name="btnMessageProposition" Grid.Row="4" Grid.Column="1" Style="{StaticResource btnMessageImageStyle}" HorizontalAlignment="Right" Width="100" Command="{Binding cmdEnvoyerMessage_Annonce}" CommandParameter="{Binding ElementName=UCVueAnnonce}"></Button>
+                <Button Name="btnMessageProposition" ToolTip="Envoyer un message" Grid.Row="4" Grid.Column="1" Style="{StaticResource btnMessageImageStyle}" HorizontalAlignment="Right" Width="100" Command="{Binding cmdEnvoyerMessage_Annonce}" CommandParameter="{Binding ElementName=UCVueAnnonce}"></Button>
                 <DataGrid ItemsSource="{Binding LesItems}" SelectedItem="{Binding ItemSelectionne}" HorizontalScrollBarVisibility="Disabled" AutoGenerateColumns="False" Grid.Row="5" Grid.ColumnSpan="2" IsReadOnly="True" SelectionChanged="DataGrid_SelectionChanged">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Path=Nom}" Header="Nom" Width="3*"></DataGridTextColumn>

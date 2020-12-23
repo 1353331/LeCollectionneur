@@ -3,6 +3,7 @@ using LeCollectionneur.Modeles;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Path = System.IO.Path;
 
 namespace LeCollectionneur.Vues
 {
@@ -84,14 +86,12 @@ namespace LeCollectionneur.Vues
         {
             int pageAide = 3;
 
-            string startupPath = Environment.CurrentDirectory;
-            string fileName = startupPath + "\\..\\..\\images\\GuideUtilisateur.pdf";
+            string fileName = System.IO.Path.GetFullPath("GuideUtilisateur.pdf");
             Process process = new Process();
-            process.StartInfo.FileName = "acroRd32.exe";
+            process.StartInfo.FileName = fileName;
             process.StartInfo.Arguments = "/A \"page=" + pageAide + "\" \"" + fileName + "\"";
 
             process.Start();
-            process.WaitForExit();
-        }
+      }
     }
 }

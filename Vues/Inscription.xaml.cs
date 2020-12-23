@@ -41,14 +41,12 @@ namespace LeCollectionneur.Vues
         {
             int pageAide = 4;
 
-            string startupPath = Environment.CurrentDirectory;
-            string fileName = startupPath + "\\..\\..\\images\\GuideUtilisateur.pdf";
+            string fileName = System.IO.Path.GetFullPath("GuideUtilisateur.pdf");
             Process process = new Process();
-            process.StartInfo.FileName = "acroRd32.exe";
+            process.StartInfo.FileName = fileName;
             process.StartInfo.Arguments = "/A \"page=" + pageAide + "\" \"" + fileName + "\"";
 
             process.Start();
-            process.WaitForExit();
-        }
+      }
     }
 }

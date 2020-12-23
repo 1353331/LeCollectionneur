@@ -100,14 +100,12 @@ namespace LeCollectionneur.Vues
 
 		private void btnAide_Click(object sender, RoutedEventArgs e)
 		{
-			string startupPath = Environment.CurrentDirectory;
-			string fileName = startupPath + "\\..\\..\\images\\GuideUtilisateur.pdf";
+			string fileName = System.IO.Path.GetFullPath("GuideUtilisateur.pdf");
 			Process process = new Process();
-			process.StartInfo.FileName = "acroRd32.exe";
-			process.StartInfo.Arguments = "/A \"page="+ pageAide +"\" \""+ fileName +"\"";
-			
+			process.StartInfo.FileName = fileName;
+			process.StartInfo.Arguments = "/A \"page=" + pageAide + "\" \"" + fileName + "\"";
+
 			process.Start();
-			process.WaitForExit();
 		}
 
 		private void modifierBackgroundBoutons(object sender)

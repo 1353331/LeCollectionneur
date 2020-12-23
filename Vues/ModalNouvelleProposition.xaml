@@ -144,7 +144,7 @@
                 <Label Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">Montant demandé ($)</Label>
                 <TextBox FontSize="16" IsReadOnly="True" Name="tbxMontantOffre" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Text="{Binding MontantDemande}" HorizontalAlignment="Stretch" Margin="10" VerticalContentAlignment="Center"></TextBox>
 
-                <Button Name="btnMessageOffre" Grid.Row="2" Grid.Column="1" Style="{StaticResource btnMessageImageStyle}" Margin="60,0,0,0" Command="{Binding cmdEnvoyerMessage}" 
+                <Button Name="btnMessageOffre" ToolTip="Envoyer un message" Grid.Row="2" Grid.Column="1" Style="{StaticResource btnMessageImageStyle}" Margin="60,0,0,0" Command="{Binding cmdEnvoyerMessage}" 
                 CommandParameter="{Binding ElementName=WindowNouvelleProposition}" MaxHeight="50" MaxWidth="80"></Button>
             </Grid>
         </GroupBox>
