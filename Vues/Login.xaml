@@ -36,5 +36,6 @@
         <Button Grid.Column="0" Grid.ColumnSpan="2" Margin="25,0,100,0" Grid.Row="8" Height="25" Content= "Connexion Prof 1" Name="btnConnectionProf" Click="btnConnectionProf_Click"/>
         <Button Grid.Column="1" Grid.ColumnSpan="2" Margin="100,0,25,0" Grid.Row="8" Height="25" Content="Connexion Prof 2" Name="btnConnectionProf2" Click="btnConnectionProf2_Click"/>
         <Button Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="9" Height="25" MaxWidth="200" Content="Prof Admin" Name="btnConnectionAdmin" Click="btnConnectionAdmin_Click"/>
+        <Button Grid.Column="2" Grid.Row="6" Height="35" Width="35" Content="?" FontWeight="Bold" Padding="0,0,0,0" Click="btnAide_Click" Name="btnAide"/>
     </Grid>
 </Window>

@@ -27,6 +27,7 @@ namespace LeCollectionneur.Vues
     public partial class UCContexteUtilisateur : UserControl
     {
 			public static bool onConversation = false;
+		public int pageAide = 19;
 
         public UCContexteUtilisateur()
         {
@@ -47,6 +48,7 @@ namespace LeCollectionneur.Vues
 			EvenementSysteme.Publier<EnvoyerThreadPropositionsMessage>(new EnvoyerThreadPropositionsMessage()) ;
 			presenteurContenu.Content = new UCCollection();
 			modifierBackgroundBoutons(sender);
+			pageAide = 19;
 		}
 
 		private void btnAnnonces_Click(object sender, RoutedEventArgs e)
@@ -55,6 +57,7 @@ namespace LeCollectionneur.Vues
 			EvenementSysteme.Publier<EnvoyerThreadPropositionsMessage>(new EnvoyerThreadPropositionsMessage());
 			presenteurContenu.Content = new UCAnnonce();
 			modifierBackgroundBoutons(sender);
+			pageAide = 13;
 		}
 
 		private void btnPropositions_Click(object sender, RoutedEventArgs e)
@@ -63,6 +66,7 @@ namespace LeCollectionneur.Vues
 			EvenementSysteme.Publier<EnvoyerThreadPropositionsMessage>(new EnvoyerThreadPropositionsMessage());
 			presenteurContenu.Content = new UCPropositionsRecuesEnvoyees();
 			modifierBackgroundBoutons(sender);
+			pageAide = 21;
 		}
 
 		private void btnConversations_Click(object sender, RoutedEventArgs e)
@@ -71,6 +75,7 @@ namespace LeCollectionneur.Vues
 			EvenementSysteme.Publier<EnvoyerThreadPropositionsMessage>(new EnvoyerThreadPropositionsMessage());
 			presenteurContenu.Content = new UCConversation();
 			modifierBackgroundBoutons(sender);
+			pageAide = 8;
 		}
 
 		private void btnDeconnexion_Click(object sender, RoutedEventArgs e)
@@ -90,6 +95,19 @@ namespace LeCollectionneur.Vues
 			EvenementSysteme.Publier<EnvoyerThreadPropositionsMessage>(new EnvoyerThreadPropositionsMessage());
 			presenteurContenu.Content = new UCParametre();
 			modifierBackgroundBoutons(sender);
+			pageAide = 12;
+		}
+
+		private void btnAide_Click(object sender, RoutedEventArgs e)
+		{
+			string startupPath = Environment.CurrentDirectory;
+			string fileName = startupPath + "\\..\\..\\images\\GuideUtilisateur.pdf";
+			Process process = new Process();
+			process.StartInfo.FileName = "acroRd32.exe";
+			process.StartInfo.Arguments = "/A \"page="+ pageAide +"\" \""+ fileName +"\"";
+			
+			process.Start();
+			process.WaitForExit();
 		}
 
 		private void modifierBackgroundBoutons(object sender)

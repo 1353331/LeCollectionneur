@@ -37,7 +37,8 @@
         <TextBox Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Width="250" Height="25" Name="tbMPC"/>
 
 
-        <Button Content="Annuler" Grid.Column="0" Grid.Row="7" Height="35" Width="75" Grid.ColumnSpan="2" Name="btnAnnuler" Click="btnAnnuler_Click"/>
-        <Button Content="S'inscrire" Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Height="35" Width="75" Click="btnIncription_Click" Name="btnIncription" />
+        <Button Content="Annuler" Grid.Column="0" Grid.Row="7" Height="35" Grid.ColumnSpan="2" Name="btnAnnuler" Click="btnAnnuler_Click" Margin="98,15,82,15"/>
+        <Button Content="S'inscrire" Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Height="35" Click="btnIncription_Click" Name="btnIncription" Margin="74,15,95,15" />
+        <Button Grid.Column="2" Grid.Row="7" Height="35" Width="35" Content="?" FontWeight="Bold" Padding="0,0,0,0" Click="btnAide_Click" Name="btnAide"/>
     </Grid>
 </Window>

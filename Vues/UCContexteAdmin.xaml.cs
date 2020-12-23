@@ -80,5 +80,19 @@ namespace LeCollectionneur.Vues
             UtilisateurADO.sauvegarderPreferenceTheme();
             ((App)Application.Current).ChangementTheme();
         }
+
+        private void btnAide_Click(object sender, RoutedEventArgs e)
+        {
+            int pageAide = 20;
+
+            string startupPath = Environment.CurrentDirectory;
+            string fileName = startupPath + "\\..\\..\\images\\GuideUtilisateur.pdf";
+            Process process = new Process();
+            process.StartInfo.FileName = "acroRd32.exe";
+            process.StartInfo.Arguments = "/A \"page=" + pageAide + "\" \"" + fileName + "\"";
+
+            process.Start();
+            process.WaitForExit();
+        }
     }
 }

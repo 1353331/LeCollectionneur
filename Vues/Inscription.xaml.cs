@@ -1,6 +1,7 @@
 ﻿using LeCollectionneur.Modeles;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,6 +35,20 @@ namespace LeCollectionneur.Vues
         private void btnAnnuler_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void btnAide_Click(object sender, RoutedEventArgs e)
+        {
+            int pageAide = 4;
+
+            string startupPath = Environment.CurrentDirectory;
+            string fileName = startupPath + "\\..\\..\\images\\GuideUtilisateur.pdf";
+            Process process = new Process();
+            process.StartInfo.FileName = "acroRd32.exe";
+            process.StartInfo.Arguments = "/A \"page=" + pageAide + "\" \"" + fileName + "\"";
+
+            process.Start();
+            process.WaitForExit();
         }
     }
 }

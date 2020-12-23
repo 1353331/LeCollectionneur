@@ -20,13 +20,15 @@
                     <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="0.5*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
                 <Button Name="btnUtilisateurs" Grid.Column="0" Click="btnUtilisateurs_Click" Content="Utilisateurs"></Button>
             <Button Name="btnAnnonces" Grid.Column="1" Click="btnAnnonces_Click" Content="Annonces"></Button>
             <Button Name="btnChangementTheme" Grid.Column="2" Click="btnChangementTheme_Click" Content="{StaticResource imgTheme}"></Button>
-            <Button Name="btnDeconnexion" Grid.Column="5" Click="btnDeconnexion_Click" Content="Déconnexion"></Button>
-            </Grid>
+            <Button Name="btnDeconnexion" Grid.Column="3" Click="btnDeconnexion_Click" Content="Déconnexion"></Button>
+            <Button Grid.Column="4"  Content="?" FontWeight="Bold" Padding="0,0,0,0" Click="btnAide_Click" Name="btnAide"/>
+        </Grid>
 
             <Border Grid.Row="0" VerticalAlignment="Bottom" BorderThickness="1" BorderBrush="Black"></Border>
             <ContentPresenter Grid.Row="1" Name="presenteurContenu"></ContentPresenter>
